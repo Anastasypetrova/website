@@ -54,7 +54,7 @@ export function MentorshipSection() {
               <span className="klabel"><T ru="Темы работы" en="Topics we work on" /></span>
               <div className="chips">
                 {chips.map(([ru, en]) => (
-                  <span className="chip clay" key={ru}><T ru={ru} en={en} /></span>
+                  <span className="chip" key={ru}><T ru={ru} en={en} /></span>
                 ))}
               </div>
             </div>

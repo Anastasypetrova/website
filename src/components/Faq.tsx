@@ -22,7 +22,7 @@ export function Faq() {
             return (
               <div className={`faqrow ${isOpen ? 'open' : ''}`} key={i}>
                 <button className="faqq" onClick={() => setOpen(isOpen ? -1 : i)}>
-                  <span>{lang === 'en' ? item.q.en : item.q.ru}</span>
+                  <span className="faqq-text">{lang === 'en' ? item.q.en : item.q.ru}</span>
                   <span className="faqidx">{String(i + 1).padStart(2, '0')} / {String(faqItems.length).padStart(2, '0')}</span>
                 </button>
                 {isOpen && <div className="faqa">{lang === 'en' ? item.a.en : item.a.ru}</div>}

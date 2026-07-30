@@ -32,7 +32,7 @@ export function MastermindSection() {
                 en="A group online format for those ready to step outside habitual thinking and shift into new perception, decisions and actions."
               />
             </p>
-            <p className="p">
+            <p className="p" style={{ textAlign: 'left' }}>
               {lang === 'ru' ? (
                 <b style={{ fontWeight: 400, color: 'var(--danger)' }}>
                   ЦЕЛЬ МАСТЕРМАЙНДА: СОЗДАТЬ НОВУЮ РЕАЛЬНОСТЬ ПРИ ПОМОЩИ ПЕРЕМЕЩЕНИЯ ВНИМАНИЯ И ИЗМЕНЕНИЯ МЫШЛЕНИЯ.
@@ -57,7 +57,7 @@ export function MastermindSection() {
               <span className="klabel"><T ru="Темы мастермайндов" en="Mastermind topics" /></span>
               <div className="chips">
                 {chips.map(([ru, en]) => (
-                  <span className="chip clay" key={ru}><T ru={ru} en={en} /></span>
+                  <span className="chip" key={ru}><T ru={ru} en={en} /></span>
                 ))}
               </div>
             </div>
@@ -103,7 +103,7 @@ export function MastermindSection() {
             <div className="mm-card" style={{ display: 'flex', flexDirection: 'column', gap: 22 }}>
               <div>
                 <span className="klabel"><T ru="Стоимость" en="Price" /></span>
-                <div className="mm-price" style={{ marginTop: 8 }}>
+                <div className="mm-price" style={{ marginTop: 8, fontSize: 17 }}>
                   <T
                     ru={<>1200 евро<br /><br />Даты следующих мастермайндов уточняются, а пока вы можете заполнить анкету предзаписи</>}
                     en={<>1200 euros<br /><br />Dates for upcoming masterminds are being finalised — for now you can fill out the pre-registration form</>}

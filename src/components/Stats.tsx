@@ -14,7 +14,7 @@ export function Stats() {
             <div className="stat-l"><T ru="стран на моем пути" en="countries on my path" /></div>
           </div>
           <div>
-            <div className="stat-n"><T ru="млн" en="mln" /></div>
+            <div className="stat-n"><T ru="млн" en="million" /></div>
             <div className="stat-l"><T ru="просмотров на YouTube" en="views on YouTube" /></div>
           </div>
           <div>
