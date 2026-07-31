@@ -2,6 +2,7 @@ import { type FormEvent } from 'react';
 import { T } from '../i18n';
 import { links } from '../content';
 import { Photo } from './Photo';
+import { photoUrl } from '../photos';
 import { ClockIcon, CoinsIcon, InstagramIcon, TelegramIcon, YoutubeIcon } from './Icons';
 
 async function submitContactForm(data: FormData) {
@@ -15,12 +16,20 @@ export function Contact() {
     void submitContactForm(new FormData(e.currentTarget));
   };
 
+  // Without a photo the section is the deep sage green from the design; the
+  // darkening scrim only exists to keep text legible over a photo.
+  const hasPhoto = Boolean(photoUrl('contacts'));
+
   return (
     <section className="csec sec anchor" id="contacts">
-      <div className="csec-bg">
-        <Photo name="contacts" alt="" />
-      </div>
-      <div className="csec-sc"></div>
+      {hasPhoto && (
+        <>
+          <div className="csec-bg">
+            <Photo name="contacts" alt="" />
+          </div>
+          <div className="csec-sc"></div>
+        </>
+      )}
       <div className="csec-in">
         <div className="cgrid">
           <div className="fcard2">
