@@ -113,7 +113,7 @@ em.accent{font-family:var(--font-script)!important;font-weight:400!important;fon
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;text-align:left;align-items:end}
 @media(max-width:760px){.stats{grid-template-columns:repeat(2,1fr);gap:40px 20px}}
 .stat-n{font-family:var(--font-grotesk);font-weight:100;font-size:clamp(38px,4.6vw,58px);line-height:1;letter-spacing:-.02em;color:var(--clay-d);display:flex;align-items:flex-start}
-.stat-sup{font-size:.36em;font-weight:600;margin-left:2px;margin-top:2px}
+.stat-sup{font-size:.36em;font-weight:inherit;margin-left:2px;margin-top:2px}
 .stat-l{margin-top:16px;font-size:11.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--taupe-500)}
 
 /* section head */
@@ -210,8 +210,8 @@ em.accent{font-family:var(--font-script)!important;font-weight:400!important;fon
 @media(max-width:560px){.statrow{grid-template-columns:repeat(3,1fr);gap:16px}}
 .ministat{padding:0;text-align:left}
 .ministat b{display:flex;align-items:flex-start;font-family:var(--font-grotesk);font-weight:100;font-size:30px;color:var(--danger);letter-spacing:-.02em;line-height:1}
-.mstat-sup{font-size:.42em;font-weight:700;margin-left:1px;margin-top:1px}
-.mstat-slash{font-weight:600}
+.mstat-sup{font-size:.42em;font-weight:inherit;margin-left:1px;margin-top:1px}
+.mstat-slash{font-weight:inherit}
 .mstat-cap{display:block;margin-top:10px;font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--taupe-500)}
 .numlist{display:flex;flex-direction:column}
 .numrow{display:flex;gap:20px;padding:18px 0;border-top:1px solid var(--border-subtle)}
