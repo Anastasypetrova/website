@@ -1,17 +1,19 @@
 import type { ReactNode } from 'react';
-import { ImagePlaceholder } from './ImagePlaceholder';
+import { Photo } from './Photo';
+import type { PhotoKey } from '../photos';
 
 interface Props {
   quote: ReactNode;
+  photo: PhotoKey;
   id?: string;
   objectPosition?: string;
 }
 
-export function PullQuotePhoto({ quote, id }: Props) {
+export function PullQuotePhoto({ quote, photo, id, objectPosition }: Props) {
   return (
     <section className="sec pullphoto" id={id}>
       <div className="pullphoto-bg">
-        <ImagePlaceholder label="Фоновое фото" />
+        <Photo name={photo} alt="" objectPosition={objectPosition ?? 'center 30%'} />
       </div>
       <div className="pullphoto-sc"></div>
       <div className="wrap-n pull">

@@ -1,5 +1,5 @@
 import { T } from '../i18n';
-import { ImagePlaceholder } from './ImagePlaceholder';
+import { Photo } from './Photo';
 import { InstagramIcon, TelegramIcon, YoutubeIcon } from './Icons';
 import { links } from '../content';
 
@@ -7,7 +7,7 @@ export function Hero() {
   return (
     <section className="hero" id="top">
       <div className="hero-bg">
-        <ImagePlaceholder label="Фото на обложку" />
+        <Photo name="hero" alt="" objectPosition="center 34%" />
       </div>
       <div className="hero-scrim"></div>
       <div className="hero-in">

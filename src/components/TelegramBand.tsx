@@ -1,13 +1,13 @@
 import { T } from '../i18n';
 import { links } from '../content';
-import { ImagePlaceholder } from './ImagePlaceholder';
+import { Photo } from './Photo';
 import { ArrowRightIcon, TelegramIcon } from './Icons';
 
 export function TelegramBand() {
   return (
     <section className="sec pullphoto" id="tg-subscribe">
       <div className="pullphoto-bg">
-        <ImagePlaceholder label="Фоновое фото" />
+        <Photo name="telegram" alt="" objectPosition="center 15%" />
       </div>
       <div className="pullphoto-sc"></div>
       <div className="wrap-n pull">

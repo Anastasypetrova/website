@@ -1,6 +1,6 @@
 import { T } from '../i18n';
 import { links } from '../content';
-import { ImagePlaceholder } from './ImagePlaceholder';
+import { Photo } from './Photo';
 
 const chips: [string, string][] = [
   ['Реализация', 'Fulfilment'],
@@ -61,7 +61,7 @@ export function MentorshipSection() {
           </div>
           <div className="prod-right">
             <div className="prod-photo">
-              <ImagePlaceholder label="Индивидуальное менторство" />
+              <Photo name="mentorship" alt="Индивидуальное менторство" />
               <div className="pc-cap"><T ru="Создаём и творим вместе" en="Creating and building together" /></div>
             </div>
           </div>

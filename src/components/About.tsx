@@ -1,5 +1,5 @@
 import { T } from '../i18n';
-import { ImagePlaceholder } from './ImagePlaceholder';
+import { Photo } from './Photo';
 
 export function About() {
   return (
@@ -11,7 +11,7 @@ export function About() {
             <T ru={<><em className="accent">Обо</em> мне</>} en={<><em className="accent">About</em> me</>} />
           </h2>
           <div className="arch" style={{ borderRadius: 0 }}>
-            <ImagePlaceholder label="Анастасия Петрова" />
+            <Photo name="about" alt="Анастасия Петрова" />
           </div>
         </div>
         <div className="about-body">

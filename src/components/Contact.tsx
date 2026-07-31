@@ -1,7 +1,7 @@
 import { type FormEvent } from 'react';
 import { T } from '../i18n';
 import { links } from '../content';
-import { ImagePlaceholder } from './ImagePlaceholder';
+import { Photo } from './Photo';
 import { ClockIcon, CoinsIcon, InstagramIcon, TelegramIcon, YoutubeIcon } from './Icons';
 
 async function submitContactForm(data: FormData) {
@@ -18,7 +18,7 @@ export function Contact() {
   return (
     <section className="csec sec anchor" id="contacts">
       <div className="csec-bg">
-        <ImagePlaceholder label="Фоновое фото" />
+        <Photo name="contacts" alt="" />
       </div>
       <div className="csec-sc"></div>
       <div className="csec-in">

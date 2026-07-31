@@ -1,6 +1,6 @@
 import { T } from '../i18n';
 import { links } from '../content';
-import { ImagePlaceholder } from './ImagePlaceholder';
+import { Photo } from './Photo';
 import { ArrowUpRightIcon } from './Icons';
 
 const chips: [string, string][] = [
@@ -66,7 +66,7 @@ export function ClubSection() {
           </div>
           <div className="prod-right">
             <div className="prod-photo">
-              <ImagePlaceholder label="Samadhi Club" />
+              <Photo name="club" alt="Samadhi Club" />
               <div className="pc-cap"><T ru="Перестать беспокоиться и начать творить" en="Stop worrying and start creating" /></div>
             </div>
           </div>

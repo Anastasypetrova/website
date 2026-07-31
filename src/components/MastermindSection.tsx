@@ -1,6 +1,6 @@
 import { T, useLang } from '../i18n';
 import { links } from '../content';
-import { ImagePlaceholder } from './ImagePlaceholder';
+import { Photo } from './Photo';
 
 const chips: [string, string][] = [
   ['Манифестация и материализация сценариев', 'Manifesting and materialising scenarios'],
@@ -64,7 +64,7 @@ export function MastermindSection() {
           </div>
           <div className="prod-right">
             <div className="prod-photo">
-              <ImagePlaceholder label="Mastermind" />
+              <Photo name="mastermind" alt="Mastermind" />
               <div className="pc-cap"><T ru="Пространство синергии, где 5 + 1 = 10" en="A space of synergy, where 5 + 1 = 10" /></div>
             </div>
           </div>

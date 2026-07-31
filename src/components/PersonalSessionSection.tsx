@@ -1,6 +1,6 @@
 import { T } from '../i18n';
 import { links } from '../content';
-import { ImagePlaceholder } from './ImagePlaceholder';
+import { Photo } from './Photo';
 
 const items: [string, string][] = [
   [
@@ -58,7 +58,7 @@ export function PersonalSessionSection() {
           </div>
           <div className="prod-right">
             <div className="prod-photo">
-              <ImagePlaceholder label="Личная консультация" />
+              <Photo name="consultation" alt="Личная консультация" />
             </div>
           </div>
         </div>

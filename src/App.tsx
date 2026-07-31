@@ -49,6 +49,7 @@ function App() {
       <Stats />
       <VideosSection />
       <PullQuotePhoto
+        photo="quote"
         quote={
           <T
             ru={<>Эта информация и живое взаимодействие уже <em className="accent" style={{ fontSize: 'clamp(28px,5vw,50px)' }}>изменили жизнь</em> сотням людей</>}
