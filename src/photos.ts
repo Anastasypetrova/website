@@ -34,6 +34,7 @@ const HANDOFF_NAMES: Record<string, PhotoKey> = {
   '9EB2E130-279C-44D5-899C-63C4AB6D6BE4 2': 'quote',
   'ChatGPT Image Jul 23, 2026, 04_17_32 PM': 'club',
   'ChatGPT Image Jul 23, 2026, 04_19_50 PM': 'consultation',
+  'ChatGPT Image Jul 31, 2026, 07_54_09 PM': 'consultation',
   '93A7FE90-DC1C-4ACE-A530-DA2E72B35AF9': 'mentorship',
   'ChatGPT Image Jul 24, 2026, 10_24_00 AM': 'mastermind',
   IMG_3101: 'about',
