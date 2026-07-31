@@ -20,11 +20,11 @@ export function About() {
           </p>
           <p className="about-intro">
             <T
-              ru={<>Я в духовных практиках уже более 15 лет. В моём опыте випассаны, медитации, дыхательные практики, тибетское учение Дзогчен, гипнотерапия, осознанные сны и многое другое. <span className="muted">Это был долгий путь поиска, но я поняла, что не нужно столько искать, чтобы найти. Реальность меняется в один момент через намерение и перемещение внимания.</span></>}
-              en={<>I've been in spiritual practice for over 15 years. My experience includes vipassana, meditation, breathwork, the Tibetan Dzogchen teaching, hypnotherapy, lucid dreaming and much more. <span className="muted">It was a long road of searching, but I realised you don't need to search so much to find. Reality shifts in a single moment through intention and the movement of attention.</span></>}
+              ru="Я в духовных практиках уже более 15 лет. В моём опыте випассаны, медитации, дыхательные практики, тибетское учение Дзогчен, гипнотерапия, осознанные сны и многое другое. Это был долгий путь поиска, но я поняла, что не нужно столько искать, чтобы найти. Реальность меняется в один момент через намерение и перемещение внимания."
+              en="I've been in spiritual practice for over 15 years. My experience includes vipassana, meditation, breathwork, the Tibetan Dzogchen teaching, hypnotherapy, lucid dreaming and much more. It was a long road of searching, but I realised you don't need to search so much to find. Reality shifts in a single moment through intention and the movement of attention."
             />
           </p>
-          <p className="p" style={{ textAlign: 'justify' }}>
+          <p className="p">
             <T
               ru="Я на своем примере поняла, что можно исполнять любые желания при помощи внимания и прожила несколько совершенно разных жизней. Жизнь корпоративного сотрудника в Москве, где работала в большой компании и управляла большой командой, жизнь консультанта по внедрению ИИ в Амстердаме, где прожила 7 лет и была международным спикером по крипто и web3, объехав с лекциями половину Европы."
               en="Through my own experience I realised I could fulfil any desire through attention, and I've lived several completely different lives. Life as a corporate employee in Moscow, running a large team; life as an AI implementation consultant in Amsterdam, where I lived for 7 years and was an international speaker on crypto and web3, touring half of Europe with lectures."

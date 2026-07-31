@@ -286,12 +286,15 @@ em.accent{font-family:var(--font-script)!important;font-weight:400!important;fon
 .arch{border-radius:6px;overflow:hidden;background:var(--sand-200);aspect-ratio:2/3}
 .about-port{display:flex;flex-direction:column;gap:22px}
 .about-body{display:flex;flex-direction:column;gap:20px}
-.about-lead{text-align:left;font-size:clamp(24px,3.4vw,42px);color:var(--danger);font-weight:400;font-family:var(--font-grotesk);line-height:1.15;margin:0}
-.about-intro{margin:0;text-align:justify;font-size:16px;line-height:1.65;color:var(--ink)}
-.about-intro .muted{color:var(--taupe-700)}
-.about-key{border-left:3px solid var(--clay-d);padding-left:20px;font-size:17px;line-height:1.6;font-weight:400;font-family:var(--font-grotesk);color:var(--ink);text-align:justify;font-style:italic}
+.about-lead{text-align:left;font-size:clamp(19px,2.5vw,31px);color:var(--danger);font-weight:100;font-family:var(--font-grotesk);line-height:1.2;margin:0}
+/* Every body paragraph in About shares one face, size and colour. */
+.about-intro,.about-body>.p,.about-key{
+  font-family:var(--font-sans);font-size:calc(16px*var(--ts,1));line-height:1.65;
+  color:var(--taupe-700);text-align:justify;text-align-last:left;margin:0;
+}
+.about-key{border-left:3px solid var(--clay-d);padding-left:20px;font-style:italic;font-weight:400}
 .about-callout{margin-top:auto;background:var(--cream-2);border-radius:16px;padding:22px 24px}
-.about-callout .klabel{color:var(--clay-d);font-weight:600;letter-spacing:.08em;text-transform:uppercase;font-size:13px;line-height:1.5}
+.about-callout .klabel{color:var(--danger);font-family:var(--font-grotesk);font-weight:100;letter-spacing:.08em;text-transform:uppercase;font-size:14px;line-height:1.55}
 
 /* telegram band (pullphoto variant) */
 .tgband-eyebrow{display:inline-flex;align-items:center;gap:9px;font-family:var(--font-sans);font-weight:600;font-size:12px;letter-spacing:.2em;text-transform:uppercase}
