@@ -44,7 +44,9 @@ export function PersonalSessionSection() {
             <div className="pricerow">
               <div className="pricebox">
                 <span className="klabel"><T ru="Стоимость" en="Price" /></span>
-                <div className="price" style={{ marginTop: 8, fontFamily: 'Helvetica, sans-serif', fontWeight: 100 }}>300€ / 30000 руб.</div>
+                <div className="price" style={{ marginTop: 8, fontFamily: 'var(--font-grotesk)', fontWeight: 100 }}>
+                  <T ru="300€ / 30000 руб." en="300€ / 30000 RUB" />
+                </div>
               </div>
               <div className="btns" style={{ marginTop: 0 }}>
                 <a className="btn-onsage" href={links.consultBot} target="_blank" rel="noopener" style={{ width: 'auto', padding: '16px 28px' }}>
