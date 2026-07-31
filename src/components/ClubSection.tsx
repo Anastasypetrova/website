@@ -29,7 +29,7 @@ export function ClubSection() {
             </p>
             <div className="statrow">
               <div className="ministat">
-                <b>100<span className="mstat-sup">+</span></b>
+                <b>200<span className="mstat-sup">+</span></b>
                 <span className="mstat-cap"><T ru="часов подкастов" en="hours of podcasts" /></span>
               </div>
               <div className="ministat">
@@ -72,7 +72,7 @@ export function ClubSection() {
           </div>
         </div>
         <div className="tagfull">
-          <span className="klabel"><T ru="В клубе более 1000 часов информации на темы" en="The club holds 1000+ hours of content on topics" /></span>
+          <span className="klabel"><T ru="В клубе более 200 часов информации на темы" en="The club holds 200+ hours of content on topics" /></span>
           <div className="chips">
             {chips.map(([ru, en]) => (
               <span className="chip" key={ru}><T ru={ru} en={en} /></span>
