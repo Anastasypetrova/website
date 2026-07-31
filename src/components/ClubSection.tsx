@@ -29,16 +29,16 @@ export function ClubSection() {
             </p>
             <div className="statrow">
               <div className="ministat">
-                <b>1000<span className="mstat-sup">+</span></b>
-                <span className="mstat-cap"><T ru="часов практик" en="hours of practices" /></span>
+                <b>100<span className="mstat-sup">+</span></b>
+                <span className="mstat-cap"><T ru="часов подкастов" en="hours of podcasts" /></span>
               </div>
               <div className="ministat">
                 <b>24<span className="mstat-slash">/</span>7</b>
                 <span className="mstat-cap"><T ru="живое сообщество" en="live community" /></span>
               </div>
               <div className="ministat">
-                <b>150<span className="mstat-sup">+</span></b>
-                <span className="mstat-cap"><T ru="разборов и эфиров" en="breakdowns and livestreams" /></span>
+                <b>50<span className="mstat-sup">+</span></b>
+                <span className="mstat-cap"><T ru="эфиров и практик" en="livestreams and practices" /></span>
               </div>
             </div>
             <p className="p">
