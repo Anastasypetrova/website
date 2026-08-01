@@ -35,12 +35,6 @@ export function Contact() {
           <div className="fcard2">
             <div className="fcard2-logo">Анастасия Петрова</div>
             <h2 className="dh dh3"><T ru="Остались вопросы?" en="Any questions?" /></h2>
-            <p className="fsub">
-              <T
-                ru="По форматам, оплате и записи. Вопросы по психологии я разбираю на консультациях."
-                en="About formats, payment and booking. Psychological questions are covered in a consultation."
-              />
-            </p>
             <form className="form" style={{ marginTop: 20 }} onSubmit={onSubmit}>
               <label className="flabel"><T ru="Ваше имя" en="Your name" /></label>
               <input className="field" type="text" name="name" placeholder="Как к вам обращаться" aria-label="Имя" />

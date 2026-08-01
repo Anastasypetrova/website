@@ -37,7 +37,9 @@ html[data-lang="en"] .tr-en{display:contents}
 .mlang{display:flex;gap:10px;margin-top:24px}
 .mlang .lang-btn{padding:10px 20px;font-size:13px}
 .mlang .lang-btn.active{background:var(--sage);border-color:var(--sage);color:#fff}
-body{margin:0;background:var(--cream);color:var(--ink);font-family:var(--font-sans);-webkit-font-smoothing:antialiased;zoom:.85}
+/* Whole-page scale. Everything — type, spacing, images — shrinks together,
+   so proportions are preserved. Adjust this one number to rescale the site. */
+body{margin:0;background:var(--cream);color:var(--ink);font-family:var(--font-sans);-webkit-font-smoothing:antialiased;zoom:.72}
 a{color:inherit;text-decoration:none}
 a:hover{color:var(--accent-hover)}
 button{font:inherit}
@@ -282,7 +284,10 @@ em.accent{font-family:var(--font-script)!important;font-weight:400!important;fon
 
 /* about */
 .about{display:grid;grid-template-columns:minmax(0,1fr);gap:44px}
-@media(min-width:920px){.about{grid-template-columns:.9fr 1.1fr;gap:64px;align-items:start}.about-body{padding-top:60px}}
+/* Stretch both columns to the same height so the copy can be distributed
+   against the portrait: the text starts level with the top of the photo and
+   the closing statement is pushed to its bottom edge. */
+@media(min-width:920px){.about{grid-template-columns:.9fr 1.1fr;gap:64px;align-items:stretch}.about-body{padding-top:174px}}
 .arch{border-radius:6px;overflow:hidden;background:var(--sand-200);aspect-ratio:2/3}
 .about-port{display:flex;flex-direction:column;gap:22px}
 .about-body{display:flex;flex-direction:column;gap:20px}
@@ -293,8 +298,8 @@ em.accent{font-family:var(--font-script)!important;font-weight:400!important;fon
   color:var(--taupe-700);text-align:justify;text-align-last:left;margin:0;
 }
 .about-key{border-left:3px solid var(--clay-d);padding-left:20px;font-style:italic;font-weight:400}
-.about-callout{margin-top:auto;background:var(--cream-2);border-radius:16px;padding:22px 24px}
-.about-callout .klabel{color:var(--danger);font-family:var(--font-grotesk);font-weight:100;letter-spacing:.08em;text-transform:uppercase;font-size:14px;line-height:1.55}
+.about-callout{margin-top:auto;padding-top:10px}
+.about-callout .klabel{color:var(--danger);font-family:var(--font-grotesk);font-weight:400;letter-spacing:.08em;text-transform:uppercase;font-size:14px;line-height:1.55}
 
 /* telegram band (pullphoto variant) */
 .tgband-eyebrow{display:inline-flex;align-items:center;gap:9px;font-family:var(--font-sans);font-weight:600;font-size:12px;letter-spacing:.2em;text-transform:uppercase}
