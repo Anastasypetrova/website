@@ -65,8 +65,8 @@ function App() {
       <MastermindSection />
       <AwakeningQuote />
       <About />
-      <TelegramBand />
       <Faq />
+      <TelegramBand />
       <Contact />
       <Footer />
     </LangContext.Provider>
