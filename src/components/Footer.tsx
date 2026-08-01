@@ -1,6 +1,6 @@
 import { type FormEvent } from 'react';
 import { T } from '../i18n';
-import { docs, links } from '../content';
+import { docs, docHref, links } from '../content';
 import { InstagramIcon, TelegramIcon, YoutubeIcon } from './Icons';
 
 async function submitNewsletter(data: FormData) {
@@ -76,7 +76,7 @@ export function Footer() {
           <div className="foot-col">
             <span className="foot-col-h"><T ru="Документы" en="Documents" /></span>
             {docs.map((d) => (
-              <a className="flink" href={`docs/${d.file}`} target="_blank" rel="noopener" key={d.file}>
+              <a className="flink" href={docHref(d.slug)} key={d.slug}>
                 <T ru={d.label.ru} en={d.label.en} />
               </a>
             ))}

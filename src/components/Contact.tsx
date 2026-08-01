@@ -1,6 +1,6 @@
 import { type FormEvent } from 'react';
 import { T } from '../i18n';
-import { links } from '../content';
+import { docHref, links } from '../content';
 import { Photo } from './Photo';
 import { photoUrl } from '../photos';
 import { ClockIcon, CoinsIcon, InstagramIcon, TelegramIcon, YoutubeIcon } from './Icons';
@@ -48,8 +48,8 @@ export function Contact() {
             </form>
             <p className="fineprint">
               <T
-                ru={<>Нажимая кнопку, вы соглашаетесь с <a href="docs/2_Politika_konfidentsialnosti.pdf" target="_blank" rel="noopener">политикой конфиденциальности</a>.</>}
-                en={<>By clicking the button, you agree to the <a href="docs/2_Politika_konfidentsialnosti.pdf" target="_blank" rel="noopener">privacy policy</a>.</>}
+                ru={<>Нажимая кнопку, вы соглашаетесь с <a href={docHref('privacy')}>политикой конфиденциальности</a>.</>}
+                en={<>By clicking the button, you agree to the <a href={docHref('privacy')}>privacy policy</a>.</>}
               />
             </p>
           </div>

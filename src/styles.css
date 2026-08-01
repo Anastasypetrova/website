@@ -385,3 +385,45 @@ textarea.field{min-height:130px;resize:vertical;border-radius:20px}
 
 /* keep fixed-nav from covering anchor-jump targets */
 #videos,#reviews,#formats,#club,#personal-session,#mentorship,#mastermind,#about,#faq,#contacts{scroll-margin-top:88px}
+
+/* ── Legal document pages (#/docs/<slug>) ────────────────────────────────
+   Each document from public/docs is also a page of the site, set in the
+   site's own type rather than handed to the browser's PDF viewer. */
+.legal-top{position:sticky;top:0;z-index:80;background:var(--cream);border-bottom:1px solid var(--border-subtle)}
+.legal-top-in{max-width:var(--wrap);margin-inline:auto;padding:18px 32px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.legal-top .logo{color:var(--ink)}
+.legal-top-right{display:flex;align-items:center;gap:18px}
+.legal-back{font-family:var(--font-sans);font-size:13.5px;color:var(--taupe-700);white-space:nowrap;transition:color .2s}
+.legal-back:hover{color:var(--accent-hover)}
+/* narrower than the landing page: ~75 characters a line reads far better for
+   long legal prose than the full content column */
+.legal{max-width:calc(860px / var(--z));margin-inline:auto;padding:56px 32px 20px}
+.legal-h1{font-family:var(--font-head);font-weight:400;font-size:calc(clamp(28px,3.6vw,44px)*var(--hs));line-height:1.16;letter-spacing:-.015em;margin:14px 0 0;max-width:22ch}
+.legal-rev{font-family:var(--font-sans);font-size:13.5px;color:var(--taupe-500);margin:14px 0 0}
+.legal-note{font-size:14px;line-height:1.6;color:var(--taupe-700);background:var(--mist-100);border-radius:14px;padding:16px 20px;margin-top:26px}
+.legal-body{margin-top:34px;border-top:1px solid var(--border-subtle);padding-top:34px}
+.legal-h2{font-family:var(--font-head);font-weight:500;font-size:calc(clamp(18px,1.9vw,22px)*var(--hs));line-height:1.3;letter-spacing:-.005em;color:var(--ink);margin:38px 0 0}
+.legal-h2:first-child{margin-top:0}
+.legal-p{font-size:15px;line-height:1.72;color:var(--taupe-700);margin:14px 0 0}
+.legal-ul{margin:14px 0 0;padding-left:0;list-style:none}
+.legal-ul li{position:relative;font-size:15px;line-height:1.72;color:var(--taupe-700);padding-left:22px;margin-top:10px}
+.legal-ul li::before{content:"";position:absolute;left:2px;top:.72em;width:5px;height:5px;border-radius:50%;background:var(--sage)}
+.legal-actions{display:flex;flex-wrap:wrap;align-items:center;gap:14px 22px;margin-top:44px;padding-top:26px;border-top:1px solid var(--border-subtle)}
+.legal-pdf{display:inline-flex;align-items:center;border:1px solid var(--border-strong);border-radius:999px;padding:12px 26px;font-family:var(--font-sans);font-size:14px;transition:background .2s,color .2s,border-color .2s}
+.legal-pdf:hover{background:var(--sage);border-color:var(--sage);color:#fff}
+.legal-mail{font-size:14px;color:var(--taupe-500)}
+.legal-other{margin-top:52px;padding-top:30px;border-top:1px solid var(--border-subtle)}
+.legal-other-h{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--clay-d)}
+.legal-other-list{display:flex;flex-wrap:wrap;gap:10px 26px;margin-top:16px}
+.legal-other-link{font-size:14.5px;color:var(--taupe-700);transition:color .2s}
+.legal-other-link:hover{color:var(--accent-hover)}
+.legal-foot{max-width:calc(860px / var(--z));margin-inline:auto;padding:44px 32px 56px;display:flex;flex-wrap:wrap;gap:8px 24px;justify-content:space-between;font-size:12.5px;color:var(--taupe-500)}
+@media(max-width:640px){
+  .legal-top-in{padding:14px 20px}
+  /* the brand name and the back link do not both fit: keep the way out */
+  .legal-top .logo{display:none}
+  .legal-top-right{flex:1;justify-content:space-between}
+  .legal{padding:36px 20px 16px}
+  .legal-foot{padding:32px 20px 44px}
+  .legal-actions{margin-top:34px}
+}

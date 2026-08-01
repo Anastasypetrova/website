@@ -114,11 +114,14 @@ export const links = {
 };
 
 export const docs = [
-  { file: '1_Dogovor_publichnoy_oferty.pdf', label: { ru: 'Договор оферты', en: 'Public offer agreement' } },
-  { file: '2_Politika_konfidentsialnosti.pdf', label: { ru: 'Политика конфиденциальности', en: 'Privacy policy' } },
-  { file: '3_Soglasie_na_obrabotku_personalnyh_dannyh.pdf', label: { ru: 'Согласие на обработку данных', en: 'Data processing consent' } },
-  { file: '4_Politika_vozvrata_sredstv.pdf', label: { ru: 'Политика возврата средств', en: 'Refund policy' } },
-  { file: '5_Disclaimer.pdf', label: { ru: 'Дисклеймер', en: 'Disclaimer' } },
-  { file: '6_Cookie_Policy.pdf', label: { ru: 'Cookie Policy', en: 'Cookie Policy' } },
-  { file: '7_Usloviya_uchastiya_Samadhi_Club.pdf', label: { ru: 'Условия участия Samadhi Club', en: 'Samadhi Club terms' } },
+  { slug: 'oferta', file: '1_Dogovor_publichnoy_oferty.pdf', label: { ru: 'Договор оферты', en: 'Public offer agreement' } },
+  { slug: 'privacy', file: '2_Politika_konfidentsialnosti.pdf', label: { ru: 'Политика конфиденциальности', en: 'Privacy policy' } },
+  { slug: 'consent', file: '3_Soglasie_na_obrabotku_personalnyh_dannyh.pdf', label: { ru: 'Согласие на обработку данных', en: 'Data processing consent' } },
+  { slug: 'refunds', file: '4_Politika_vozvrata_sredstv.pdf', label: { ru: 'Политика возврата средств', en: 'Refund policy' } },
+  { slug: 'disclaimer', file: '5_Disclaimer.pdf', label: { ru: 'Дисклеймер', en: 'Disclaimer' } },
+  { slug: 'cookies', file: '6_Cookie_Policy.pdf', label: { ru: 'Cookie Policy', en: 'Cookie Policy' } },
+  { slug: 'club-terms', file: '7_Usloviya_uchastiya_Samadhi_Club.pdf', label: { ru: 'Условия участия Samadhi Club', en: 'Samadhi Club terms' } },
 ];
+
+/** Hash route for a document's own page, e.g. `#/docs/privacy`. */
+export const docHref = (slug: string) => `#/docs/${slug}`;
