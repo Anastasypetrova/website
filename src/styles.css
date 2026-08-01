@@ -70,8 +70,10 @@ em.accent{font-family:var(--font-script)!important;font-weight:400!important;fon
 .wrap-n{max-width:var(--wrap-n);margin-inline:auto;padding-inline:32px}
 .sec{padding-block:112px}
 .sec-s{padding-block:82px}
-.bg1{background:var(--cream)}
-.bg2{background:var(--cream-2)}
+/* Both section backgrounds are the same cream, as in the design: the page
+   should read as one continuous canvas. Giving them different tints leaves
+   a faint visible seam at every section boundary. */
+.bg1,.bg2{background:var(--cream)}
 @media(max-width:680px){.wrap,.wrap-n{padding-inline:20px}.sec{padding-block:78px}.sec-s{padding-block:62px}}
 
 /* photos + placeholders */
