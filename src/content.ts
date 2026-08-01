@@ -108,7 +108,7 @@ export const links = {
   consultBot: 'https://t.me/consultpay_bot',
   clubJoin: 'https://t.me/tribute/app?startapp=sr53',
   mastermindForm: 'https://forms.gle/8MB1UucBcKHaGxSp7',
-  clubAudio: 'https://t.me/into_samadhi/1929',
+  clubAudio: 'https://t.me/into_samadhi/2531',
   email: 'hello@metasouls.co',
   mailto: 'mailto:anastasia.into.samadhi@gmail.com',
 };
