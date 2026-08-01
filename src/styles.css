@@ -308,7 +308,7 @@ em.accent{font-family:var(--font-script)!important;font-weight:400!important;fon
 .arch{border-radius:6px;overflow:hidden;background:var(--sand-200);aspect-ratio:2/3}
 .about-port{display:flex;flex-direction:column;gap:22px}
 .about-body{display:flex;flex-direction:column;gap:20px}
-.about-lead{text-align:left;font-size:calc(clamp(19px,2.5vw,31px)*var(--hs));color:var(--danger);font-weight:100;font-family:var(--font-grotesk);line-height:1.2;margin:0}
+.about-lead{text-align:left;font-size:calc(clamp(19px,2.5vw,31px)*var(--hs));color:var(--danger);font-weight:300;font-family:var(--font-grotesk);line-height:1.2;margin:0}
 /* Every body paragraph in About shares one face, size and colour. */
 .about-intro,.about-body>.p,.about-key{
   font-family:var(--font-sans);font-size:calc(16px*var(--ts,1));line-height:1.65;
