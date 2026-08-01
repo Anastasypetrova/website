@@ -14,8 +14,8 @@ export function FormatList() {
         <span className="eyebrow"><T ru="форматы работы" en="work formats" /></span>
         <h2 className="dh dh2" style={{ marginTop: 14, maxWidth: '22ch' }}>
           <T
-            ru={<>Как мы можем <em className="accent" style={{ fontSize: 'clamp(40px,8vw,80px)' }}>повзаимодействовать</em></>}
-            en={<>How we can <em className="accent" style={{ fontSize: 'clamp(40px,8vw,80px)' }}>work together</em></>}
+            ru={<>Как мы можем <em className="accent" style={{ fontSize: 'calc(clamp(40px,8vw,80px) * var(--hs))' }}>повзаимодействовать</em></>}
+            en={<>How we can <em className="accent" style={{ fontSize: 'calc(clamp(40px,8vw,80px) * var(--hs))' }}>work together</em></>}
           />
         </h2>
         <div className="flist">

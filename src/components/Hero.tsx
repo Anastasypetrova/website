@@ -13,8 +13,8 @@ export function Hero() {
       <div className="hero-in">
         <h1 className="hero-h">
           <T
-            ru={<>Привет, родная душа. Здесь поменяется твоё <em style={{ fontSize: 'clamp(46px,9vw,90px)' }}>восприятие</em> мира, а затем и твоя реальность</>}
-            en={<>Hi, kindred soul. Here your <em style={{ fontSize: 'clamp(46px,9vw,90px)' }}>perception</em> of the world will shift, and then your reality</>}
+            ru={<>Привет, родная душа. Здесь поменяется твоё <em style={{ fontSize: 'calc(clamp(46px,9vw,90px) * var(--hs))' }}>восприятие</em> мира, а затем и твоя реальность</>}
+            en={<>Hi, kindred soul. Here your <em style={{ fontSize: 'calc(clamp(46px,9vw,90px) * var(--hs))' }}>perception</em> of the world will shift, and then your reality</>}
           />
         </h1>
         <p className="hero-sub">

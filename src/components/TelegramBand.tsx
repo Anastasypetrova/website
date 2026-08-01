@@ -17,8 +17,8 @@ export function TelegramBand() {
         </span>
         <div className="q" style={{ marginTop: 22 }}>
           <T
-            ru={<>Подпишитесь на мой телеграм-канал <em className="accent" style={{ fontSize: 'clamp(34px,6.5vw,65px)' }}>Энергия и состояние</em></>}
-            en={<>Subscribe to my Telegram channel <em className="accent" style={{ fontSize: 'clamp(34px,6.5vw,65px)' }}>Energy and State</em></>}
+            ru={<>Подпишитесь на мой телеграм-канал <em className="accent" style={{ fontSize: 'calc(clamp(34px,6.5vw,65px) * var(--hs))' }}>Энергия и состояние</em></>}
+            en={<>Subscribe to my Telegram channel <em className="accent" style={{ fontSize: 'calc(clamp(34px,6.5vw,65px) * var(--hs))' }}>Energy and State</em></>}
           />
         </div>
         <p className="tgband-sub" style={{ color: 'rgba(255,255,255,.85)' }}>

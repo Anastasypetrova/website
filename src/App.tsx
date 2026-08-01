@@ -52,8 +52,8 @@ function App() {
         photo="quote"
         quote={
           <T
-            ru={<>Эта информация и живое взаимодействие уже <em className="accent" style={{ fontSize: 'clamp(28px,5vw,50px)' }}>изменили жизнь</em> сотням людей</>}
-            en={<>This information, and the live interaction, has already <em className="accent" style={{ fontSize: 'clamp(28px,5vw,50px)' }}>changed the lives</em> of hundreds of people</>}
+            ru={<>Эта информация и живое взаимодействие уже <em className="accent" style={{ fontSize: 'calc(clamp(28px,5vw,50px) * var(--hs))' }}>изменили жизнь</em> сотням людей</>}
+            en={<>This information, and the live interaction, has already <em className="accent" style={{ fontSize: 'calc(clamp(28px,5vw,50px) * var(--hs))' }}>changed the lives</em> of hundreds of people</>}
           />
         }
       />

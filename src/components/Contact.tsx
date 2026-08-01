@@ -56,8 +56,8 @@ export function Contact() {
           <div>
             <h2 className="ctitle">
               <T
-                ru={<>Давайте оставаться <br />на <em className="accent" style={{ fontSize: 'clamp(64px,15vw,150px)' }}>связи</em>.</>}
-                en={<>Let's stay <br />in <em className="accent" style={{ fontSize: 'clamp(64px,15vw,150px)' }}>touch</em>.</>}
+                ru={<>Давайте оставаться <br />на <em className="accent" style={{ fontSize: 'calc(clamp(64px,15vw,150px) * var(--hs))' }}>связи</em>.</>}
+                en={<>Let's stay <br />in <em className="accent" style={{ fontSize: 'calc(clamp(64px,15vw,150px) * var(--hs))' }}>touch</em>.</>}
               />
             </h2>
             <p className="clead"><T ru="Ответим на любые организационные вопросы" en="We'll answer any organisational questions" /></p>

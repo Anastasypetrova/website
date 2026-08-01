@@ -35,8 +35,8 @@ export function Footer() {
         <div className="foot-news">
           <h2 className="foot-h">
             <T
-              ru={<>Подпишитесь на <em className="accent" style={{ fontSize: 'clamp(38px,7vw,70px)' }}>рассылку</em></>}
-              en={<>Subscribe to the <em className="accent" style={{ fontSize: 'clamp(38px,7vw,70px)' }}>newsletter</em></>}
+              ru={<>Подпишитесь на <em className="accent" style={{ fontSize: 'calc(clamp(38px,7vw,70px) * var(--hs))' }}>рассылку</em></>}
+              en={<>Subscribe to the <em className="accent" style={{ fontSize: 'calc(clamp(38px,7vw,70px) * var(--hs))' }}>newsletter</em></>}
             />
           </h2>
           <form className="subs" onSubmit={onSubmit}>

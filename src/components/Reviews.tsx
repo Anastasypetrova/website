@@ -9,8 +9,8 @@ export function Reviews() {
         <span className="eyebrow"><T ru="отзывы" en="reviews" /></span>
         <h2 className="dh dh2" style={{ marginTop: 14, maxWidth: '24ch' }}>
           <T
-            ru={<>Отзывы людей, которым я <em className="accent" style={{ fontSize: 'clamp(40px,8vw,80px)' }}>помогла</em></>}
-            en={<>Reviews from people I have <em className="accent" style={{ fontSize: 'clamp(40px,8vw,80px)' }}>helped</em></>}
+            ru={<>Отзывы людей, которым я <em className="accent" style={{ fontSize: 'calc(clamp(40px,8vw,80px) * var(--hs))' }}>помогла</em></>}
+            en={<>Reviews from people I have <em className="accent" style={{ fontSize: 'calc(clamp(40px,8vw,80px) * var(--hs))' }}>helped</em></>}
           />
         </h2>
         <div className="mas">

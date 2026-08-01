@@ -30,8 +30,8 @@ export function VideosSection() {
             <span className="eyebrow">youtube</span>
             <h2 className="dh dh2" style={{ marginTop: 14, maxWidth: '20ch' }}>
               <T
-                ru={<>Посмотрите мои видео, чтобы <em className="accent" style={{ fontSize: 'clamp(38px,7.5vw,75px)' }}>познакомиться</em> со мной</>}
-                en={<>Watch my videos to <em className="accent" style={{ fontSize: 'clamp(38px,7.5vw,75px)' }}>get to know</em> me</>}
+                ru={<>Посмотрите мои видео, чтобы <em className="accent" style={{ fontSize: 'calc(clamp(38px,7.5vw,75px) * var(--hs))' }}>познакомиться</em> со мной</>}
+                en={<>Watch my videos to <em className="accent" style={{ fontSize: 'calc(clamp(38px,7.5vw,75px) * var(--hs))' }}>get to know</em> me</>}
               />
             </h2>
           </div>

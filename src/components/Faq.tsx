@@ -12,8 +12,8 @@ export function Faq() {
         <span className="eyebrow" style={{ display: 'block', textAlign: 'center' }}>FAQ</span>
         <h2 className="dh dh2" style={{ margin: '14px auto 56px', textAlign: 'center', maxWidth: '20ch' }}>
           <T
-            ru={<>Частые <em className="accent" style={{ fontSize: 'clamp(36px,6.8vw,68px)' }}>вопросы</em></>}
-            en={<>Frequently asked <em className="accent" style={{ fontSize: 'clamp(36px,6.8vw,68px)' }}>questions</em></>}
+            ru={<>Частые <em className="accent" style={{ fontSize: 'calc(clamp(36px,6.8vw,68px) * var(--hs))' }}>вопросы</em></>}
+            en={<>Frequently asked <em className="accent" style={{ fontSize: 'calc(clamp(36px,6.8vw,68px) * var(--hs))' }}>questions</em></>}
           />
         </h2>
         <div className="faqlist">

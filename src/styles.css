@@ -17,6 +17,10 @@
      genuinely carries a 100 weight, so every visitor sees the same thin
      numerals the design intends. */
   --font-grotesk:'Inter','Helvetica Neue',Helvetica,Arial,sans-serif;
+  /* Heading scale, independent of the whole-page zoom below. Lowering this
+     shrinks every display heading — including the Great Vibes accent words,
+     which track it too — while body copy, spacing and photos stay put. */
+  --hs:.9;
   --border-subtle:rgba(44,44,44,.08);--border-default:rgba(44,44,44,.14);--border-strong:rgba(44,44,44,.24);
   --shadow-sm:0 2px 10px rgba(44,36,26,.06);
   --shadow-md:0 10px 28px rgba(44,36,26,.12);
@@ -39,7 +43,7 @@ html[data-lang="en"] .tr-en{display:contents}
 .mlang .lang-btn.active{background:var(--sage);border-color:var(--sage);color:#fff}
 /* Whole-page scale. Everything — type, spacing, images — shrinks together,
    so proportions are preserved. Adjust this one number to rescale the site. */
-body{margin:0;background:var(--cream);color:var(--ink);font-family:var(--font-sans);-webkit-font-smoothing:antialiased;zoom:.72}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:var(--font-sans);-webkit-font-smoothing:antialiased;zoom:.765}
 a{color:inherit;text-decoration:none}
 a:hover{color:var(--accent-hover)}
 button{font:inherit}
@@ -49,9 +53,9 @@ img{max-width:100%;display:block}
 .dh{font-family:var(--font-head);font-weight:400;color:var(--ink);line-height:1.08;letter-spacing:-.018em;text-wrap:balance;margin:0}
 .dh em{font-family:var(--font-display);font-style:italic;font-weight:500;letter-spacing:0}
 em.accent{font-family:var(--font-script)!important;font-weight:400!important;font-style:normal!important;letter-spacing:0}
-.dh1{font-size:clamp(40px,6.2vw,86px);line-height:1.02}
-.dh2{font-size:clamp(30px,4.3vw,58px)}
-.dh3{font-size:clamp(23px,2.9vw,38px)}
+.dh1{font-size:calc(clamp(40px,6.2vw,86px)*var(--hs));line-height:1.02}
+.dh2{font-size:calc(clamp(30px,4.3vw,58px)*var(--hs))}
+.dh3{font-size:calc(clamp(23px,2.9vw,38px)*var(--hs))}
 .eyebrow{font-family:var(--font-sans);font-weight:600;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--clay-d);display:inline-block;white-space:nowrap}
 .p{font-size:calc(15.5px*var(--ts,1));line-height:1.65;color:var(--taupe-700)}
 .wrap{max-width:1240px;margin-inline:auto;padding-inline:32px}
@@ -95,7 +99,7 @@ em.accent{font-family:var(--font-script)!important;font-weight:400!important;fon
 .hero-bg{position:absolute;inset:0;z-index:1}
 .hero-scrim{position:absolute;inset:0;z-index:2;pointer-events:none;background:linear-gradient(180deg,rgba(30,28,25,.42) 0%,rgba(30,28,25,.05) 30%,rgba(30,28,25,.08) 55%,rgba(30,28,25,.72) 100%)}
 .hero-in{position:relative;z-index:3;width:100%;max-width:1320px;margin-inline:auto;padding:118px 34px 82px;color:#fff}
-.hero-h{font-family:var(--font-head);font-weight:400;font-size:calc(clamp(36px,5.3vw,78px)*var(--ts,1));line-height:1.07;letter-spacing:-.02em;color:#fff;max-width:17ch;text-wrap:balance;margin:0}
+.hero-h{font-family:var(--font-head);font-weight:400;font-size:calc(clamp(36px,5.3vw,78px)*var(--ts,1)*var(--hs));line-height:1.07;letter-spacing:-.02em;color:#fff;max-width:17ch;text-wrap:balance;margin:0}
 .hero-h em{font-family:var(--font-script);font-style:normal;font-weight:400}
 .hero-sub{font-size:calc(clamp(16px,1.4vw,20px)*var(--ts,1));line-height:1.65;color:rgba(255,255,255,.92);max-width:52ch;margin-top:24px}
 .hero-social{display:flex;gap:12px;margin-top:34px}
@@ -107,7 +111,7 @@ em.accent{font-family:var(--font-script)!important;font-weight:400!important;fon
 
 /* intro statement */
 .intro{text-align:center}
-.intro .dh{max-width:20ch;margin-inline:auto;font-size:clamp(26px,3.4vw,44px)}
+.intro .dh{max-width:20ch;margin-inline:auto;font-size:calc(clamp(26px,3.4vw,44px)*var(--hs))}
 .attr{margin-top:26px;font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--clay-d)}
 .rule{width:64px;height:1px;background:var(--border-strong);margin:0 auto 30px}
 
@@ -135,7 +139,7 @@ em.accent{font-family:var(--font-script)!important;font-weight:400!important;fon
 
 /* pull quote */
 .pull{text-align:center}
-.pull .q{font-family:var(--font-head);font-weight:400;font-size:calc(clamp(26px,3.4vw,44px)*var(--ts,1));line-height:1.26;letter-spacing:-.015em;color:var(--ink);max-width:20ch;margin-inline:auto;text-wrap:balance}
+.pull .q{font-family:var(--font-head);font-weight:400;font-size:calc(clamp(26px,3.4vw,44px)*var(--ts,1)*var(--hs));line-height:1.26;letter-spacing:-.015em;color:var(--ink);max-width:20ch;margin-inline:auto;text-wrap:balance}
 .pull .q em{font-family:var(--font-script);font-style:normal;font-weight:400}
 .pull .qa{margin-top:30px;font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--clay-d)}
 .pullphoto{position:relative;overflow:hidden;padding-block:170px;text-align:center}
@@ -164,7 +168,7 @@ em.accent{font-family:var(--font-script)!important;font-weight:400!important;fon
 .flist{margin-top:8px;border-top:1px solid var(--border-subtle)}
 .frow{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:34px 4px;border-bottom:1px solid var(--border-subtle);color:var(--taupe-500);text-decoration:none;transition:color .28s var(--ease-soft),padding-left .28s var(--ease-soft)}
 .frow:hover{color:var(--sage);padding-left:14px}
-.frow-n{font-family:var(--font-head);font-weight:500;font-size:clamp(24px,3.4vw,38px);letter-spacing:-.01em;transition:color .28s var(--ease-soft)}
+.frow-n{font-family:var(--font-head);font-weight:500;font-size:calc(clamp(24px,3.4vw,38px)*var(--hs));letter-spacing:-.01em;transition:color .28s var(--ease-soft)}
 .frow:hover .frow-n{color:var(--ink)}
 .frow-sub{display:block;margin-top:6px;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--danger)}
 .frow-idx{font-size:12px;letter-spacing:.1em;color:var(--taupe-500);flex:none}
@@ -172,7 +176,7 @@ em.accent{font-family:var(--font-script)!important;font-weight:400!important;fon
 /* faq */
 .faqlist{margin-top:8px;border-top:1px solid var(--border-subtle)}
 .faqrow{border-bottom:1px solid var(--border-subtle)}
-.faqq{display:flex;align-items:center;justify-content:space-between;gap:24px;width:100%;padding:34px 4px;background:none;border:none;cursor:pointer;text-align:left;font-family:var(--font-head);font-weight:500;font-size:clamp(24px,3.4vw,38px);letter-spacing:-.01em;color:var(--taupe-500);transition:color .28s var(--ease-soft),padding-left .28s var(--ease-soft)}
+.faqq{display:flex;align-items:center;justify-content:space-between;gap:24px;width:100%;padding:34px 4px;background:none;border:none;cursor:pointer;text-align:left;font-family:var(--font-head);font-weight:500;font-size:calc(clamp(24px,3.4vw,38px)*var(--hs));letter-spacing:-.01em;color:var(--taupe-500);transition:color .28s var(--ease-soft),padding-left .28s var(--ease-soft)}
 .faqq .faqq-text{font-weight:300}
 .faqrow.open .faqq,.faqq:hover{color:var(--sage);padding-left:14px}
 .faqidx{flex:none;font-size:12px;letter-spacing:.1em;color:var(--taupe-500)}
@@ -291,7 +295,7 @@ em.accent{font-family:var(--font-script)!important;font-weight:400!important;fon
 .arch{border-radius:6px;overflow:hidden;background:var(--sand-200);aspect-ratio:2/3}
 .about-port{display:flex;flex-direction:column;gap:22px}
 .about-body{display:flex;flex-direction:column;gap:20px}
-.about-lead{text-align:left;font-size:clamp(19px,2.5vw,31px);color:var(--danger);font-weight:100;font-family:var(--font-grotesk);line-height:1.2;margin:0}
+.about-lead{text-align:left;font-size:calc(clamp(19px,2.5vw,31px)*var(--hs));color:var(--danger);font-weight:100;font-family:var(--font-grotesk);line-height:1.2;margin:0}
 /* Every body paragraph in About shares one face, size and colour. */
 .about-intro,.about-body>.p,.about-key{
   font-family:var(--font-sans);font-size:calc(16px*var(--ts,1));line-height:1.65;
@@ -328,7 +332,7 @@ textarea.field{min-height:130px;resize:vertical;border-radius:20px}
 .fineprint{font-size:12px;line-height:1.5;color:var(--taupe-500);margin-top:16px}
 .fineprint a{color:var(--sage);border-bottom:1px solid var(--border-default)}
 .fsub{font-size:13px;line-height:1.5;color:var(--taupe-600);margin-top:8px}
-.ctitle{font-family:var(--font-head);font-weight:400;font-size:calc(clamp(54px,7.2vw,108px)*var(--ts,1));line-height:.96;letter-spacing:-.03em;color:#fff;margin:0}
+.ctitle{font-family:var(--font-head);font-weight:400;font-size:calc(clamp(54px,7.2vw,108px)*var(--ts,1)*var(--hs));line-height:.96;letter-spacing:-.03em;color:#fff;margin:0}
 .ctitle em{font-family:var(--font-script);font-style:normal;font-weight:400}
 .clead{font-size:calc(clamp(18px,1.6vw,22px)*var(--ts,1));line-height:1.5;color:rgba(255,255,255,.9);margin-top:24px;max-width:38ch}
 .crule{height:1px;background:rgba(255,255,255,.18);margin:34px 0}
@@ -342,11 +346,13 @@ textarea.field{min-height:130px;resize:vertical;border-radius:20px}
 .c-mail2:hover{color:#fff}
 
 /* footer */
-.footer{background:var(--sage-deep);color:rgba(250,248,245,.72)}
+/* A step lighter than the contacts section directly above, which is also
+   sage-deep — otherwise the two dark blocks read as one. */
+.footer{background:#4E5648;color:rgba(250,248,245,.72)}
 .footer-in{max-width:1240px;margin-inline:auto;padding:74px 32px 40px}
 .foot-news{display:grid;grid-template-columns:minmax(0,1fr);gap:26px;align-items:center;padding-bottom:52px;border-bottom:1px solid rgba(250,248,245,.14)}
 @media(min-width:820px){.foot-news{grid-template-columns:1fr 1fr}}
-.foot-h{font-family:var(--font-head);font-weight:400;font-size:calc(clamp(28px,3.4vw,42px)*var(--ts,1));color:var(--cream);line-height:1.14;letter-spacing:-.015em;margin:0}
+.foot-h{font-family:var(--font-head);font-weight:400;font-size:calc(clamp(28px,3.4vw,42px)*var(--ts,1)*var(--hs));color:var(--cream);line-height:1.14;letter-spacing:-.015em;margin:0}
 .foot-h em{font-family:var(--font-script);font-style:normal;font-weight:400}
 .subs{display:flex;gap:10px;max-width:440px}
 .subs input{flex:1;background:rgba(250,248,245,.08);border:1px solid rgba(250,248,245,.2);border-radius:999px;padding:15px 24px;color:var(--cream);font-family:var(--font-sans);font-size:15px}
