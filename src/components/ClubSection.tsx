@@ -1,6 +1,7 @@
 import { T } from '../i18n';
 import { links } from '../content';
 import { Photo } from './Photo';
+import { ConsentGate } from './ConsentGate';
 import { ArrowUpRightIcon } from './Icons';
 
 const chips: [string, string][] = [
@@ -55,10 +56,15 @@ export function ClubSection() {
               </span>
               <span className="audio-ar"><ArrowUpRightIcon /></span>
             </a>
-            <div className="btns">
-              <a className="btn-onsage" href={links.clubJoin} target="_blank" rel="noopener" style={{ width: 'auto', padding: '16px 28px' }}>
+            <div className="btns btns-consent">
+              <ConsentGate
+                href={links.clubJoin}
+                product="samadhi-club"
+                slugs={['oferta', 'club-terms', 'disclaimer']}
+                style={{ width: 'auto', padding: '16px 28px' }}
+              >
                 <T ru="Присоединиться" en="Join" />
-              </a>
+              </ConsentGate>
               <a className="btn-outline" href={links.reviewsChannel} target="_blank" rel="noopener">
                 <T ru="Отзывы" en="Reviews" />
               </a>

@@ -368,7 +368,9 @@ textarea.field{min-height:130px;resize:vertical;border-radius:20px}
 .foot-h{font-family:var(--font-head);font-weight:400;font-size:calc(clamp(28px,3.4vw,42px)*var(--ts,1)*var(--hs));color:var(--cream);line-height:1.14;letter-spacing:-.015em;margin:0}
 .foot-h em{font-family:var(--font-script);font-style:normal;font-weight:400}
 .subs{display:flex;gap:10px;max-width:440px}
-.subs input{flex:1;background:rgba(250,248,245,.08);border:1px solid rgba(250,248,245,.2);border-radius:999px;padding:15px 24px;color:var(--cream);font-family:var(--font-sans);font-size:15px}
+/* min-width:0 or the input refuses to shrink below its intrinsic size and
+   pushes the button off the right edge of a narrow phone */
+.subs input{flex:1;min-width:0;background:rgba(250,248,245,.08);border:1px solid rgba(250,248,245,.2);border-radius:999px;padding:15px 24px;color:var(--cream);font-family:var(--font-sans);font-size:15px}
 .subs input::placeholder{color:rgba(250,248,245,.5)}
 .subs input:focus{outline:none;border-color:var(--sage)}
 .foot-grid{display:flex;flex-wrap:wrap;gap:30px 60px;justify-content:space-between;padding-top:40px}
@@ -427,3 +429,27 @@ textarea.field{min-height:130px;resize:vertical;border-radius:20px}
   .legal-foot{padding:32px 20px 44px}
   .legal-actions{margin-top:34px}
 }
+
+/* ── Consent gate before a paid flow ─────────────────────────────────────
+   The purchase itself happens off-site (Tribute, in Telegram), so this is
+   the last point the site controls: the button stays locked until the
+   documents are accepted. */
+.consent-wrap{display:flex;flex-direction:column;gap:12px}
+.consent{display:flex;align-items:flex-start;gap:10px;max-width:46ch;cursor:pointer;border-radius:12px;padding:8px 10px;margin:-8px -10px;transition:background .25s}
+.consent input{flex:none;width:17px;height:17px;margin:1px 0 0;accent-color:var(--sage);cursor:pointer}
+.consent-text{font-size:13px;line-height:1.5;color:var(--taupe-700)}
+.consent-text a{text-decoration:underline;text-underline-offset:2px;color:var(--taupe-700)}
+.consent-text a:hover{color:var(--accent-hover)}
+.consent-nudge{background:rgba(193,106,74,.1)}
+.consent-nudge .consent-text{color:var(--danger)}
+.consent-nudge .consent-text a{color:var(--danger)}
+.consent-nudge input{outline:2px solid var(--danger);outline-offset:2px}
+.btn-onsage.is-locked{background:var(--taupe-500);cursor:not-allowed}
+.btn-onsage.is-locked:hover{background:var(--taupe-500);transform:none}
+@media(prefers-reduced-motion:no-preference){
+  .consent-nudge{animation:consent-shake .32s var(--ease-soft)}
+  @keyframes consent-shake{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+}
+/* the consent row makes this CTA column taller than its neighbour button —
+   bottom-align them so the two buttons still sit on one line */
+.btns-consent{align-items:flex-end}
