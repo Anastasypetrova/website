@@ -20,12 +20,12 @@
   /* Heading scale, independent of the whole-page zoom below. Lowering this
      shrinks every display heading — including the Great Vibes accent words,
      which track it too — while body copy, spacing and photos stay put. */
-  --hs:.9;
+  --hs:.8;
   /* Page zoom. Content containers divide their width by it (see --wrap /
      --wrap-n below), so shrinking the type does not also shrink the column
      the site occupies — otherwise the layout collapses into a narrow strip
      with wide empty margins on a desktop screen. */
-  --z:.765;
+  --z:.95;
   --wrap:calc(1240px / var(--z));
   --wrap-n:calc(1020px / var(--z));
   --wrap-wide:calc(1320px / var(--z));
@@ -280,7 +280,10 @@ em.accent{font-family:var(--font-script)!important;font-weight:400!important;fon
 /* per-format overrides */
 .tagfull .chip{border-color:rgba(143,90,59,.22)}
 #club .prod-main{gap:34px;justify-content:space-between}
-#club .lede,#club .p{font-size:14.5px!important;line-height:1.65!important;text-align:justify;text-align-last:justify;max-width:none}
+/* text-align-last:left, not justify: justifying the final line stretches a
+   handful of words across the whole column with gaping holes between them,
+   which the wider column made glaring. */
+#club .lede,#club .p{font-size:14.5px!important;line-height:1.65!important;text-align:justify;text-align-last:left;max-width:none}
 #club .klabel{font-size:11px!important}
 #club .chip{font-size:12.5px!important}
 #club .audio-t{font-size:14.5px!important}
