@@ -389,7 +389,7 @@ textarea.field{min-height:130px;resize:vertical;border-radius:20px}
 .hbg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 34%;z-index:1}
 
 /* keep fixed-nav from covering anchor-jump targets */
-#videos,#reviews,#formats,#club,#personal-session,#mentorship,#mastermind,#about,#faq,#contacts{scroll-margin-top:88px}
+#videos,#reviews,#formats,#club,#personal-session,#mentorship,#mastermind,#about,#faq,#tg-subscribe,#contacts{scroll-margin-top:88px}
 
 /* ── Legal document pages (#/docs/<slug>) ────────────────────────────────
    Each document from public/docs is also a page of the site, set in the
