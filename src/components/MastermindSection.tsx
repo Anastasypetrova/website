@@ -1,6 +1,7 @@
 import { T, useLang } from '../i18n';
 import { links } from '../content';
 import { Photo } from './Photo';
+import { ConsentGate } from './ConsentGate';
 
 const chips: [string, string][] = [
   ['Манифестация и материализация сценариев', 'Manifesting and materialising scenarios'],
@@ -110,9 +111,14 @@ export function MastermindSection() {
                   />
                 </div>
               </div>
-              <a className="btn-onsage" href={links.mastermindForm} target="_blank" rel="noopener" style={{ marginTop: 'auto' }}>
+              <ConsentGate
+                href={links.mastermindForm}
+                product="mastermind"
+                slugs={['oferta', 'disclaimer']}
+                style={{ marginTop: 'auto' }}
+              >
                 <T ru="Заполнить анкету" en="Fill out the form" />
-              </a>
+              </ConsentGate>
             </div>
           </div>
         </div>

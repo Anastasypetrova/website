@@ -61,7 +61,7 @@ export function ClubSection() {
                 href={links.clubJoin}
                 product="samadhi-club"
                 slugs={['oferta', 'club-terms', 'disclaimer']}
-                style={{ width: 'auto', padding: '16px 28px' }}
+                buttonStyle={{ width: 'auto', padding: '16px 28px' }}
               >
                 <T ru="Присоединиться" en="Join" />
               </ConsentGate>

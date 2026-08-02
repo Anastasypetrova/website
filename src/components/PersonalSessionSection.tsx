@@ -1,6 +1,7 @@
 import { T } from '../i18n';
 import { links } from '../content';
 import { Photo } from './Photo';
+import { ConsentGate } from './ConsentGate';
 
 const items: [string, string][] = [
   [
@@ -48,10 +49,15 @@ export function PersonalSessionSection() {
                   <T ru="300€ / 30000 руб." en="300€ / 30000 RUB" />
                 </div>
               </div>
-              <div className="btns" style={{ marginTop: 0 }}>
-                <a className="btn-onsage" href={links.consultBot} target="_blank" rel="noopener" style={{ width: 'auto', padding: '16px 28px' }}>
+              <div className="btns btns-consent" style={{ marginTop: 0 }}>
+                <ConsentGate
+                  href={links.consultBot}
+                  product="personal-session"
+                  slugs={['oferta', 'disclaimer']}
+                  buttonStyle={{ width: 'auto', padding: '16px 28px' }}
+                >
                   <T ru="Записаться" en="Book now" />
-                </a>
+                </ConsentGate>
                 <a className="btn-outline" href={links.reviewsChannel} target="_blank" rel="noopener">
                   <T ru="Отзывы" en="Reviews" />
                 </a>

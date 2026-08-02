@@ -42,11 +42,14 @@ interface Props {
   /** Identifies the purchase in the consent record. */
   product: string;
   children: ReactNode;
+  /** Layout for the checkbox + button block as a whole. */
   style?: CSSProperties;
+  /** Layout for the button alone. */
+  buttonStyle?: CSSProperties;
 }
 
 /** A call-to-action that stays locked until the documents are accepted. */
-export function ConsentGate({ href, slugs, product, children, style }: Props) {
+export function ConsentGate({ href, slugs, product, children, style, buttonStyle }: Props) {
   const [agreed, setAgreed] = useState(false);
   const [nudge, setNudge] = useState(false);
   const id = useId();
@@ -65,7 +68,7 @@ export function ConsentGate({ href, slugs, product, children, style }: Props) {
   );
 
   return (
-    <div className="consent-wrap">
+    <div className="consent-wrap" style={style}>
       <label className={`consent ${nudge ? 'consent-nudge' : ''}`} htmlFor={id}>
         <input
           id={id}
@@ -86,7 +89,7 @@ export function ConsentGate({ href, slugs, product, children, style }: Props) {
         target="_blank"
         rel="noopener"
         aria-disabled={!agreed}
-        style={style}
+        style={buttonStyle}
         onClick={(e) => {
           if (!agreed) {
             e.preventDefault();

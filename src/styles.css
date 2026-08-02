@@ -453,3 +453,7 @@ textarea.field{min-height:130px;resize:vertical;border-radius:20px}
 /* the consent row makes this CTA column taller than its neighbour button —
    bottom-align them so the two buttons still sit on one line */
 .btns-consent{align-items:flex-end}
+.mm-cta{align-items:flex-end}
+/* the mastermind card is a column: the gate, not the button inside it, is
+   what has to be pushed to the bottom */
+.mm-card .consent-wrap .consent{max-width:none}

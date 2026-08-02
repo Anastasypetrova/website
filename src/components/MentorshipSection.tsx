@@ -1,6 +1,7 @@
 import { T } from '../i18n';
 import { links } from '../content';
 import { Photo } from './Photo';
+import { ConsentGate } from './ConsentGate';
 
 const chips: [string, string][] = [
   ['Реализация', 'Fulfilment'],
@@ -111,7 +112,9 @@ export function MentorshipSection() {
         </div>
 
         <div className="mm-cta">
-          <a className="btn-onsage" href={links.consultBot} target="_blank" rel="noopener"><T ru="Занять место" en="Take a spot" /></a>
+          <ConsentGate href={links.consultBot} product="mentorship" slugs={['oferta', 'disclaimer']}>
+            <T ru="Занять место" en="Take a spot" />
+          </ConsentGate>
           <a className="btn-outline" href={links.reviewsChannel} target="_blank" rel="noopener"><T ru="Отзывы" en="Reviews" /></a>
         </div>
       </div>
