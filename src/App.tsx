@@ -68,6 +68,18 @@ function App() {
     document.title = doc ? `${doc.title} — Анастасия Петрова` : SITE_TITLE;
   }, [doc]);
 
+  // A cold load of a shared link like /#club lands at the top: the section does
+  // not exist yet when the browser tries to jump to it, and the photos loading
+  // afterwards move it anyway. Jump ourselves, then once more once they have.
+  useEffect(() => {
+    const id = window.location.hash.slice(1);
+    if (!id || window.location.hash.startsWith('#/')) return;
+    const jump = () => document.getElementById(id)?.scrollIntoView({ behavior: 'instant' });
+    jump();
+    window.addEventListener('load', jump);
+    return () => window.removeEventListener('load', jump);
+  }, []);
+
   const handleSetLang = (l: Lang) => {
     setLang(l);
     try {

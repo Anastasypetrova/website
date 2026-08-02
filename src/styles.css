@@ -25,7 +25,7 @@
      --wrap-n below), so shrinking the type does not also shrink the column
      the site occupies — otherwise the layout collapses into a narrow strip
      with wide empty margins on a desktop screen. */
-  --z:.95;
+  --z:.9;
   --wrap:calc(1240px / var(--z));
   --wrap-n:calc(1020px / var(--z));
   --wrap-wide:calc(1320px / var(--z));
@@ -105,7 +105,10 @@ em.accent{font-family:var(--font-script)!important;font-weight:400!important;fon
 .mlink em{font-family:var(--font-display);font-style:italic;font-weight:500}
 
 /* hero */
-.hero{position:relative;min-height:100vh;display:flex;align-items:flex-end;overflow:hidden}
+/* divide by the zoom for the same reason the containers do: 100vh inside a
+   zoomed body only covers 100vh × --z of the actual screen, leaving a strip
+   of background below the hero */
+.hero{position:relative;min-height:calc(100vh / var(--z));display:flex;align-items:flex-end;overflow:hidden}
 .hero-bg{position:absolute;inset:0;z-index:1}
 .hero-scrim{position:absolute;inset:0;z-index:2;pointer-events:none;background:linear-gradient(180deg,rgba(30,28,25,.42) 0%,rgba(30,28,25,.05) 30%,rgba(30,28,25,.08) 55%,rgba(30,28,25,.72) 100%)}
 .hero-in{position:relative;z-index:3;width:100%;max-width:var(--wrap-wide);margin-inline:auto;padding:118px 34px 82px;color:#fff}
