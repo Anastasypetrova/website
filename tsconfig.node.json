@@ -4,10 +4,16 @@
     "target": "es2023",
     "lib": ["ES2023"],
     "types": ["node"],
+    // src/seo.ts reaches src/content.ts, whose type-only import of i18n.tsx
+    // still has to resolve
+    "jsx": "react-jsx",
     "skipLibCheck": true,
 
-    /* Bundler mode */
-    "module": "nodenext",
+    /* Bundler mode. The config is bundled by esbuild before Node ever sees it,
+       and it imports src/seo.ts, so resolution has to match the app's — under
+       nodenext, TypeScript demands .js extensions all the way down src/. */
+    "module": "esnext",
+    "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
     "moduleDetection": "force",

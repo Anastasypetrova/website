@@ -22,7 +22,7 @@ import { Contact } from './components/Contact';
 import { Footer } from './components/Footer';
 import { T } from './i18n';
 
-const SITE_TITLE = 'Анастасия Петрова';
+const SITE_TITLE = 'Анастасия Петрова — трансформационный ментор';
 
 function getInitialLang(): Lang {
   if (typeof localStorage === 'undefined') return 'ru';
@@ -31,7 +31,11 @@ function getInitialLang(): Lang {
 
 function App() {
   const [lang, setLang] = useState<Lang>(getInitialLang);
-  const [hash, setHash] = useState(() => window.location.hash);
+  // guarded because this also renders on the server at build time, where the
+  // prerendered HTML is always the landing page
+  const [hash, setHash] = useState(() =>
+    typeof window === 'undefined' ? '' : window.location.hash,
+  );
 
   useEffect(() => {
     document.documentElement.setAttribute('data-lang', lang);
