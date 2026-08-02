@@ -4,7 +4,7 @@ const items: { href: string; nameRu: string; nameEn: string; subRu: string; subE
   { href: '#club', nameRu: 'Samadhi Club', nameEn: 'Samadhi Club', subRu: 'Клуб по подписке', subEn: 'Subscription club', idx: '01 / 04' },
   { href: '#personal-session', nameRu: 'Личная консультация', nameEn: 'Personal consultation', subRu: 'Одна сессия', subEn: 'One session', idx: '02 / 04' },
   { href: '#mentorship', nameRu: 'Индивидуальное менторство', nameEn: 'Individual mentorship', subRu: 'Глубокая работа', subEn: 'Deep work', idx: '03 / 04' },
-  { href: '#mastermind', nameRu: 'Mastermind', nameEn: 'Mastermind', subRu: 'Групповой формат', subEn: 'Group format', idx: '04 / 04' },
+  { href: '#mastermind', nameRu: 'Мастермайнд-группа', nameEn: 'Mastermind', subRu: 'Групповой формат', subEn: 'Group format', idx: '04 / 04' },
 ];
 
 export function FormatList() {

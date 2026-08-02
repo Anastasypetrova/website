@@ -26,7 +26,7 @@ export function MastermindSection() {
         <div className="prod-grid">
           <div className="prod-main">
             <span className="taglead"><T ru="Групповой формат" en="Group format" /></span>
-            <h2 className="dh dh2">Mastermind</h2>
+            <h2 className="dh dh2"><T ru="Мастермайнд-группа" en="Mastermind" /></h2>
             <p className="lede">
               <T
                 ru="Групповой онлайн-формат для тех, кто готов выйти за рамки привычного мышления и перейти в новое восприятие, решения и действия."
