@@ -1,0 +1,24 @@
+name = "samadhi-forms"
+main = "src/index.ts"
+compatibility_date = "2026-08-01"
+
+[vars]
+# Origins allowed to post the forms. Everything else gets 403.
+ALLOWED_ORIGINS = "https://anastasia-samadhi.club,https://www.anastasia-samadhi.club"
+SITE_URL = "https://anastasia-samadhi.club"
+
+# Must be a domain verified in Resend.
+FROM_EMAIL = "Анастасия Петрова <hello@anastasia-samadhi.club>"
+
+# Where a person's reply lands, and where new messages are announced.
+# Point these at the Zoho mailbox once it works — one edit, then `wrangler deploy`.
+REPLY_TO = "hello@metasouls.co"
+NOTIFY_TO = "hello@metasouls.co"
+
+OPENAI_MODEL = "gpt-4o-mini"
+
+# Secrets — never values here:
+#   npx wrangler secret put OPENAI_API_KEY
+#   npx wrangler secret put RESEND_API_KEY
+#   npx wrangler secret put SHEET_ENDPOINT
+#   npx wrangler secret put SHEET_SECRET
