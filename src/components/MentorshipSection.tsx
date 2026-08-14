@@ -21,7 +21,7 @@ const format: [string, string][] = [
 ];
 
 const pricing: [string, string, string][] = [
-  ['5 сессий, раз в 10-14 дней, период 2-3 месяца', '5 sessions, once every 10 to 14 days, 2 to 3 months', '3000 €'],
+  ['5 сессий, раз в 10-14 дней, период 2-3 месяца', '5 sessions, once every 10 to 14 days, 2 to 3 months', '2500 €'],
   ['10 сессий, раз в 10-14 дней, период 4-6 месяцев', '10 sessions, once every 10 to 14 days, 4 to 6 months', '5000 €'],
 ];
 
