@@ -182,5 +182,41 @@ reset();
 res = await post('/subscribe', { email: 'нет' });
 check('кривой адрес отклонён', res.status === 422);
 
+// --- только четыре секрета, остальное по умолчанию -------------------------
+console.log('\n— настроены только четыре секрета —');
+const bare = {
+  OPENAI_API_KEY: 'sk-test',
+  RESEND_API_KEY: 're_test',
+  SHEET_ENDPOINT: 'https://script.google.com/test',
+  SHEET_SECRET: 'sheet-secret',
+};
+reset();
+res = await worker.fetch(
+  new Request('https://api.example/contact', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json', origin: 'https://anastasia-samadhi.club' },
+    body: JSON.stringify(FULL),
+  }),
+  bare,
+);
+check('форма работает без остальных переменных', res.status === 200);
+check('отправитель подставлен по умолчанию',
+  to('maria@example.com')?.from === 'Анастасия Петрова <hello@anastasia-samadhi.club>');
+check('ответы пойдут на hello@metasouls.co', to('maria@example.com')?.reply_to === 'hello@metasouls.co');
+check('уведомление ушло на hello@metasouls.co', Boolean(to('hello@metasouls.co')));
+check('модель по умолчанию gpt-4o-mini', prompts[0]?.model === 'gpt-4o-mini');
+check('строка записана в таблицу', rows.length === 1);
+
+reset();
+res = await worker.fetch(
+  new Request('https://api.example/contact', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json', origin: 'https://evil.example' },
+    body: JSON.stringify(FULL),
+  }),
+  bare,
+);
+check('и чужой сайт по-прежнему получает 403', res.status === 403);
+
 console.log(`\n${failures === 0 ? 'Все проверки пройдены.' : `ПРОВАЛЕНО: ${failures}`}`);
 process.exit(failures === 0 ? 0 : 1);

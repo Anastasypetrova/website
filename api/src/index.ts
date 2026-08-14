@@ -25,20 +25,55 @@ import { appendRow, type ContactRow } from './sheet';
 import { draftReply } from './openai';
 import { sendLetter } from './resend';
 
+/**
+ * Only these four are secret and only these four have to be set. The rest are
+ * plain settings with the defaults below — overriding one is possible but not
+ * required, which keeps first-time setup to four values instead of ten.
+ */
 export interface Env {
   OPENAI_API_KEY: string;
   RESEND_API_KEY: string;
   SHEET_ENDPOINT: string;
   SHEET_SECRET: string;
+
   /** Verified in Resend, e.g. 'Анастасия Петрова <hello@anastasia-samadhi.club>'. */
-  FROM_EMAIL: string;
+  FROM_EMAIL?: string;
   /** Where a person's reply should land. */
-  REPLY_TO: string;
+  REPLY_TO?: string;
   /** Where Anastasia gets told about new messages. */
-  NOTIFY_TO: string;
-  ALLOWED_ORIGINS: string;
-  SITE_URL: string;
-  OPENAI_MODEL: string;
+  NOTIFY_TO?: string;
+  ALLOWED_ORIGINS?: string;
+  SITE_URL?: string;
+  OPENAI_MODEL?: string;
+}
+
+const DEFAULTS = {
+  ALLOWED_ORIGINS: 'https://anastasia-samadhi.club,https://www.anastasia-samadhi.club',
+  SITE_URL: 'https://anastasia-samadhi.club',
+  FROM_EMAIL: 'Анастасия Петрова <hello@anastasia-samadhi.club>',
+  REPLY_TO: 'hello@metasouls.co',
+  NOTIFY_TO: 'hello@metasouls.co',
+  OPENAI_MODEL: 'gpt-4o-mini',
+} as const;
+
+interface Config {
+  allowedOrigins: string[];
+  siteUrl: string;
+  from: string;
+  replyTo: string;
+  notifyTo: string;
+  model: string;
+}
+
+function config(env: Env): Config {
+  return {
+    allowedOrigins: (env.ALLOWED_ORIGINS || DEFAULTS.ALLOWED_ORIGINS).split(',').map((o) => o.trim()),
+    siteUrl: env.SITE_URL || DEFAULTS.SITE_URL,
+    from: env.FROM_EMAIL || DEFAULTS.FROM_EMAIL,
+    replyTo: env.REPLY_TO || DEFAULTS.REPLY_TO,
+    notifyTo: env.NOTIFY_TO || DEFAULTS.NOTIFY_TO,
+    model: env.OPENAI_MODEL || DEFAULTS.OPENAI_MODEL,
+  };
 }
 
 const MAX_NAME = 100;
@@ -49,9 +84,8 @@ const MAX_MESSAGE = 4000;
 const looksLikeEmail = (value: string) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value);
 const looksLikeHandle = (value: string) => /^@[A-Za-z][A-Za-z0-9_]{4,31}$/.test(value);
 
-function corsHeaders(origin: string | null, env: Env): Record<string, string> {
-  const allowed = env.ALLOWED_ORIGINS.split(',').map((o) => o.trim());
-  if (!origin || !allowed.includes(origin)) return {};
+function corsHeaders(origin: string | null, cfg: Config): Record<string, string> {
+  if (!origin || !cfg.allowedOrigins.includes(origin)) return {};
   return {
     'access-control-allow-origin': origin,
     'access-control-allow-methods': 'POST, OPTIONS',
@@ -81,10 +115,10 @@ async function record(env: Env, row: ContactRow): Promise<boolean> {
   return done !== null;
 }
 
-function notify(env: Env, subject: string, text: string) {
+function notify(env: Env, cfg: Config, subject: string, text: string) {
   return attempt('notify', () =>
-    sendLetter(env.RESEND_API_KEY, env.FROM_EMAIL, env.SITE_URL, {
-      to: env.NOTIFY_TO,
+    sendLetter(env.RESEND_API_KEY, cfg.from, cfg.siteUrl, {
+      to: cfg.notifyTo,
       subject,
       text,
     }),
@@ -100,7 +134,7 @@ interface ContactPayload {
   website?: string;
 }
 
-async function handleContact(request: Request, env: Env, cors: Record<string, string>) {
+async function handleContact(request: Request, env: Env, cfg: Config, cors: Record<string, string>) {
   const body = (await request.json().catch(() => null)) as ContactPayload | null;
   if (!body) return json({ error: 'bad_request' }, 400, cors);
   if (body.website) return json({ ok: true }, 200, cors);
@@ -115,7 +149,7 @@ async function handleContact(request: Request, env: Env, cors: Record<string, st
   if (!looksLikeHandle(telegram)) return json({ error: 'telegram_invalid' }, 422, cors);
 
   const draft = await attempt('draft', () =>
-    draftReply(env.OPENAI_API_KEY, env.OPENAI_MODEL, name, message),
+    draftReply(env.OPENAI_API_KEY, cfg.model, name, message),
   );
 
   let outcome: string;
@@ -125,11 +159,11 @@ async function handleContact(request: Request, env: Env, cors: Record<string, st
     outcome = 'не по теме — письмо не отправлено';
   } else {
     const sent = await attempt('reply', () =>
-      sendLetter(env.RESEND_API_KEY, env.FROM_EMAIL, env.SITE_URL, {
+      sendLetter(env.RESEND_API_KEY, cfg.from, cfg.siteUrl, {
         to: email,
         subject: 'Ответ на ваш вопрос',
         text: draft.reply,
-        replyTo: env.REPLY_TO,
+        replyTo: cfg.replyTo,
       }),
     );
     outcome = sent !== null ? 'отправлен' : 'не удалось отправить — ответьте сами';
@@ -139,6 +173,7 @@ async function handleContact(request: Request, env: Env, cors: Record<string, st
 
   await notify(
     env,
+    cfg,
     `Вопрос с сайта: ${name || email}`,
     [
       `ФИО: ${name || '—'}`,
@@ -159,7 +194,7 @@ async function handleContact(request: Request, env: Env, cors: Record<string, st
   return json({ ok: true }, 200, cors);
 }
 
-async function handleSubscribe(request: Request, env: Env, cors: Record<string, string>) {
+async function handleSubscribe(request: Request, env: Env, cfg: Config, cors: Record<string, string>) {
   const body = (await request.json().catch(() => null)) as { email?: string; website?: string } | null;
   if (!body) return json({ error: 'bad_request' }, 400, cors);
   if (body.website) return json({ ok: true }, 200, cors);
@@ -170,6 +205,7 @@ async function handleSubscribe(request: Request, env: Env, cors: Record<string, 
   const saved = await record(env, { kind: 'subscribe', email, outcome: '—' });
   await notify(
     env,
+    cfg,
     'Новая подписка на рассылку',
     saved ? email : `${email}\n\n⚠️ Записать в таблицу не получилось.`,
   );
@@ -179,7 +215,8 @@ async function handleSubscribe(request: Request, env: Env, cors: Record<string, 
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
-    const cors = corsHeaders(request.headers.get('origin'), env);
+    const cfg = config(env);
+    const cors = corsHeaders(request.headers.get('origin'), cfg);
 
     if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: cors });
     if (request.method !== 'POST') return new Response('not found', { status: 404 });
@@ -188,8 +225,8 @@ export default {
     if (Object.keys(cors).length === 0) return new Response('forbidden', { status: 403 });
 
     try {
-      if (url.pathname === '/contact') return await handleContact(request, env, cors);
-      if (url.pathname === '/subscribe') return await handleSubscribe(request, env, cors);
+      if (url.pathname === '/contact') return await handleContact(request, env, cfg, cors);
+      if (url.pathname === '/subscribe') return await handleSubscribe(request, env, cfg, cors);
     } catch (error) {
       console.error(error);
       return json({ error: 'server_error' }, 500, cors);
