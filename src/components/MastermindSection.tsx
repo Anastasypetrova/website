@@ -1,5 +1,5 @@
 import { T, useLang } from '../i18n';
-import { links } from '../content';
+import { links, pricing } from '../content';
 import { Photo } from './Photo';
 import { ConsentGate } from './ConsentGate';
 
@@ -106,8 +106,8 @@ export function MastermindSection() {
                 <span className="klabel"><T ru="Стоимость" en="Price" /></span>
                 <div className="mm-price" style={{ marginTop: 8, fontSize: 17 }}>
                   <T
-                    ru={<>1200 евро<br /><br />Даты следующих мастермайндов уточняются, а пока вы можете заполнить анкету предзаписи</>}
-                    en={<>1200 euros<br /><br />Dates for upcoming masterminds are being finalised — for now you can fill out the pre-registration form</>}
+                    ru={<>{pricing.mastermind.ru}<br /><br />Даты следующих мастермайндов уточняются, а пока вы можете заполнить анкету предзаписи</>}
+                    en={<>{pricing.mastermind.en}<br /><br />Dates for upcoming masterminds are being finalised — for now you can fill out the pre-registration form</>}
                   />
                 </div>
               </div>

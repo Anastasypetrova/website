@@ -1,5 +1,5 @@
 import { T } from '../i18n';
-import { links } from '../content';
+import { links, pricing } from '../content';
 import { Photo } from './Photo';
 import { ConsentGate } from './ConsentGate';
 
@@ -20,10 +20,6 @@ const format: [string, string][] = [
   ['Чат в Telegram с поддержкой между сессиями', 'Telegram chat support between sessions'],
 ];
 
-const pricing: [string, string, string][] = [
-  ['5 сессий, раз в 10-14 дней, период 2-3 месяца', '5 sessions, once every 10 to 14 days, 2 to 3 months', '2500 €'],
-  ['10 сессий, раз в 10-14 дней, период 4-6 месяцев', '10 sessions, once every 10 to 14 days, 4 to 6 months', '5000 €'],
-];
 
 export function MentorshipSection() {
   return (
@@ -100,10 +96,10 @@ export function MentorshipSection() {
             <div className="mm-card">
               <span className="klabel"><T ru="Стоимость программ" en="Program pricing" /></span>
               <div className="pricetable" style={{ marginTop: 16 }}>
-                {pricing.map(([ru, en, price]) => (
-                  <div className="prow" key={ru}>
-                    <span className="prow-l"><T ru={ru} en={en} /></span>
-                    <span className="prow-p">{price}</span>
+                {pricing.mentorship.map((tier) => (
+                  <div className="prow" key={tier.price}>
+                    <span className="prow-l"><T ru={tier.sessions.ru} en={tier.sessions.en} /></span>
+                    <span className="prow-p">{tier.price}</span>
                   </div>
                 ))}
               </div>

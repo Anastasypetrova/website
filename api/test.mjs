@@ -101,7 +101,16 @@ check('в уведомлении есть копия того, что ушло �
 check('модели передали справку о сайте',
   prompts[0]?.messages?.[1]?.content.includes('Samadhi Club') &&
   prompts[0]?.messages?.[1]?.content.includes('Мастермайнд'));
-check('модели запрещено называть цены', prompts[0]?.messages?.[0]?.content.includes('НИКОГДА не называй цены'));
+check('модели разрешено называть цены только дословно',
+  prompts[0]?.messages?.[0]?.content.includes('ТОЛЬКО те, что дословно указаны'));
+check('и запрещено называть даты и наличие мест',
+  prompts[0]?.messages?.[0]?.content.includes('ДАТЫ, сроки старта и наличие мест НЕ называй'));
+const brief = prompts[0]?.messages?.[1]?.content ?? '';
+check('в справке есть цена клуба', brief.includes('от 17 € в месяц') && brief.includes('до 23 € в месяц'));
+check('в справке есть цена консультации', brief.includes('300€'));
+check('в справке есть обе программы менторства', brief.includes('2500 €') && brief.includes('5000 €'));
+check('в справке есть цена мастермайнда', brief.includes('1200 евро'));
+check('в справке есть отзывы участников', brief.includes('ОТЗЫВЫ УЧАСТНИКОВ'));
 check('ответ просят строго в JSON', prompts[0]?.response_format?.type === 'json_object');
 
 // --- вопрос не по теме -----------------------------------------------------

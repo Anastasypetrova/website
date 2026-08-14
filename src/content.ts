@@ -113,6 +113,24 @@ export const links = {
   site: 'https://anastasia-samadhi.club',
 };
 
+/**
+ * Every price the site quotes, in one place — the page and the automatic
+ * replies both read from here, so a price can never be current in one and
+ * stale in the other.
+ */
+export const pricing = {
+  club: {
+    ru: 'от 17 € в месяц. С сентября стоимость повышается до 23 € в месяц.',
+    en: 'from €17 per month. From September the price rises to €23 per month.',
+  },
+  consultation: { ru: '300€ / 30000 руб.', en: '300€ / 30000 RUB' },
+  mentorship: [
+    { sessions: { ru: '5 сессий, раз в 10-14 дней, период 2-3 месяца', en: '5 sessions, once every 10 to 14 days, 2 to 3 months' }, price: '2500 €' },
+    { sessions: { ru: '10 сессий, раз в 10-14 дней, период 4-6 месяцев', en: '10 sessions, once every 10 to 14 days, 4 to 6 months' }, price: '5000 €' },
+  ],
+  mastermind: { ru: '1200 евро', en: '1200 euros' },
+};
+
 export const docs = [
   { slug: 'oferta', file: '1_Dogovor_publichnoy_oferty.pdf', label: { ru: 'Договор оферты', en: 'Public offer agreement' } },
   { slug: 'privacy', file: '2_Politika_konfidentsialnosti.pdf', label: { ru: 'Политика конфиденциальности', en: 'Privacy policy' } },

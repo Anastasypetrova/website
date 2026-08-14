@@ -1,5 +1,5 @@
 import { T } from '../i18n';
-import { links } from '../content';
+import { links, pricing } from '../content';
 import { Photo } from './Photo';
 import { ConsentGate } from './ConsentGate';
 
@@ -46,7 +46,7 @@ export function PersonalSessionSection() {
               <div className="pricebox">
                 <span className="klabel"><T ru="Стоимость" en="Price" /></span>
                 <div className="price" style={{ marginTop: 8, fontFamily: 'var(--font-grotesk)', fontWeight: 100 }}>
-                  <T ru="300€ / 30000 руб." en="300€ / 30000 RUB" />
+                  <T ru={pricing.consultation.ru} en={pricing.consultation.en} />
                 </div>
               </div>
               <div className="btns btns-consent" style={{ marginTop: 0 }}>
