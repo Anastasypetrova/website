@@ -1,5 +1,5 @@
 /**
- * Talking to the bot Worker (see bot/).
+ * Talking to the form Worker (see api/).
  *
  * The site is static, so it holds no token and no secret — it only knows the
  * Worker's address. Until that address is set the forms fall back to opening
@@ -7,8 +7,8 @@
  */
 import { links } from './content';
 
-/** Set to the deployed Worker URL, e.g. 'https://samadhi-bot.<subdomain>.workers.dev'. */
-export const API_BASE = '';
+/** The deployed Worker (see api/). Empty disables the forms and falls back to mail. */
+export const API_BASE: string = 'https://samadhi-forms.rapid-glade-d94d.workers.dev';
 
 export const apiConfigured = API_BASE !== '';
 
@@ -46,7 +46,7 @@ export interface ContactFields {
 export function normaliseTelegram(value: string): string {
   const handle = value
     .trim()
-    .replace(/^https?:\/\/(t\.me|telegram\.me)\//i, '')
+    .replace(/^(?:https?:\/\/)?(?:www\.)?(?:t\.me|telegram\.me)\//i, '')
     .replace(/^@/, '')
     .replace(/\/+$/, '');
   return handle ? `@${handle}` : '';
