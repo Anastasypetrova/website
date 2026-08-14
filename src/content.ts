@@ -110,7 +110,6 @@ export const links = {
   mastermindForm: 'https://forms.gle/8MB1UucBcKHaGxSp7',
   clubAudio: 'https://t.me/into_samadhi/2531',
   email: 'hello@metasouls.co',
-  mailto: 'mailto:anastasia.into.samadhi@gmail.com',
 };
 
 export const docs = [

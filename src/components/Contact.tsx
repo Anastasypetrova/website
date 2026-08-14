@@ -73,7 +73,7 @@ export function Contact() {
               </div>
             </div>
             <div className="cmini">
-              <a className="c-mail2" href={links.mailto}>{links.email}</a>
+              <a className="c-mail2" href={`mailto:${links.email}`}>{links.email}</a>
               <div className="c-social">
                 <a className="soc soc-l" href={links.instagram} target="_blank" rel="noopener" aria-label="Instagram"><InstagramIcon /></a>
                 <a className="soc soc-l" href={links.telegramChannel} target="_blank" rel="noopener" aria-label="Telegram"><TelegramIcon /></a>
