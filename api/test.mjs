@@ -77,7 +77,7 @@ const post = (path, body, origin = 'https://anastasia-samadhi.club') =>
     env,
   );
 
-const FULL = { name: 'Мария Иванова', email: 'maria@example.com', telegram: '@mariaiv', message: 'Расскажите про клуб' };
+const FULL = { name: 'Тестовый Пользователь', email: 'qa-fixture@example.com', telegram: '@qa_fixture_account', message: 'Расскажите про клуб' };
 const to = (addr) => letters.find((l) => l.to?.[0] === addr);
 
 // --- вопрос по теме --------------------------------------------------------
@@ -87,14 +87,14 @@ let res = await post('/contact', FULL);
 check('форма принята', res.status === 200 && (await res.json()).ok);
 check('строка записана в таблицу', rows.length === 1);
 check('в строке ФИО, email, telegram и текст',
-  rows[0].name === 'Мария Иванова' && rows[0].email === 'maria@example.com' &&
-  rows[0].telegram === '@mariaiv' && rows[0].message === 'Расскажите про клуб');
+  rows[0].name === 'Тестовый Пользователь' && rows[0].email === 'qa-fixture@example.com' &&
+  rows[0].telegram === '@qa_fixture_account' && rows[0].message === 'Расскажите про клуб');
 check('таблица защищена паролем', rows[0].secret === 'sheet-secret');
 check('в таблице отмечено, что автоответ ушёл', rows[0].outcome === 'отправлен');
-check('человеку ушло письмо', Boolean(to('maria@example.com')));
-check('письмо с адреса сайта', to('maria@example.com')?.from.includes('hello@anastasia-samadhi.club'));
-check('ответ придёт на почту, которую читает Анастасия', to('maria@example.com')?.reply_to === 'hello@metasouls.co');
-check('в письме есть и текст, и вёрстка', Boolean(to('maria@example.com')?.text && to('maria@example.com')?.html));
+check('человеку ушло письмо', Boolean(to('qa-fixture@example.com')));
+check('письмо с адреса сайта', to('qa-fixture@example.com')?.from.includes('hello@anastasia-samadhi.club'));
+check('ответ придёт на почту, которую читает Анастасия', to('qa-fixture@example.com')?.reply_to === 'hello@metasouls.co');
+check('в письме есть и текст, и вёрстка', Boolean(to('qa-fixture@example.com')?.text && to('qa-fixture@example.com')?.html));
 check('Анастасии ушло уведомление', Boolean(to('hello@metasouls.co')));
 check('в уведомлении есть копия того, что ушло от её имени',
   to('hello@metasouls.co')?.text.includes('Что ушло от вашего имени'));
@@ -109,7 +109,7 @@ console.log('\n— вопрос не по теме —');
 reset({ relevant: false, reply: '' });
 res = await post('/contact', { ...FULL, message: 'Куплю ссылки, размещу рекламу, ответьте' });
 check('форма всё равно принята', res.status === 200);
-check('человеку ничего не отправлено', !to('maria@example.com'));
+check('человеку ничего не отправлено', !to('qa-fixture@example.com'));
 check('но запись в таблице есть', rows.length === 1 && rows[0].outcome.includes('не по теме'));
 check('и Анастасия всё равно уведомлена', Boolean(to('hello@metasouls.co')));
 
@@ -117,7 +117,7 @@ check('и Анастасия всё равно уведомлена', Boolean(to
 console.log('\n— модель вернула пустой ответ —');
 reset({ relevant: true, reply: '   ' });
 await post('/contact', FULL);
-check('пустое письмо не уходит', !to('maria@example.com'));
+check('пустое письмо не уходит', !to('qa-fixture@example.com'));
 check('в таблице отмечено как не по теме', rows[0].outcome.includes('не по теме'));
 
 // --- отказы внешних сервисов ------------------------------------------------
@@ -134,7 +134,7 @@ reset();
 stub.sheetFails = true;
 res = await post('/contact', FULL);
 check('таблица упала: форма всё равно принята', res.status === 200);
-check('письмо человеку всё равно ушло', Boolean(to('maria@example.com')));
+check('письмо человеку всё равно ушло', Boolean(to('qa-fixture@example.com')));
 check('в уведомлении предупреждение записать вручную',
   to('hello@metasouls.co')?.text.includes('вручную'));
 
@@ -201,8 +201,8 @@ res = await worker.fetch(
 );
 check('форма работает без остальных переменных', res.status === 200);
 check('отправитель подставлен по умолчанию',
-  to('maria@example.com')?.from === 'Анастасия Петрова <hello@anastasia-samadhi.club>');
-check('ответы пойдут на hello@metasouls.co', to('maria@example.com')?.reply_to === 'hello@metasouls.co');
+  to('qa-fixture@example.com')?.from === 'Анастасия Петрова <hello@anastasia-samadhi.club>');
+check('ответы пойдут на hello@metasouls.co', to('qa-fixture@example.com')?.reply_to === 'hello@metasouls.co');
 check('уведомление ушло на hello@metasouls.co', Boolean(to('hello@metasouls.co')));
 check('модель по умолчанию gpt-4o-mini', prompts[0]?.model === 'gpt-4o-mini');
 check('строка записана в таблицу', rows.length === 1);
