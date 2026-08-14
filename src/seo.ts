@@ -6,7 +6,7 @@
  * time — a crawler has to find it in the HTML, and Google's FAQ rich result in
  * particular is only granted to markup that matches visible page content.
  */
-import { faqItems, links, type FaqItem } from './content';
+import { faqItems, links, pricing, type FaqItem } from './content';
 
 export const SITE_URL = 'https://anastasia-samadhi.club';
 export const SITE_NAME = 'Анастасия Петрова';
@@ -15,31 +15,41 @@ export const SITE_DESCRIPTION =
   'Помогаю выйти за пределы ограничивающих концепций через внимание и состояние. ' +
   'Samadhi Club, личные консультации, менторство и мастермайнд-группы.';
 
-const services: { name: string; description: string; url: string }[] = [
+/** `price` is the number Google reads; `note` is what a person is told. */
+const services: { name: string; description: string; url: string; price?: number; currency?: string; note?: string }[] = [
   {
     name: 'Samadhi Club',
     description:
       'Закрытый клуб по подписке: ежедневное присутствие автора, более 200 часов подкастов, ' +
       'разборы, авторские практики и живые эфиры.',
     url: `${SITE_URL}/#club`,
+    price: 17,
+    currency: 'EUR',
+    note: pricing.club.ru,
   },
   {
     name: 'Личная консультация',
     description:
       'Час один на один онлайн: разбираем конкретный запрос через работу с вниманием и состоянием.',
     url: `${SITE_URL}/#personal-session`,
+    price: 300,
+    currency: 'EUR',
   },
   {
     name: 'Индивидуальное менторство',
     description:
       'Глубокая длительная работа над одной темой, растянутая на несколько сессий.',
     url: `${SITE_URL}/#mentorship`,
+    price: 2500,
+    currency: 'EUR',
   },
   {
     name: 'Мастермайнд-группа',
     description:
       'Групповой онлайн-формат: работа в кругу единомышленников, брейнсторм и разбор ваших кейсов.',
     url: `${SITE_URL}/#mastermind`,
+    price: 1200,
+    currency: 'EUR',
   },
 ];
 
@@ -115,6 +125,20 @@ export function buildStructuredData(): string {
       serviceUrl: s.url,
       availableLanguage: { '@type': 'Language', name: 'Russian' },
     },
+    ...(s.price
+      ? {
+          offers: {
+            '@type': 'Offer',
+            url: s.url,
+            // the club is a subscription, so its figure is a starting price
+            ...(s.name === 'Samadhi Club'
+              ? { priceSpecification: { '@type': 'PriceSpecification', minPrice: s.price, priceCurrency: s.currency } }
+              : { price: s.price, priceCurrency: s.currency }),
+            availability: 'https://schema.org/InStock',
+            ...(s.note ? { description: s.note } : {}),
+          },
+        }
+      : {}),
   }));
 
   return JSON.stringify({

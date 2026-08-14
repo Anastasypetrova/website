@@ -44,7 +44,21 @@ if (markup.length < 10_000) {
   throw new Error(`prerendered markup is suspiciously short (${markup.length} bytes)`);
 }
 
-writeFileSync(OUT, html.replace('<div id="root"></div>', `<div id="root">${markup}</div>`));
+/**
+ * React emits a <link rel="preload"> for every image it renders. For the hero
+ * that is exactly right; for the thirteen YouTube thumbnails below the fold it
+ * is thirteen requests to another origin racing the fonts the first screen is
+ * waiting on. Drop those, and make the hero's own preload relative so it still
+ * resolves under the /website/ subpath.
+ */
+const cleaned = markup
+  .replace(/<link rel="preload" as="image" href="https:\/\/img\.youtube\.com[^>]*>/g, '')
+  .replace(/(<link rel="preload"[^>]*href=")\/assets\//g, '$1assets/');
+
+const dropped = (markup.match(/img\.youtube\.com/g) ?? []).length - (cleaned.match(/img\.youtube\.com/g) ?? []).length;
+
+writeFileSync(OUT, html.replace('<div id="root"></div>', `<div id="root">${cleaned}</div>`));
+console.log(`убрано лишних предзагрузок: ${dropped}`);
 rmSync(SSR_DIR, { recursive: true, force: true });
 
 console.log(`prerendered ${(markup.length / 1024).toFixed(0)} KB of markup into ${OUT}`);

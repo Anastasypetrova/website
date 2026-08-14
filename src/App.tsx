@@ -39,6 +39,9 @@ function App() {
 
   useEffect(() => {
     document.documentElement.setAttribute('data-lang', lang);
+    // lang is what a search engine and a screen reader read; data-lang only
+    // drives the stylesheet, and leaving lang at "ru" mislabels the English page
+    document.documentElement.lang = lang;
   }, [lang]);
 
   useEffect(() => {

@@ -41,7 +41,7 @@ export function VideosSection() {
           {videos.map((v) => (
             <a className="vcard" href={v.url} target="_blank" rel="noopener" key={v.id} style={{ textDecoration: 'none', color: 'inherit' }}>
               <div className="vthumb">
-                <img src={v.thumb} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
+                <img src={v.thumb} alt="Видео Анастасии Петровой на YouTube" loading="lazy" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
                 <div className="play"><span>▶</span></div>
               </div>
             </a>
@@ -59,7 +59,7 @@ export function VideosSection() {
           {podcasts.map((v) => (
             <a className="vcard" href={v.url} target="_blank" rel="noopener" key={v.id} style={{ textDecoration: 'none', color: 'inherit' }}>
               <div className="vthumb">
-                <img src={v.thumb} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
+                <img src={v.thumb} alt="Подкаст Анастасии Петровой" loading="lazy" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
                 <div className="play"><span>▶</span></div>
               </div>
             </a>

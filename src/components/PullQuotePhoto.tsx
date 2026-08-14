@@ -13,7 +13,7 @@ export function PullQuotePhoto({ quote, photo, id, objectPosition }: Props) {
   return (
     <section className="sec pullphoto" id={id}>
       <div className="pullphoto-bg">
-        <Photo name={photo} alt="" objectPosition={objectPosition ?? 'center 30%'} />
+        <Photo name={photo} alt="Анастасия Петрова" objectPosition={objectPosition ?? 'center 30%'} />
       </div>
       <div className="pullphoto-sc"></div>
       <div className="wrap-n pull">
