@@ -47,7 +47,7 @@ export interface Env {
   OPENAI_MODEL?: string;
 }
 
-export const VERSION = 2;
+export const VERSION = 3;
 
 const DEFAULTS = {
   ALLOWED_ORIGINS: 'https://anastasia-samadhi.club,https://www.anastasia-samadhi.club',
@@ -102,19 +102,30 @@ const json = (body: unknown, status: number, cors: Record<string, string>) =>
     headers: { 'content-type': 'application/json', ...cors },
   });
 
-/** Never let a side errand take down the request that matters. */
-async function attempt<T>(label: string, task: () => Promise<T>): Promise<T | null> {
+/**
+ * Never let a side errand take down the request that matters — and keep the
+ * reason, so a failure explains itself in the notification instead of only in
+ * the Cloudflare log.
+ */
+interface Attempt<T> {
+  value: T | null;
+  error: string | null;
+}
+
+async function attempt<T>(label: string, task: () => Promise<T>): Promise<Attempt<T>> {
   try {
-    return await task();
+    return { value: await task(), error: null };
   } catch (error) {
     console.error(`${label} failed:`, error);
-    return null;
+    return { value: null, error: String(error).replace(/^Error:\s*/, '').slice(0, 300) };
   }
 }
 
-async function record(env: Env, row: ContactRow): Promise<boolean> {
-  const done = await attempt('sheet', () => appendRow(env.SHEET_ENDPOINT, env.SHEET_SECRET, row));
-  return done !== null;
+async function record(env: Env, row: ContactRow): Promise<string | null> {
+  const { error } = await attempt('sheet', () =>
+    appendRow(env.SHEET_ENDPOINT, env.SHEET_SECRET, row),
+  );
+  return error;
 }
 
 function notify(env: Env, cfg: Config, subject: string, text: string) {
@@ -150,17 +161,17 @@ async function handleContact(request: Request, env: Env, cfg: Config, cors: Reco
   if (!looksLikeEmail(email)) return json({ error: 'email_invalid' }, 422, cors);
   if (!looksLikeHandle(telegram)) return json({ error: 'telegram_invalid' }, 422, cors);
 
-  const draft = await attempt('draft', () =>
+  const { value: draft, error: draftError } = await attempt('draft', () =>
     draftReply(env.OPENAI_API_KEY, cfg.model, name, message),
   );
 
   let outcome: string;
   if (draft === null) {
-    outcome = 'не удалось составить — ответьте сами';
+    outcome = `не удалось составить — ответьте сами (${draftError})`;
   } else if (!draft.relevant) {
     outcome = 'не по теме — письмо не отправлено';
   } else {
-    const sent = await attempt('reply', () =>
+    const { error: sendError } = await attempt('reply', () =>
       sendLetter(env.RESEND_API_KEY, cfg.from, cfg.siteUrl, {
         to: email,
         subject: 'Ответ на ваш вопрос',
@@ -168,10 +179,10 @@ async function handleContact(request: Request, env: Env, cfg: Config, cors: Reco
         replyTo: cfg.replyTo,
       }),
     );
-    outcome = sent !== null ? 'отправлен' : 'не удалось отправить — ответьте сами';
+    outcome = sendError === null ? 'отправлен' : `не удалось отправить — ответьте сами (${sendError})`;
   }
 
-  const saved = await record(env, { kind: 'contact', name, email, telegram, message, outcome });
+  const sheetError = await record(env, { kind: 'contact', name, email, telegram, message, outcome });
 
   await notify(
     env,
@@ -188,7 +199,9 @@ async function handleContact(request: Request, env: Env, cfg: Config, cors: Reco
       '---',
       `Автоответ: ${outcome}`,
       ...(draft?.relevant ? ['', 'Что ушло от вашего имени:', '', draft.reply] : []),
-      ...(saved ? [] : ['', '⚠️ Записать в таблицу не получилось — сохраните контакт вручную.']),
+      ...(sheetError
+        ? ['', `⚠️ Записать в таблицу не получилось — сохраните контакт вручную. Причина: ${sheetError}`]
+        : []),
     ].join('\n'),
   );
 
@@ -204,12 +217,12 @@ async function handleSubscribe(request: Request, env: Env, cfg: Config, cors: Re
   const email = (body.email ?? '').trim().slice(0, MAX_EMAIL);
   if (!looksLikeEmail(email)) return json({ error: 'email_invalid' }, 422, cors);
 
-  const saved = await record(env, { kind: 'subscribe', email, outcome: '—' });
+  const sheetError = await record(env, { kind: 'subscribe', email, outcome: '—' });
   await notify(
     env,
     cfg,
     'Новая подписка на рассылку',
-    saved ? email : `${email}\n\n⚠️ Записать в таблицу не получилось.`,
+    sheetError ? `${email}\n\n⚠️ Записать в таблицу не получилось: ${sheetError}` : email,
   );
   return json({ ok: true }, 200, cors);
 }

@@ -128,6 +128,8 @@ res = await post('/contact', FULL);
 check('модель упала: форма всё равно принята', res.status === 200);
 check('обращение не потеряно — записано в таблицу', rows.length === 1);
 check('в таблице просьба ответить самой', rows[0].outcome.includes('ответьте сами'));
+check('и указана причина отказа', rows[0].outcome.includes('OpenAI 500'));
+check('причина видна и в уведомлении', to('hello@metasouls.co')?.text.includes('OpenAI 500'));
 check('Анастасия уведомлена', Boolean(to('hello@metasouls.co')));
 
 reset();
@@ -137,12 +139,14 @@ check('таблица упала: форма всё равно принята', 
 check('письмо человеку всё равно ушло', Boolean(to('qa-fixture@example.com')));
 check('в уведомлении предупреждение записать вручную',
   to('hello@metasouls.co')?.text.includes('вручную'));
+check('с причиной, почему не записалось', to('hello@metasouls.co')?.text.includes('Sheet 500'));
 
 reset();
 stub.resendFails = true;
 res = await post('/contact', FULL);
 check('почта упала: форма всё равно принята', res.status === 200);
 check('обращение записано в таблицу', rows.length === 1 && rows[0].outcome.includes('не удалось отправить'));
+check('с причиной отказа почты', rows[0].outcome.includes('Resend 422'));
 
 // --- проверки ввода ---------------------------------------------------------
 console.log('\n— проверки ввода —');
