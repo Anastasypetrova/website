@@ -47,6 +47,8 @@ export interface Env {
   OPENAI_MODEL?: string;
 }
 
+export const VERSION = 2;
+
 const DEFAULTS = {
   ALLOWED_ORIGINS: 'https://anastasia-samadhi.club,https://www.anastasia-samadhi.club',
   SITE_URL: 'https://anastasia-samadhi.club',
@@ -212,12 +214,42 @@ async function handleSubscribe(request: Request, env: Env, cfg: Config, cors: Re
   return json({ ok: true }, 200, cors);
 }
 
+/**
+ * Opening the Worker's address in a browser answers the two questions that
+ * actually come up during setup: is this the current code, and did the secrets
+ * get through. Only whether each secret is present, never its value.
+ */
+function health(cfg: Config, env: Env): Response {
+  return new Response(
+    JSON.stringify(
+      {
+        ok: true,
+        service: 'samadhi-forms',
+        version: VERSION,
+        settings: { from: cfg.from, replyTo: cfg.replyTo, notifyTo: cfg.notifyTo, model: cfg.model },
+        secrets: {
+          OPENAI_API_KEY: Boolean(env.OPENAI_API_KEY),
+          RESEND_API_KEY: Boolean(env.RESEND_API_KEY),
+          SHEET_ENDPOINT: Boolean(env.SHEET_ENDPOINT),
+          SHEET_SECRET: Boolean(env.SHEET_SECRET),
+        },
+      },
+      null,
+      2,
+    ),
+    { headers: { 'content-type': 'application/json; charset=utf-8' } },
+  );
+}
+
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
     const cfg = config(env);
     const cors = corsHeaders(request.headers.get('origin'), cfg);
 
+    if (request.method === 'GET' && (url.pathname === '/' || url.pathname === '/health')) {
+      return health(cfg, env);
+    }
     if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: cors });
     if (request.method !== 'POST') return new Response('not found', { status: 404 });
 
