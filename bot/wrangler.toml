@@ -1,0 +1,12 @@
+name = "samadhi-bot"
+main = "src/index.ts"
+compatibility_date = "2026-08-01"
+
+[vars]
+# Origins allowed to post the site forms. Everything else gets 403.
+ALLOWED_ORIGINS = "https://anastasia-samadhi.club,https://www.anastasia-samadhi.club"
+
+# BOT_TOKEN, OWNER_CHAT_ID and WEBHOOK_SECRET are secrets, never values here:
+#   npx wrangler secret put BOT_TOKEN
+#   npx wrangler secret put OWNER_CHAT_ID
+#   npx wrangler secret put WEBHOOK_SECRET

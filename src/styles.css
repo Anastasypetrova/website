@@ -460,3 +460,19 @@ textarea.field{min-height:130px;resize:vertical;border-radius:20px}
 /* the mastermind card is a column: the gate, not the button inside it, is
    what has to be pushed to the bottom */
 .mm-card .consent-wrap .consent{max-width:none}
+
+/* ── Form states ─────────────────────────────────────────────────────────
+   The honeypot must be reachable by a script and invisible to a person —
+   display:none is skipped by some bots, so it is hidden by position. */
+.hp-field{position:absolute;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none}
+.form-error{margin:14px 0 0;font-size:13.5px;line-height:1.5;color:var(--danger)}
+.form-error a{text-decoration:underline;color:inherit}
+.form-done{margin-top:20px;padding:20px 22px;border-radius:16px;background:var(--mist-100)}
+.form-done-h{margin:0;font-family:var(--font-head);font-weight:500;font-size:17px;color:var(--ink)}
+.form-done-p{margin:8px 0 0;font-size:14px;line-height:1.6;color:var(--taupe-700)}
+.form-answer{margin:14px 0 0;padding-top:14px;border-top:1px solid var(--border-subtle);font-size:14px;line-height:1.65;color:var(--taupe-700)}
+.form-done .btn-outline{margin-top:16px;width:auto;padding:11px 22px;font-size:14px}
+.btn-onsage:disabled{opacity:.6;cursor:progress}
+.subs-done{margin:0;font-size:15px;line-height:1.6;color:var(--cream)}
+.subs-error{margin:12px 0 0;font-size:13.5px;color:#E8A88C}
+.subs-error a{text-decoration:underline;color:inherit}

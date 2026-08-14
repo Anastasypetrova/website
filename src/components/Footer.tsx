@@ -1,12 +1,8 @@
-import { type FormEvent } from 'react';
-import { T } from '../i18n';
+import { useState, type FormEvent } from 'react';
+import { T, useLang } from '../i18n';
 import { docs, docHref, links } from '../content';
+import { apiConfigured, submitNewsletter } from '../api';
 import { InstagramIcon, TelegramIcon, YoutubeIcon } from './Icons';
-
-async function submitNewsletter(data: FormData) {
-  // Hook point: POST `data` to the Telegram-bot automated-response flow once it exists.
-  void data;
-}
 
 const sectionLinks: { href: string; ru: string; en: string }[] = [
   { href: '#videos', ru: 'Видео', en: 'Videos' },
@@ -24,9 +20,26 @@ const formatLinks: { href: string; ru: string; en: string }[] = [
 ];
 
 export function Footer() {
-  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const lang = useLang();
+  const [state, setState] = useState<'idle' | 'sending' | 'sent' | 'failed'>('idle');
+
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    void submitNewsletter(new FormData(e.currentTarget));
+    const form = e.currentTarget;
+    const data = new FormData(form);
+    const email = String(data.get('email') ?? '');
+    const website = String(data.get('website') ?? '');
+
+    // Not wired up yet — do not pretend the address was saved.
+    if (!apiConfigured) {
+      window.location.href = `mailto:${links.email}?subject=${encodeURIComponent('Подписка на рассылку')}&body=${encodeURIComponent(email)}`;
+      return;
+    }
+
+    setState('sending');
+    const result = await submitNewsletter(email, website);
+    setState(result.status === 'ok' ? 'sent' : 'failed');
+    if (result.status === 'ok') form.reset();
   };
 
   return (
@@ -39,12 +52,28 @@ export function Footer() {
               en={<>Subscribe to the <em className="accent" style={{ fontSize: 'calc(clamp(38px,7vw,70px) * var(--hs))' }}>newsletter</em></>}
             />
           </h2>
-          <form className="subs" onSubmit={onSubmit}>
-            <input type="email" name="email" placeholder="Ваш email" aria-label="Email" />
-            <button className="btn-onsage" type="submit" style={{ width: 'auto', padding: '15px 28px' }}>
-              <T ru="Подписаться" en="Subscribe" />
-            </button>
-          </form>
+          {state === 'sent' ? (
+            <p className="subs-done">
+              <T ru="Готово — вы подписаны. Спасибо!" en="Done — you're subscribed. Thank you!" />
+            </p>
+          ) : (
+            <form className="subs" onSubmit={onSubmit}>
+              <input type="email" name="email" required autoComplete="email"
+                placeholder={lang === 'en' ? 'Your email' : 'Ваш email'} aria-label="Email" />
+              <input type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" className="hp-field" />
+              <button className="btn-onsage" type="submit" disabled={state === 'sending'} style={{ width: 'auto', padding: '15px 28px' }}>
+                {state === 'sending' ? <T ru="Отправляю…" en="Sending…" /> : <T ru="Подписаться" en="Subscribe" />}
+              </button>
+            </form>
+          )}
+          {state === 'failed' && (
+            <p className="subs-error">
+              <T
+                ru={<>Не получилось. Напишите на <a href={`mailto:${links.email}`}>{links.email}</a>.</>}
+                en={<>Could not subscribe. Please write to <a href={`mailto:${links.email}`}>{links.email}</a>.</>}
+              />
+            </p>
+          )}
         </div>
         <div className="foot-grid">
           <div className="foot-brand">

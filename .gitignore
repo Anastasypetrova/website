@@ -25,3 +25,7 @@ dist-ssr
 
 # python bytecode from scripts/
 __pycache__/
+
+# bot dependencies are installed separately (see bot/README.md)
+bot/node_modules
+bot/.wrangler
