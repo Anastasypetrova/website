@@ -29,3 +29,6 @@ __pycache__/
 # bot dependencies are installed separately (see bot/README.md)
 bot/node_modules
 bot/.wrangler
+
+# bundled worker, rebuilt on demand
+api/dist
