@@ -24,6 +24,7 @@
 import { appendRow, type ContactRow } from './sheet';
 import { draftReply } from './openai';
 import { sendLetter } from './resend';
+import { runChecks } from './check';
 
 /**
  * Only these four are secret and only these four have to be set. The rest are
@@ -47,7 +48,7 @@ export interface Env {
   OPENAI_MODEL?: string;
 }
 
-export const VERSION = 3;
+export const VERSION = 4;
 
 const DEFAULTS = {
   ALLOWED_ORIGINS: 'https://anastasia-samadhi.club,https://www.anastasia-samadhi.club',
@@ -262,6 +263,12 @@ export default {
 
     if (request.method === 'GET' && (url.pathname === '/' || url.pathname === '/health')) {
       return health(cfg, env);
+    }
+    if (request.method === 'GET' && url.pathname === '/check') {
+      const checks = await runChecks(env.OPENAI_API_KEY, env.RESEND_API_KEY, cfg.model);
+      return new Response(JSON.stringify({ model: cfg.model, ...checks }, null, 2), {
+        headers: { 'content-type': 'application/json; charset=utf-8' },
+      });
     }
     if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: cors });
     if (request.method !== 'POST') return new Response('not found', { status: 404 });
