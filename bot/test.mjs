@@ -45,33 +45,42 @@ const post = (path, body, origin = 'https://anastasia-samadhi.club', headers = {
 
 console.log('\n— форма обратной связи —');
 sent = [];
-let res = await post('/contact', { name: 'Мария', email: 'maria@example.com', message: 'Как оплатить и в какой валюте?' });
+let res = await post('/contact', { name: 'Мария Иванова', email: 'maria@example.com', telegram: '@mariaiv', message: 'Как оплатить и в какой валюте?' });
 let data = await res.json();
 check('принята', res.status === 200 && data.ok);
 check('ушло сообщение Анастасии', sent.length === 1 && String(sent[0].chat_id) === '111');
-check('в сообщении есть имя, адрес и текст',
-  sent[0]?.text.includes('Мария') && sent[0]?.text.includes('maria@example.com') && sent[0]?.text.includes('оплатить'));
+check('в сообщении есть ФИО, адрес, telegram и текст',
+  sent[0]?.text.includes('Мария Иванова') && sent[0]?.text.includes('maria@example.com') && sent[0]?.text.includes('@mariaiv') && sent[0]?.text.includes('оплатить'));
 check('есть ссылка «Ответить письмом»', sent[0]?.text.includes('mailto:'));
 check('отправителю вернулся автоответ из FAQ', typeof data.answer === 'string' && data.answer.length > 40);
 
 sent = [];
-res = await post('/contact', { email: 'нет-собаки', message: 'привет' });
+res = await post('/contact', { email: 'нет-собаки', telegram: '@someone', message: 'привет' });
 check('кривой адрес отклонён', res.status === 422 && (await res.json()).error === 'email_invalid');
 check('в Telegram ничего не ушло', sent.length === 0);
 
 sent = [];
-res = await post('/contact', { email: 'a@b.co', message: '' });
+res = await post('/contact', { email: 'a@b.co', telegram: '@someone', message: '' });
 check('пустое сообщение отклонено', res.status === 422);
 
 sent = [];
-res = await post('/contact', { email: 'bot@spam.io', message: 'buy links', website: 'http://spam' });
+res = await post('/contact', { email: 'bot@spam.io', telegram: '@spammer', message: 'buy links', website: 'http://spam' });
 check('ловушка для спам-ботов: ответ 200, но ничего не отправлено',
   res.status === 200 && sent.length === 0);
 
 sent = [];
-res = await post('/contact', { email: 'a@b.co', message: 'привет' }, 'https://evil.example');
+res = await post('/contact', { email: 'a@b.co', telegram: '@someone', message: 'привет' }, 'https://evil.example');
 check('чужой сайт получает 403', res.status === 403);
 check('и ничего не отправляется', sent.length === 0);
+
+sent = [];
+res = await post('/contact', { email: 'a@b.co', telegram: 'не-ник!', message: 'привет' });
+check('кривой ник Telegram отклонён', res.status === 422 && (await res.json()).error === 'telegram_invalid');
+check('и ничего не отправлено', sent.length === 0);
+
+sent = [];
+res = await post('/contact', { email: 'a@b.co', message: 'привет' });
+check('без Telegram форма не принимается', res.status === 422);
 
 console.log('\n— подписка на рассылку —');
 sent = [];

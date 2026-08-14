@@ -23,6 +23,7 @@ export function Contact() {
     const fields = {
       name: String(data.get('name') ?? ''),
       email: String(data.get('email') ?? ''),
+      telegram: String(data.get('telegram') ?? ''),
       message: String(data.get('message') ?? ''),
       website: String(data.get('website') ?? ''),
     };
@@ -89,13 +90,20 @@ export function Contact() {
               </div>
             ) : (
               <form className="form" style={{ marginTop: 20 }} onSubmit={onSubmit}>
-                <label className="flabel" htmlFor="cf-name"><T ru="Ваше имя" en="Your name" /></label>
-                <input className="field" id="cf-name" type="text" name="name" autoComplete="name"
+                <label className="flabel" htmlFor="cf-name"><T ru="ФИО" en="Full name" /></label>
+                <input className="field" id="cf-name" type="text" name="name" required autoComplete="name"
                   placeholder={lang === 'en' ? 'How should I call you' : 'Как к вам обращаться'} />
 
                 <label className="flabel" htmlFor="cf-email">Email</label>
                 <input className="field" id="cf-email" type="email" name="email" required autoComplete="email"
                   placeholder="hello@site.com" />
+
+                <label className="flabel" htmlFor="cf-telegram">Telegram</label>
+                <input className="field" id="cf-telegram" type="text" name="telegram" required
+                  autoComplete="off" autoCapitalize="off" spellCheck={false}
+                  pattern="\s*(?:(?:https?://)?(?:t\.me|telegram\.me)/)?@?[A-Za-z][A-Za-z0-9_]{4,31}\s*"
+                  title={lang === 'en' ? 'Your Telegram handle, e.g. @username' : 'Ваш ник в Telegram, например @username'}
+                  placeholder="@username" />
 
                 <label className="flabel" htmlFor="cf-message"><T ru="Сообщение" en="Message" /></label>
                 <textarea className="field" id="cf-message" name="message" required
@@ -110,6 +118,8 @@ export function Contact() {
                   <p className="form-error">
                     {state.reason === 'email_invalid' ? (
                       <T ru="Проверьте адрес электронной почты." en="Please check the email address." />
+                    ) : state.reason === 'telegram_invalid' ? (
+                      <T ru="Проверьте ник в Telegram — он выглядит как @username." en="Please check the Telegram handle — it looks like @username." />
                     ) : state.reason === 'message_required' ? (
                       <T ru="Напишите, пожалуйста, сам вопрос." en="Please write your question." />
                     ) : (

@@ -31,6 +31,7 @@ export interface Env {
 const MAX_NAME = 100;
 const MAX_EMAIL = 200;
 const MAX_MESSAGE = 4000;
+const MAX_HANDLE = 40;
 
 function corsHeaders(origin: string | null, env: Env): Record<string, string> {
   const allowed = env.ALLOWED_ORIGINS.split(',').map((o) => o.trim());
@@ -51,10 +52,13 @@ function json(body: unknown, status: number, cors: Record<string, string>): Resp
 }
 
 const looksLikeEmail = (value: string) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value);
+/** Telegram's own rule for a username, already normalised to @name by the site. */
+const looksLikeHandle = (value: string) => /^@[A-Za-z][A-Za-z0-9_]{4,31}$/.test(value);
 
 interface ContactPayload {
   name?: string;
   email?: string;
+  telegram?: string;
   message?: string;
   /** Honeypot: a field hidden from people, irresistible to form bots. */
   website?: string;
@@ -67,10 +71,12 @@ async function handleContact(request: Request, env: Env, cors: Record<string, st
 
   const name = (body.name ?? '').trim().slice(0, MAX_NAME);
   const email = (body.email ?? '').trim().slice(0, MAX_EMAIL);
+  const telegram = (body.telegram ?? '').trim().slice(0, MAX_HANDLE);
   const message = (body.message ?? '').trim().slice(0, MAX_MESSAGE);
 
   if (!message) return json({ error: 'message_required' }, 422, cors);
   if (!looksLikeEmail(email)) return json({ error: 'email_invalid' }, 422, cors);
+  if (!looksLikeHandle(telegram)) return json({ error: 'telegram_invalid' }, 422, cors);
 
   const tg = new Telegram(env.BOT_TOKEN);
   const suggestion = findAnswer(`${message}`);
@@ -80,6 +86,7 @@ async function handleContact(request: Request, env: Env, cors: Record<string, st
     '',
     `<b>Имя:</b> ${escapeHtml(name || '—')}`,
     `<b>Email:</b> ${escapeHtml(email)}`,
+    `<b>Telegram:</b> ${escapeHtml(telegram)}`,
     '',
     escapeHtml(message),
     '',
