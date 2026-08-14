@@ -48,7 +48,7 @@ export interface Env {
   OPENAI_MODEL?: string;
 }
 
-export const VERSION = 4;
+export const VERSION = 5;
 
 const DEFAULTS = {
   ALLOWED_ORIGINS: 'https://anastasia-samadhi.club,https://www.anastasia-samadhi.club',
@@ -60,6 +60,10 @@ const DEFAULTS = {
 } as const;
 
 interface Config {
+  openaiKey: string;
+  resendKey: string;
+  sheetEndpoint: string;
+  sheetSecret: string;
   allowedOrigins: string[];
   siteUrl: string;
   from: string;
@@ -68,8 +72,18 @@ interface Config {
   model: string;
 }
 
+/**
+ * Secrets are trimmed: pasting one into a dashboard field very easily picks up
+ * a leading space or a trailing newline, and the service then rejects a key
+ * that looks perfectly correct on screen.
+ */
 function config(env: Env): Config {
+  const clean = (value: string | undefined) => (value ?? '').trim();
   return {
+    openaiKey: clean(env.OPENAI_API_KEY),
+    resendKey: clean(env.RESEND_API_KEY),
+    sheetEndpoint: clean(env.SHEET_ENDPOINT),
+    sheetSecret: clean(env.SHEET_SECRET),
     allowedOrigins: (env.ALLOWED_ORIGINS || DEFAULTS.ALLOWED_ORIGINS).split(',').map((o) => o.trim()),
     siteUrl: env.SITE_URL || DEFAULTS.SITE_URL,
     from: env.FROM_EMAIL || DEFAULTS.FROM_EMAIL,
@@ -122,16 +136,16 @@ async function attempt<T>(label: string, task: () => Promise<T>): Promise<Attemp
   }
 }
 
-async function record(env: Env, row: ContactRow): Promise<string | null> {
+async function record(cfg: Config, row: ContactRow): Promise<string | null> {
   const { error } = await attempt('sheet', () =>
-    appendRow(env.SHEET_ENDPOINT, env.SHEET_SECRET, row),
+    appendRow(cfg.sheetEndpoint, cfg.sheetSecret, row),
   );
   return error;
 }
 
-function notify(env: Env, cfg: Config, subject: string, text: string) {
+function notify(cfg: Config, subject: string, text: string) {
   return attempt('notify', () =>
-    sendLetter(env.RESEND_API_KEY, cfg.from, cfg.siteUrl, {
+    sendLetter(cfg.resendKey, cfg.from, cfg.siteUrl, {
       to: cfg.notifyTo,
       subject,
       text,
@@ -148,7 +162,7 @@ interface ContactPayload {
   website?: string;
 }
 
-async function handleContact(request: Request, env: Env, cfg: Config, cors: Record<string, string>) {
+async function handleContact(request: Request, cfg: Config, cors: Record<string, string>) {
   const body = (await request.json().catch(() => null)) as ContactPayload | null;
   if (!body) return json({ error: 'bad_request' }, 400, cors);
   if (body.website) return json({ ok: true }, 200, cors);
@@ -163,7 +177,7 @@ async function handleContact(request: Request, env: Env, cfg: Config, cors: Reco
   if (!looksLikeHandle(telegram)) return json({ error: 'telegram_invalid' }, 422, cors);
 
   const { value: draft, error: draftError } = await attempt('draft', () =>
-    draftReply(env.OPENAI_API_KEY, cfg.model, name, message),
+    draftReply(cfg.openaiKey, cfg.model, name, message),
   );
 
   let outcome: string;
@@ -173,7 +187,7 @@ async function handleContact(request: Request, env: Env, cfg: Config, cors: Reco
     outcome = 'не по теме — письмо не отправлено';
   } else {
     const { error: sendError } = await attempt('reply', () =>
-      sendLetter(env.RESEND_API_KEY, cfg.from, cfg.siteUrl, {
+      sendLetter(cfg.resendKey, cfg.from, cfg.siteUrl, {
         to: email,
         subject: 'Ответ на ваш вопрос',
         text: draft.reply,
@@ -183,10 +197,9 @@ async function handleContact(request: Request, env: Env, cfg: Config, cors: Reco
     outcome = sendError === null ? 'отправлен' : `не удалось отправить — ответьте сами (${sendError})`;
   }
 
-  const sheetError = await record(env, { kind: 'contact', name, email, telegram, message, outcome });
+  const sheetError = await record(cfg, { kind: 'contact', name, email, telegram, message, outcome });
 
   await notify(
-    env,
     cfg,
     `Вопрос с сайта: ${name || email}`,
     [
@@ -210,7 +223,7 @@ async function handleContact(request: Request, env: Env, cfg: Config, cors: Reco
   return json({ ok: true }, 200, cors);
 }
 
-async function handleSubscribe(request: Request, env: Env, cfg: Config, cors: Record<string, string>) {
+async function handleSubscribe(request: Request, cfg: Config, cors: Record<string, string>) {
   const body = (await request.json().catch(() => null)) as { email?: string; website?: string } | null;
   if (!body) return json({ error: 'bad_request' }, 400, cors);
   if (body.website) return json({ ok: true }, 200, cors);
@@ -218,9 +231,8 @@ async function handleSubscribe(request: Request, env: Env, cfg: Config, cors: Re
   const email = (body.email ?? '').trim().slice(0, MAX_EMAIL);
   if (!looksLikeEmail(email)) return json({ error: 'email_invalid' }, 422, cors);
 
-  const sheetError = await record(env, { kind: 'subscribe', email, outcome: '—' });
+  const sheetError = await record(cfg, { kind: 'subscribe', email, outcome: '—' });
   await notify(
-    env,
     cfg,
     'Новая подписка на рассылку',
     sheetError ? `${email}\n\n⚠️ Записать в таблицу не получилось: ${sheetError}` : email,
@@ -233,7 +245,7 @@ async function handleSubscribe(request: Request, env: Env, cfg: Config, cors: Re
  * actually come up during setup: is this the current code, and did the secrets
  * get through. Only whether each secret is present, never its value.
  */
-function health(cfg: Config, env: Env): Response {
+function health(cfg: Config): Response {
   return new Response(
     JSON.stringify(
       {
@@ -241,11 +253,13 @@ function health(cfg: Config, env: Env): Response {
         service: 'samadhi-forms',
         version: VERSION,
         settings: { from: cfg.from, replyTo: cfg.replyTo, notifyTo: cfg.notifyTo, model: cfg.model },
+        // lengths, not values — a truncated paste is the usual culprit and
+        // shows up here as a number that does not match the original
         secrets: {
-          OPENAI_API_KEY: Boolean(env.OPENAI_API_KEY),
-          RESEND_API_KEY: Boolean(env.RESEND_API_KEY),
-          SHEET_ENDPOINT: Boolean(env.SHEET_ENDPOINT),
-          SHEET_SECRET: Boolean(env.SHEET_SECRET),
+          OPENAI_API_KEY: cfg.openaiKey.length,
+          RESEND_API_KEY: cfg.resendKey.length,
+          SHEET_ENDPOINT: cfg.sheetEndpoint.length,
+          SHEET_SECRET: cfg.sheetSecret.length,
         },
       },
       null,
@@ -262,10 +276,10 @@ export default {
     const cors = corsHeaders(request.headers.get('origin'), cfg);
 
     if (request.method === 'GET' && (url.pathname === '/' || url.pathname === '/health')) {
-      return health(cfg, env);
+      return health(cfg);
     }
     if (request.method === 'GET' && url.pathname === '/check') {
-      const checks = await runChecks(env.OPENAI_API_KEY, env.RESEND_API_KEY, cfg.model);
+      const checks = await runChecks(cfg.openaiKey, cfg.resendKey, cfg.model);
       return new Response(JSON.stringify({ model: cfg.model, ...checks }, null, 2), {
         headers: { 'content-type': 'application/json; charset=utf-8' },
       });
@@ -277,8 +291,8 @@ export default {
     if (Object.keys(cors).length === 0) return new Response('forbidden', { status: 403 });
 
     try {
-      if (url.pathname === '/contact') return await handleContact(request, env, cfg, cors);
-      if (url.pathname === '/subscribe') return await handleSubscribe(request, env, cfg, cors);
+      if (url.pathname === '/contact') return await handleContact(request, cfg, cors);
+      if (url.pathname === '/subscribe') return await handleSubscribe(request, cfg, cors);
     } catch (error) {
       console.error(error);
       return json({ error: 'server_error' }, 500, cors);
