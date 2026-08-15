@@ -25,7 +25,7 @@ import fs from 'node:fs/promises';
 import { createReadStream } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { SIZES, DEFAULT_SIZE, TEXT_SIZES, SUPERSAMPLE, baseCss, rich, esc } from './theme.mjs';
+import { SIZES, DEFAULT_SIZE, TEXT_SIZES, LINE_HEIGHT, SUPERSAMPLE, baseCss, rich, esc } from './theme.mjs';
 import { findTextBox, measureBox, roundBox } from './analyze.mjs';
 
 const ROOT = path.resolve(fileURLToPath(new URL('..', import.meta.url)));
@@ -58,7 +58,7 @@ function textHeight(slide, boxW, size) {
   const perLine = Math.max(8, (boxW * size.w) / (fs * 0.5));
   const chars = [slide.text, slide.text2].filter(Boolean).join(' ').length;
   const lines = Math.max(1, Math.ceil(chars / perLine)) + (slide.text2 ? 1 : 0);
-  return clamp((lines * 1.36 * fs) / size.h, 0.05, 0.62);
+  return clamp((lines * LINE_HEIGHT * fs) / size.h, 0.05, 0.62);
 }
 
 /* ---------------------------------------------------------------- photos -- */

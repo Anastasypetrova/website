@@ -1,15 +1,14 @@
 /**
- * Slide CSS for the Instagram carousel renderer.
+ * Slide CSS for the carousel renderer.
  *
- * The look is taken from the reference carousels: the photo carries the slide
- * full-bleed, a soft gradient vignette gives the type something to sit on, and
- * the copy is small, white and set in a neutral grotesque in the upper third —
- * placed on empty sky, never across the subject.
+ * The look comes from the reference carousels: the photo carries the slide
+ * full bleed, a gradient vignette gives the type something to sit on, and the
+ * copy is small and set in a neutral grotesque, placed where the frame has
+ * room for it rather than in a fixed corner.
  *
- * Inter is the grotesque here. The reference uses the iOS system face, and
- * Inter is the closest neo-grotesque to it — and the site already self-hosts
- * it (see the note in `src/styles.css`), so nothing new is downloaded and the
- * slides render identically on every machine.
+ * Inter is the grotesque. The reference uses the iOS system face; Inter is the
+ * closest neo-grotesque to it, and it is vendored in `fonts/`, so the slides
+ * render identically on any machine and nothing is fetched at render time.
  */
 
 /**
@@ -39,6 +38,13 @@ export const SUPERSAMPLE = 2;
 /** Copy sizes, as a share of canvas width — measured off the reference slides. */
 export const TEXT_SIZES = { s: 0.026, m: 0.030, l: 0.036 };
 
+/**
+ * Leading. Tight, so a few lines read as one block rather than as a list —
+ * shared with the renderer, which counts lines to know how much room the copy
+ * will take before it looks for somewhere to put it.
+ */
+export const LINE_HEIGHT = 1.26;
+
 export function esc(s) {
   return String(s ?? '')
     .replace(/&/g, '&amp;')
@@ -51,15 +57,14 @@ export function esc(s) {
  * The markup a spec's text fields understand:
  *
  *   *слово*   italic
- *   **слово** the site's Playfair italic, for a rare editorial accent
  *   //        hard line break
  *
- * Everything else is plain text and is escaped. The reference style is plain
- * on purpose — reach for the accents sparingly or the slides stop matching it.
+ * Everything else is plain text and is escaped. Deliberately thin: the
+ * reference style is one weight of one face, and every extra bit of styling
+ * moves the slides away from it.
  */
 export function rich(s) {
   return esc(s)
-    .replace(/\*\*([^*]+)\*\*/g, '<em class="serif">$1</em>')
     .replace(/\*([^*]+)\*/g, '<em>$1</em>')
     .replace(/\s*\/\/\s*/g, '<br>');
 }
@@ -70,7 +75,6 @@ export function baseCss({ w, h }) {
 :root{
   --ink:#2C2C2C;
   --font-grotesk:'Inter','Helvetica Neue',Helvetica,Arial,sans-serif;
-  --font-display:'Playfair Display',Georgia,serif;
 }
 html,body{background:#111;-webkit-font-smoothing:antialiased}
 body{display:flex;flex-direction:column;align-items:center;gap:40px;padding:40px}
@@ -134,7 +138,7 @@ body{display:flex;flex-direction:column;align-items:center;gap:40px;padding:40px
   font-family:var(--font-grotesk);
   font-weight:400;
   font-size:calc(var(--fs) * ${w}px);
-  line-height:1.36;
+  line-height:${LINE_HEIGHT};
   letter-spacing:-.002em;
   color:#fff;
   text-wrap:pretty;
@@ -142,7 +146,6 @@ body{display:flex;flex-direction:column;align-items:center;gap:40px;padding:40px
 }
 .copy.dark{color:var(--ink);text-shadow:0 1px 2px rgba(255,255,255,.35), 0 2px 22px rgba(255,255,255,.45)}
 .copy em{font-style:italic}
-.copy em.serif{font-family:var(--font-display);font-style:italic;font-weight:500}
 .copy .l2{display:block;margin-top:.85em;opacity:.92}
 
 /* optional handle, bottom-left, same restraint as the copy */
