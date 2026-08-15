@@ -248,7 +248,13 @@ async function main() {
   const size = SIZES[sizeKey];
   if (!size) throw new Error(`unknown size "${sizeKey}" — use ${Object.keys(SIZES).join(', ')}`);
   if (!Array.isArray(cfg.slides) || !cfg.slides.length) throw new Error('spec has no slides');
-  if (cfg.slides.length > 10) throw new Error('Instagram allows at most 10 slides per carousel');
+  // Instagram itself takes 20 slides, but Meta's publishing API stops at 10 —
+  // so render whatever was asked for and flag what the API will not carry.
+  const API_MAX = 10;
+  if (cfg.slides.length > API_MAX) {
+    console.warn(`\n  ! ${cfg.slides.length} слайдов. Через API уйдут первые ${API_MAX}, ` +
+      'остальные придётся доложить вручную из приложения.');
+  }
   cfg._guides = args.guides;
 
   const slug = cfg.slug ?? path.basename(args.spec, '.json');

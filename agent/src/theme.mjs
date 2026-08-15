@@ -83,14 +83,16 @@ body{display:flex;flex-direction:column;align-items:center;gap:40px;padding:40px
       rgba(8,10,14,.30) 100%);
 }
 /* The pool under the copy sits on top of the falloff, sized to what the ground
-   needs (--vs) and present only where there is copy (--vp). */
+   needs (--vs) and present only where there is copy (--vp).
+   It is meant to be all but invisible — you should not be able to point at
+   where it starts. The type's own shadow does the rest of the work. */
 .vig.pool{
   background:
     radial-gradient(105% 62% at var(--vx) var(--vy),
-      rgba(8,10,14,calc(.46*var(--vs)*var(--vp))) 0%,
-      rgba(8,10,14,calc(.30*var(--vs)*var(--vp))) 32%,
-      rgba(8,10,14,calc(.10*var(--vs)*var(--vp))) 58%,
-      rgba(8,10,14,0) 76%),
+      rgba(8,10,14,calc(.16*var(--vs)*var(--vp))) 0%,
+      rgba(8,10,14,calc(.10*var(--vs)*var(--vp))) 34%,
+      rgba(8,10,14,calc(.03*var(--vs)*var(--vp))) 60%,
+      rgba(8,10,14,0) 78%),
     radial-gradient(128% 96% at 50% 42%,
       rgba(8,10,14,0) 52%,
       rgba(8,10,14,.16) 82%,
@@ -100,9 +102,9 @@ body{display:flex;flex-direction:column;align-items:center;gap:40px;padding:40px
 .vig.pool.inverted{
   background:
     radial-gradient(105% 62% at var(--vx) var(--vy),
-      rgba(255,255,255,calc(.60*var(--vs)*var(--vp))) 0%,
-      rgba(255,255,255,calc(.38*var(--vs)*var(--vp))) 34%,
-      rgba(255,255,255,0) 74%),
+      rgba(255,255,255,calc(.22*var(--vs)*var(--vp))) 0%,
+      rgba(255,255,255,calc(.13*var(--vs)*var(--vp))) 36%,
+      rgba(255,255,255,0) 76%),
     radial-gradient(128% 96% at 50% 42%,
       rgba(8,10,14,0) 55%,
       rgba(8,10,14,.22) 100%);
