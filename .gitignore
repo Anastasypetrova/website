@@ -33,5 +33,3 @@ bot/.wrangler
 # bundled worker, rebuilt on demand
 api/dist
 
-# rendered carousels
-out

@@ -2,17 +2,19 @@
 /**
  * Render an Instagram carousel from a spec file.
  *
- *   node tools/carousel/render.mjs tools/carousel/examples/mir-za.json
+ *   npm run render -- posts/mir-vsegda-za.json
  *
- * Each slide is a photo cropped to the canvas, a gradient vignette, and a short
- * line of copy placed on the emptiest part of the frame. Placement is measured
- * from the photo itself (see `analyze.mjs`) unless the spec pins a box.
+ * Each slide is a photo from `input/` cropped to the canvas, a gradient
+ * vignette, and a line of copy placed where the frame has room for it.
+ * Placement is measured from the photo itself (see `analyze.mjs`) unless the
+ * spec pins a box.
  *
  * Output: numbered PNGs ready to post, a caption file, and a preview page.
  *
  * Flags:
- *   --out <dir>    output root                     (default: out/carousel)
+ *   --out <dir>    output root                     (default: out)
  *   --size 4:5     canvas                          (4:5 | 1:1 | 9:16)
+ *   --candidates   render every placement the analyser proposed, for a look
  *   --guides       draw the chosen text box and the 1:1 grid crop
  *   --jpg          write JPEG instead of PNG
  */
@@ -26,18 +28,10 @@ import { fileURLToPath } from 'node:url';
 import { SIZES, DEFAULT_SIZE, TEXT_SIZES, baseCss, rich, esc } from './theme.mjs';
 import { findTextBox, roundBox } from './analyze.mjs';
 
-const ROOT = path.resolve(fileURLToPath(new URL('../..', import.meta.url)));
+const ROOT = path.resolve(fileURLToPath(new URL('..', import.meta.url)));
 
 const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
 
-/**
- * How tall the copy will actually be, as a share of the canvas.
- *
- * The analyser needs the real footprint: reserving four lines' worth of space
- * for a two-line sentence pushes the box away from spots that would have fitted
- * it comfortably. Cyrillic in Inter averages close to half the point size per
- * glyph, which is near enough to count lines from.
- */
 /**
  * Vignette strength for a measured placement.
  *
@@ -51,6 +45,14 @@ function vignetteFor(measured) {
     : clamp((measured.lum - 0.12) * 2.6, 0.5, 1.8);
 }
 
+/**
+ * How tall the copy will actually be, as a share of the canvas.
+ *
+ * The analyser needs the real footprint: reserving four lines' worth of space
+ * for a two-line sentence pushes the box away from spots that would have fitted
+ * it comfortably. Cyrillic in Inter averages close to half the point size per
+ * glyph, which is near enough to count lines from.
+ */
 function textHeight(slide, boxW, size) {
   const fs = (TEXT_SIZES[slide.size ?? 'm'] ?? TEXT_SIZES.m) * size.w;
   const perLine = Math.max(8, (boxW * size.w) / (fs * 0.5));
@@ -61,41 +63,39 @@ function textHeight(slide, boxW, size) {
 
 /* ---------------------------------------------------------------- photos -- */
 
+export const PHOTO_RE = /\.(jpe?g|png|webp|avif|heic|heif)$/i;
+
 /**
- * Resolve a spec's `photo` to a file: either a path, or one of the slot names
- * the site itself uses. The slot aliases live in `src/photos.ts` — read them
- * from there rather than keeping a second copy that can drift.
+ * Index whatever is sitting in `input/`.
+ *
+ * A spec names a photo the way the file is named — case, spaces and punctuation
+ * are ignored, so `IMG_4821.HEIC` answers to `img4821`, and a phone's own
+ * filenames can be used without renaming anything.
  */
 async function photoIndex() {
-  const dir = path.join(ROOT, 'src/photos');
+  const dir = path.join(ROOT, 'input');
   const norm = (s) => s.toLowerCase().replace(/[^a-z0-9]/g, '');
-
-  const aliases = new Map();
-  try {
-    const src = await fs.readFile(path.join(ROOT, 'src/photos.ts'), 'utf8');
-    const block = src.match(/HANDOFF_NAMES[^{]*\{([\s\S]*?)\n\};/)?.[1] ?? '';
-    for (const m of block.matchAll(/'([^']+)'\s*:\s*'([^']+)'|(\w+)\s*:\s*'([^']+)'/g)) {
-      aliases.set(norm(m[1] ?? m[3]), m[2] ?? m[4]);
-    }
-  } catch { /* no registry: slot names still work */ }
-
-  const bySlot = new Map();
+  const byName = new Map();
   for (const file of await fs.readdir(dir).catch(() => [])) {
-    if (!/\.(jpe?g|png|webp|avif)$/i.test(file)) continue;
-    const key = norm(file.replace(/\.[^.]+$/, ''));
-    const slot = aliases.get(key) ?? key;
-    // A file named after the slot wins over one named after the handoff file.
-    if (!bySlot.has(slot) || key === slot) bySlot.set(slot, path.join(dir, file));
+    if (!PHOTO_RE.test(file)) continue;
+    byName.set(norm(file.replace(/\.[^.]+$/, '')), path.join(dir, file));
   }
-  return bySlot;
+  return byName;
 }
 
-/** Tone curves. `none` is the reference look — the photos there are ungraded. */
+/**
+ * Tone curves.
+ *
+ * `base` is the house treatment and the default: brightness down a couple of
+ * points and a touch of sharpening. Both are deliberately small — the point is
+ * a slightly deeper, crisper frame that still looks like the photo you took,
+ * not a filter.
+ */
 const GRADES = {
+  base: { brightness: 0.96, sharpen: 0.8 },
   none: null,
-  natural: { saturation: 0.97, brightness: 1.01 },
-  warm: { saturation: 1.04, brightness: 1.02, hue: 4 },
-  muted: { saturation: 0.86, brightness: 1.03 },
+  soft: { brightness: 0.98, sharpen: 0.5 },
+  deep: { brightness: 0.93, saturation: 0.97, sharpen: 1.1 },
 };
 
 /**
@@ -103,11 +103,19 @@ const GRADES = {
  * analysis and the render — works on this file, so the box the analyser picks
  * is the box the viewer sees.
  */
-async function prepPhoto(src, dest, { w, h }, { focus = 'centre', grade = 'none' }) {
+async function prepPhoto(src, dest, { w, h }, { focus = 'centre', grade = 'base' }) {
   const position = focus === 'auto' ? sharp.strategy.attention : focus;
   let img = sharp(src).rotate().resize(w, h, { fit: 'cover', position });
+
   const g = GRADES[grade];
-  if (g) img = img.modulate(g);
+  if (g === undefined) throw new Error(`unknown grade "${grade}" — use ${Object.keys(GRADES).join(', ')}`);
+  if (g) {
+    const { sharpen, ...modulate } = g;
+    if (Object.keys(modulate).length) img = img.modulate(modulate);
+    // Sharpen after the resize, so it works on the pixels that ship.
+    if (sharpen) img = img.sharpen({ sigma: sharpen });
+  }
+
   await img.jpeg({ quality: 95, chromaSubsampling: '4:4:4' }).toFile(dest);
 }
 
@@ -124,7 +132,7 @@ function slideHtml(s, i, cfg) {
     `--fs:${fs}`, `--pad:0.085`,
     `--vx:${((box.x + box.w / 2) * 100).toFixed(1)}%`,
     `--vy:${((box.y + box.h / 2) * 100).toFixed(1)}%`,
-    `--vs:${vs}`,
+    `--vs:${vs}`, `--vp:${s.text ? 1 : 0}`,
   ].join(';');
 
   const copy = s.text
@@ -137,7 +145,7 @@ function slideHtml(s, i, cfg) {
 
   return `<div class="slide" style="${vars}">
   <div class="bg"><img src="${esc(s._url)}" alt=""></div>
-  <div class="vig ${vs > 0 && s.text ? 'on' : ''} ${tone === 'dark' ? 'inverted' : ''}"></div>
+  <div class="vig ${vs > 0 && s.text ? 'pool' : ''} ${tone === 'dark' ? 'inverted' : ''}"></div>
   ${copy}
   ${handle ? `<div class="handle ${tone === 'dark' ? 'dark' : ''}">${esc(handle)}</div>` : ''}
   <div class="guides ${cfg._guides ? 'on' : ''}"><div class="box"></div><div class="sq"></div></div>
@@ -146,7 +154,7 @@ function slideHtml(s, i, cfg) {
 
 function pageHtml(items, cfg, size) {
   return `<!doctype html><html lang="ru"><head><meta charset="utf-8">
-<link rel="stylesheet" href="/src/fonts.css">
+<link rel="stylesheet" href="/fonts/fonts.css">
 <style>${baseCss(size)}</style></head><body>
 ${items.map((it) => slideHtml(it.slide, it.index, cfg)).join('\n')}
 </body></html>`;
@@ -187,11 +195,11 @@ const MIME = {
 };
 
 /**
- * Serve the repo over HTTP for the duration of the render.
+ * Serve the agent folder over HTTP for the duration of the render.
  *
  * Chromium refuses to load webfonts cross-origin from `file://` URLs, and the
- * whole point here is that the slides use the site's own woff2 files — so the
- * page is served rather than opened from disk.
+ * slides depend on the vendored Inter woff2 files — so the page is served
+ * rather than opened from disk.
  */
 async function serve(pageBody) {
   const server = http.createServer(async (req, res) => {
@@ -215,7 +223,7 @@ async function serve(pageBody) {
 /* ------------------------------------------------------------------ main -- */
 
 function parseArgs(argv) {
-  const args = { spec: null, out: 'out/carousel', size: null, guides: false, jpg: false, candidates: false };
+  const args = { spec: null, out: 'out', size: null, guides: false, jpg: false, candidates: false };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     if (a === '--out') args.out = argv[++i];
@@ -231,7 +239,7 @@ function parseArgs(argv) {
 async function main() {
   const args = parseArgs(process.argv.slice(2));
   if (!args.spec) {
-    console.error('usage: node tools/carousel/render.mjs <spec.json> [--out dir] [--size 4:5] [--guides] [--jpg]');
+    console.error('usage: npm run render -- <spec.json> [--out dir] [--size 4:5] [--candidates] [--guides] [--jpg]');
     process.exit(1);
   }
 
@@ -260,8 +268,8 @@ async function main() {
     const src = photos.get(s.photo.toLowerCase().replace(/[^a-z0-9]/g, '')) ??
       (await fs.access(path.resolve(ROOT, s.photo)).then(() => path.resolve(ROOT, s.photo), () => null));
     if (!src) {
-      throw new Error(`slide ${i + 1}: no photo "${s.photo}" — put a file in src/photos/ or give a path. ` +
-        `Known slots: ${[...photos.keys()].join(', ')}`);
+      throw new Error(`slide ${i + 1}: no photo "${s.photo}" — положите файл в input/ или укажите путь. ` +
+        `Есть в input/: ${[...photos.keys()].join(', ')}`);
     }
 
     const dest = path.join(workDir, `${String(i + 1).padStart(2, '0')}.jpg`);

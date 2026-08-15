@@ -72,29 +72,40 @@ body{display:flex;flex-direction:column;align-items:center;gap:40px;padding:40px
  * edge falloff that frames the photo. Both stay low-contrast on purpose —
  * a visible grey panel would read as a sticker, not as light.
  */
-.vig{position:absolute;inset:0;z-index:2;pointer-events:none}
-.vig.on{
+.vig{
+  position:absolute;inset:0;z-index:2;pointer-events:none;
+  /* Edge falloff, on every frame whether or not it carries copy — it is part
+     of the house look, not a device for holding type. */
+  background:
+    radial-gradient(128% 96% at 50% 42%,
+      rgba(8,10,14,0) 52%,
+      rgba(8,10,14,.16) 82%,
+      rgba(8,10,14,.30) 100%);
+}
+/* The pool under the copy sits on top of the falloff, sized to what the ground
+   needs (--vs) and present only where there is copy (--vp). */
+.vig.pool{
   background:
     radial-gradient(105% 62% at var(--vx) var(--vy),
-      rgba(8,10,14,calc(.46*var(--vs))) 0%,
-      rgba(8,10,14,calc(.30*var(--vs))) 32%,
-      rgba(8,10,14,calc(.10*var(--vs))) 58%,
+      rgba(8,10,14,calc(.46*var(--vs)*var(--vp))) 0%,
+      rgba(8,10,14,calc(.30*var(--vs)*var(--vp))) 32%,
+      rgba(8,10,14,calc(.10*var(--vs)*var(--vp))) 58%,
       rgba(8,10,14,0) 76%),
     radial-gradient(128% 96% at 50% 42%,
       rgba(8,10,14,0) 52%,
-      rgba(8,10,14,calc(.18*var(--vs))) 82%,
-      rgba(8,10,14,calc(.32*var(--vs))) 100%);
+      rgba(8,10,14,.16) 82%,
+      rgba(8,10,14,.30) 100%);
 }
-/* Light photos take the same shape in reverse, so dark type keeps its ground. */
-.vig.on.inverted{
+/* Light ground takes the same shape in reverse, so dark type keeps its footing. */
+.vig.pool.inverted{
   background:
     radial-gradient(105% 62% at var(--vx) var(--vy),
-      rgba(255,255,255,calc(.60*var(--vs))) 0%,
-      rgba(255,255,255,calc(.38*var(--vs))) 34%,
+      rgba(255,255,255,calc(.60*var(--vs)*var(--vp))) 0%,
+      rgba(255,255,255,calc(.38*var(--vs)*var(--vp))) 34%,
       rgba(255,255,255,0) 74%),
     radial-gradient(128% 96% at 50% 42%,
       rgba(8,10,14,0) 55%,
-      rgba(8,10,14,calc(.16*var(--vs))) 100%);
+      rgba(8,10,14,.22) 100%);
 }
 
 /* the copy */
