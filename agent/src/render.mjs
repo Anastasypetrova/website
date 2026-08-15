@@ -25,8 +25,8 @@ import fs from 'node:fs/promises';
 import { createReadStream } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { SIZES, DEFAULT_SIZE, TEXT_SIZES, baseCss, rich, esc } from './theme.mjs';
-import { findTextBox, roundBox } from './analyze.mjs';
+import { SIZES, DEFAULT_SIZE, TEXT_SIZES, SUPERSAMPLE, baseCss, rich, esc } from './theme.mjs';
+import { findTextBox, measureBox, roundBox } from './analyze.mjs';
 
 const ROOT = path.resolve(fileURLToPath(new URL('..', import.meta.url)));
 
@@ -102,21 +102,29 @@ const GRADES = {
  * Crop a photo to the canvas and grade it. Everything downstream — the
  * analysis and the render — works on this file, so the box the analyser picks
  * is the box the viewer sees.
+ *
+ * Prepared at the full render resolution and written as PNG. Handing the
+ * browser a canvas-sized JPEG and letting it enlarge to the device pixels
+ * costs real detail twice over: once to the browser's own scaling, once to
+ * JPEG artefacts that the second encode then bakes in.
  */
 async function prepPhoto(src, dest, { w, h }, { focus = 'centre', grade = 'base' }) {
   const position = focus === 'auto' ? sharp.strategy.attention : focus;
-  let img = sharp(src).rotate().resize(w, h, { fit: 'cover', position });
+  const rw = w * SUPERSAMPLE, rh = h * SUPERSAMPLE;
+  let img = sharp(src).rotate().resize(rw, rh, { fit: 'cover', position, kernel: 'lanczos3' });
 
   const g = GRADES[grade];
   if (g === undefined) throw new Error(`unknown grade "${grade}" — use ${Object.keys(GRADES).join(', ')}`);
   if (g) {
     const { sharpen, ...modulate } = g;
     if (Object.keys(modulate).length) img = img.modulate(modulate);
-    // Sharpen after the resize, so it works on the pixels that ship.
-    if (sharpen) img = img.sharpen({ sigma: sharpen });
+    // Sharpening happens at render resolution but is judged at output size, so
+    // the radius scales with the supersample — otherwise it halves on the way
+    // down and the "couple of points" turns into none.
+    if (sharpen) img = img.sharpen({ sigma: sharpen * SUPERSAMPLE });
   }
 
-  await img.jpeg({ quality: 95, chromaSubsampling: '4:4:4' }).toFile(dest);
+  await img.png({ compressionLevel: 6 }).toFile(dest);
 }
 
 /* ------------------------------------------------------------------ html -- */
@@ -248,12 +256,8 @@ async function main() {
   const size = SIZES[sizeKey];
   if (!size) throw new Error(`unknown size "${sizeKey}" — use ${Object.keys(SIZES).join(', ')}`);
   if (!Array.isArray(cfg.slides) || !cfg.slides.length) throw new Error('spec has no slides');
-  // Instagram itself takes 20 slides, but Meta's publishing API stops at 10 —
-  // so render whatever was asked for and flag what the API will not carry.
-  const API_MAX = 10;
-  if (cfg.slides.length > API_MAX) {
-    console.warn(`\n  ! ${cfg.slides.length} слайдов. Через API уйдут первые ${API_MAX}, ` +
-      'остальные придётся доложить вручную из приложения.');
+  if (cfg.slides.length > 20) {
+    console.warn(`\n  ! ${cfg.slides.length} слайдов — Instagram принимает 20.`);
   }
   cfg._guides = args.guides;
 
@@ -278,7 +282,7 @@ async function main() {
         `Есть в input/: ${[...photos.keys()].join(', ')}`);
     }
 
-    const dest = path.join(workDir, `${String(i + 1).padStart(2, '0')}.jpg`);
+    const dest = path.join(workDir, `${String(i + 1).padStart(2, '0')}.png`);
     await prepPhoto(src, dest, size, { focus: s.focus, grade: s.grade ?? cfg.grade });
     s._url = `/${path.relative(ROOT, dest).split(path.sep).join('/')}`;
 
@@ -290,11 +294,17 @@ async function main() {
         tone: s.tone && s.tone !== 'auto' ? s.tone : 'auto',
       });
       s._box = s.box ? { ...roundBox(measured), ...s.box } : roundBox(measured);
-      s._tone = measured.tone;
-      s._detail = measured.detail;
-      s._lum = measured.lum;
-      s._vs = vignetteFor(measured);
       s._options = measured.options;
+
+      // A pinned box has to be read where it actually sits, not where the
+      // analyser would have put it.
+      const at = s.box
+        ? await measureBox(dest, s._box, s.tone && s.tone !== 'auto' ? s.tone : 'auto')
+        : measured;
+      s._tone = at.tone;
+      s._detail = at.detail;
+      s._lum = at.lum;
+      s._vs = vignetteFor(at);
     } else {
       s._box = { x: 0.085, y: 0.085, w: 0.46, h: 0.16 };
       s._tone = 'light';
@@ -308,7 +318,7 @@ async function main() {
   try {
     const page = await browser.newPage({
       viewport: { width: size.w + 80, height: size.h + 80 },
-      deviceScaleFactor: 2,          // supersample, then scale down for clean edges
+      deviceScaleFactor: SUPERSAMPLE,
     });
     await page.goto(`http://127.0.0.1:${port}/`, { waitUntil: 'networkidle' });
     await page.evaluate(() => document.fonts.ready);
@@ -319,7 +329,10 @@ async function main() {
       const raw = await el.screenshot({ type: 'png' });
       const name = `${items[i].name}.${ext}`;
       const img = sharp(raw).resize(size.w, size.h, { kernel: 'lanczos3' });
-      await (args.jpg ? img.jpeg({ quality: 92, chromaSubsampling: '4:4:4' }) : img.png({ compressionLevel: 9 }))
+      // PNG by default: Instagram re-encodes to JPEG on its side, and going
+      // through a JPEG of our own first would stack one generation of loss on
+      // top of another.
+      await (args.jpg ? img.jpeg({ quality: 96, chromaSubsampling: '4:4:4', mozjpeg: true }) : img.png({ compressionLevel: 9 }))
         .toFile(path.join(outDir, name));
       files.push(name);
     }

@@ -12,14 +12,29 @@
  * slides render identically on every machine.
  */
 
-/** Instagram canvases. 4:5 is the default: it takes the most feed height. */
+/**
+ * Instagram canvases, at the widest edge Instagram keeps.
+ *
+ * Uploads are downsampled to 1440px wide, so 1440 is the most detail that can
+ * reach a viewer — the usual 1080 throws away a third of it for nothing. 4:5
+ * is the default: it takes the most height in the feed.
+ */
 export const SIZES = {
-  '4:5': { w: 1080, h: 1350 },
-  '1:1': { w: 1080, h: 1080 },
-  '9:16': { w: 1080, h: 1920 },
+  '4:5': { w: 1440, h: 1800 },
+  '1:1': { w: 1440, h: 1440 },
+  '9:16': { w: 1440, h: 2560 },
 };
 
 export const DEFAULT_SIZE = '4:5';
+
+/**
+ * Render at twice the output and scale down.
+ *
+ * Type and the vignette get supersampled, which is where clean edges come
+ * from, and the photo is prepared at this resolution too so the browser never
+ * has to enlarge it.
+ */
+export const SUPERSAMPLE = 2;
 
 /** Copy sizes, as a share of canvas width — measured off the reference slides. */
 export const TEXT_SIZES = { s: 0.026, m: 0.030, l: 0.036 };

@@ -177,6 +177,25 @@ export async function findTextBox(file, opts = {}) {
   return { ...options[0], options, subject: m.subject };
 }
 
+/**
+ * Measure one box that was chosen by hand.
+ *
+ * A pinned box still needs its ground read — which type colour it can carry and
+ * how much vignette it wants. Taking those from the automatic pick instead
+ * would describe a spot the copy is not sitting on.
+ */
+export async function measureBox(file, box, tone = 'auto') {
+  const m = await maps(file);
+  const full = { x: box.x, y: box.y, w: box.w ?? 0.46, h: box.h ?? 0.16 };
+  if (tone !== 'auto') return { ...full, ...score(m, full, tone), tone };
+
+  const light = score(m, full, 'light');
+  const dark = score(m, full, 'dark');
+  return light.contrast <= dark.contrast
+    ? { ...full, ...light, tone: 'light' }
+    : { ...full, ...dark, tone: 'dark' };
+}
+
 /** Round a box for readable JSON without losing placement accuracy. */
 export function roundBox(b) {
   const r = (v) => Math.round(v * 1000) / 1000;
