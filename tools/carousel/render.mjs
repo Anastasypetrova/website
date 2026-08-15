@@ -30,6 +30,35 @@ const ROOT = path.resolve(fileURLToPath(new URL('../..', import.meta.url)));
 
 const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
 
+/**
+ * How tall the copy will actually be, as a share of the canvas.
+ *
+ * The analyser needs the real footprint: reserving four lines' worth of space
+ * for a two-line sentence pushes the box away from spots that would have fitted
+ * it comfortably. Cyrillic in Inter averages close to half the point size per
+ * glyph, which is near enough to count lines from.
+ */
+/**
+ * Vignette strength for a measured placement.
+ *
+ * Scaled to what the ground actually needs: a dark frame gets almost none, a
+ * bright one gets enough to hold white type. A fixed strength either muddies
+ * the dark frames or loses the type on the light ones.
+ */
+function vignetteFor(measured) {
+  return measured.tone === 'dark'
+    ? clamp((0.88 - measured.lum) * 2.6, 0.5, 1.8)
+    : clamp((measured.lum - 0.12) * 2.6, 0.5, 1.8);
+}
+
+function textHeight(slide, boxW, size) {
+  const fs = (TEXT_SIZES[slide.size ?? 'm'] ?? TEXT_SIZES.m) * size.w;
+  const perLine = Math.max(8, (boxW * size.w) / (fs * 0.5));
+  const chars = [slide.text, slide.text2].filter(Boolean).join(' ').length;
+  const lines = Math.max(1, Math.ceil(chars / perLine)) + (slide.text2 ? 1 : 0);
+  return clamp((lines * 1.36 * fs) / size.h, 0.05, 0.62);
+}
+
 /* ---------------------------------------------------------------- photos -- */
 
 /**
@@ -115,12 +144,38 @@ function slideHtml(s, i, cfg) {
 </div>`;
 }
 
-function pageHtml(cfg, size) {
+function pageHtml(items, cfg, size) {
   return `<!doctype html><html lang="ru"><head><meta charset="utf-8">
 <link rel="stylesheet" href="/src/fonts.css">
 <style>${baseCss(size)}</style></head><body>
-${cfg.slides.map((s, i) => slideHtml(s, i, cfg)).join('\n')}
+${items.map((it) => slideHtml(it.slide, it.index, cfg)).join('\n')}
 </body></html>`;
+}
+
+/**
+ * Expand the slides into what actually gets shot.
+ *
+ * Normally that is one frame per slide. With --candidates each slide with copy
+ * is shot once per placement the analyser proposed, so the agent can look at
+ * the real options side by side instead of guessing from coordinates.
+ */
+function renderItems(cfg, candidates) {
+  const items = [];
+  for (const [index, slide] of cfg.slides.entries()) {
+    const opts = candidates && slide.text && !slide.box ? slide._options : null;
+    if (!opts?.length) {
+      items.push({ slide, index, name: String(index + 1).padStart(2, '0') });
+      continue;
+    }
+    for (const [k, o] of opts.entries()) {
+      items.push({
+        index,
+        name: `${String(index + 1).padStart(2, '0')}${'abcd'[k]}`,
+        slide: { ...slide, _box: roundBox(o), _tone: o.tone, _vs: vignetteFor(o) },
+      });
+    }
+  }
+  return items;
 }
 
 /* ---------------------------------------------------------------- server -- */
@@ -160,12 +215,13 @@ async function serve(pageBody) {
 /* ------------------------------------------------------------------ main -- */
 
 function parseArgs(argv) {
-  const args = { spec: null, out: 'out/carousel', size: null, guides: false, jpg: false };
+  const args = { spec: null, out: 'out/carousel', size: null, guides: false, jpg: false, candidates: false };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     if (a === '--out') args.out = argv[++i];
     else if (a === '--size') args.size = argv[++i];
     else if (a === '--guides') args.guides = true;
+    else if (a === '--candidates') args.candidates = true;
     else if (a === '--jpg') args.jpg = true;
     else if (!a.startsWith('--')) args.spec = a;
   }
@@ -198,6 +254,9 @@ async function main() {
   // Prepare every photo, then measure where its copy can go.
   for (const [i, s] of cfg.slides.entries()) {
     if (!s.photo) throw new Error(`slide ${i + 1}: "photo" is required`);
+    // Slide one is the title — it carries the whole post in the feed, so it is
+    // set larger than the slides that follow unless the spec says otherwise.
+    if (i === 0 && !s.size) s.size = 'l';
     const src = photos.get(s.photo.toLowerCase().replace(/[^a-z0-9]/g, '')) ??
       (await fs.access(path.resolve(ROOT, s.photo)).then(() => path.resolve(ROOT, s.photo), () => null));
     if (!src) {
@@ -210,20 +269,18 @@ async function main() {
     s._url = `/${path.relative(ROOT, dest).split(path.sep).join('/')}`;
 
     if (s.text) {
+      const boxW = s.box?.w ?? cfg.boxW ?? 0.46;
       const measured = await findTextBox(dest, {
-        boxW: s.box?.w ?? cfg.boxW ?? 0.46,
-        boxH: s.box?.h ?? 0.16,
+        boxW,
+        boxH: s.box?.h ?? textHeight(s, boxW, size),
+        tone: s.tone && s.tone !== 'auto' ? s.tone : 'auto',
       });
       s._box = s.box ? { ...roundBox(measured), ...s.box } : roundBox(measured);
-      s._tone = s.tone && s.tone !== 'auto' ? s.tone : measured.tone;
+      s._tone = measured.tone;
       s._detail = measured.detail;
       s._lum = measured.lum;
-      // Scale the vignette to what the ground actually needs: a dark photo gets
-      // almost none, a bright one gets enough to hold white type. A fixed
-      // strength either muddies the dark frames or loses the light ones.
-      s._vs = s._tone === 'dark'
-        ? clamp((0.88 - measured.lum) * 2.6, 0.5, 1.8)
-        : clamp((measured.lum - 0.12) * 2.6, 0.5, 1.8);
+      s._vs = vignetteFor(measured);
+      s._options = measured.options;
     } else {
       s._box = { x: 0.085, y: 0.085, w: 0.46, h: 0.16 };
       s._tone = 'light';
@@ -231,7 +288,8 @@ async function main() {
   }
 
   // Render.
-  const { server, port } = await serve(pageHtml(cfg, size));
+  const items = renderItems(cfg, args.candidates);
+  const { server, port } = await serve(pageHtml(items, cfg, size));
   const browser = await chromium.launch();
   try {
     const page = await browser.newPage({
@@ -245,7 +303,7 @@ async function main() {
     const files = [];
     for (const [i, el] of (await page.locator('.slide').all()).entries()) {
       const raw = await el.screenshot({ type: 'png' });
-      const name = `${String(i + 1).padStart(2, '0')}.${ext}`;
+      const name = `${items[i].name}.${ext}`;
       const img = sharp(raw).resize(size.w, size.h, { kernel: 'lanczos3' });
       await (args.jpg ? img.jpeg({ quality: 92, chromaSubsampling: '4:4:4' }) : img.png({ compressionLevel: 9 }))
         .toFile(path.join(outDir, name));

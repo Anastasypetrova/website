@@ -1,29 +1,36 @@
 /**
- * Find where text can sit on a photo without covering anything.
+ * Choose where the copy goes on a photo.
  *
- * The rule the reference carousels follow: copy goes on empty sky, never on
- * the subject. That is a measurable property — sky is flat, a person is full
- * of detail — so we score every candidate text box by how much visual detail
- * it contains and pick the calmest one.
+ * Not "top third, on the left" — that was one photograph's answer, not a rule.
+ * The job is to find the spot that actually looks right on this frame: empty
+ * enough that nothing is covered, even enough that the type stays legible, and
+ * placed so the slide reads as composed rather than as text dropped on a photo.
  *
- * No model, no network: a Sobel energy map plus integral images, which is
- * enough to tell sky from a body and runs in a few milliseconds per photo.
+ * Five things are measured for every candidate box, and the frame decides which
+ * one wins:
+ *
+ *   detail      how much is going on under the box — a face and hands score
+ *               high, sky and a plain wall score near zero
+ *   evenness    how uniform the ground is; busy-but-flat gradients still read
+ *   contrast    how far the ground sits from the type's own colour
+ *   balance     whether the box sits away from the subject's visual mass, so
+ *               the two sides of the frame hold each other up
+ *   thirds      how close the box lands to a rule-of-thirds line
+ *
+ * No model and no network: Sobel energy plus integral images, a few
+ * milliseconds per photo.
  */
 import sharp from 'sharp';
 
 /** Working resolution for the analysis. Detail survives; the cost does not. */
 const SAMPLE_W = 200;
 
-/**
- * Build the luminance and detail maps for a photo.
- * Both are returned as integral images so any box query is four lookups.
- */
 async function maps(file) {
   const img = sharp(file).greyscale().resize({ width: SAMPLE_W });
   const { data, info } = await img.raw().toBuffer({ resolveWithObject: true });
   const { width: w, height: h } = info;
 
-  // Sobel magnitude — high where edges are, near zero on flat sky.
+  // Sobel magnitude — high on edges, near zero on flat sky.
   const detail = new Float32Array(w * h);
   const at = (x, y) => data[y * w + x];
   for (let y = 1; y < h - 1; y++) {
@@ -38,78 +45,136 @@ async function maps(file) {
     }
   }
 
-  return { w, h, detailSum: integral(detail, w, h), lumSum: integral(data, w, h, 255) };
+  // Where the subject sits, as the centre of mass of all that detail. Text
+  // placed away from it is what makes a slide feel balanced rather than piled.
+  let mass = 0, mx = 0, my = 0;
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
+      const d = detail[y * w + x];
+      mass += d; mx += d * (x / w); my += d * (y / h);
+    }
+  }
+  const subject = mass > 0 ? { x: mx / mass, y: my / mass } : { x: 0.5, y: 0.5 };
+
+  const lum = new Float32Array(w * h);
+  const lum2 = new Float32Array(w * h);
+  for (let i = 0; i < data.length; i++) {
+    const v = data[i] / 255;
+    lum[i] = v; lum2[i] = v * v;
+  }
+
+  return {
+    w, h, subject,
+    detailSum: integral(detail, w, h),
+    lumSum: integral(lum, w, h),
+    lum2Sum: integral(lum2, w, h),
+  };
 }
 
 /** Summed-area table, padded by one row/column so box sums need no bounds checks. */
-function integral(src, w, h, scale = 1) {
+function integral(src, w, h) {
   const S = new Float64Array((w + 1) * (h + 1));
   for (let y = 0; y < h; y++) {
     let row = 0;
     for (let x = 0; x < w; x++) {
-      row += src[y * w + x] / scale;
+      row += src[y * w + x];
       S[(y + 1) * (w + 1) + (x + 1)] = S[y * (w + 1) + (x + 1)] + row;
     }
   }
   return S;
 }
 
-/** Mean value of an integral image over a pixel box. */
 function boxMean(S, w, x0, y0, x1, y1) {
   const W = w + 1;
   const area = Math.max(1, (x1 - x0) * (y1 - y0));
   return (S[y1 * W + x1] - S[y0 * W + x1] - S[y1 * W + x0] + S[y0 * W + x0]) / area;
 }
 
+const clamp01 = (v) => Math.max(0, Math.min(1, v));
+
+/** Distance to the nearest rule-of-thirds line, on one axis. */
+function toThird(v) {
+  return Math.min(Math.abs(v - 1 / 3), Math.abs(v - 2 / 3));
+}
+
 /**
- * Pick the best text box for a photo.
- *
- * `box` is normalised {x, y, w, h} in 0..1 of the rendered canvas, so it is
- * independent of the photo's own aspect — the renderer crops the photo to the
- * canvas first and analysis runs on that same crop.
- *
- * Returns the winning box plus the mean luminance under it, which decides
- * whether the copy is set in white or in ink.
+ * Score one candidate box for one type colour.
+ * Lower is better. Every term is roughly 0..1 before weighting.
  */
-export async function findTextBox(file, opts = {}) {
-  const {
-    boxW = 0.46,      // column width, as in the reference: a narrow measure
-    boxH = 0.16,      // room for three or four lines
-    margin = 0.085,   // keep clear of the canvas edge
-    topBias = 0.24,   // the reference always sits in the upper third
-    step = 0.02,
-  } = opts;
-
-  const { w, h, detailSum, lumSum } = await maps(file);
+function score(m, box, tone) {
+  const { w, h } = m;
   const px = (v, span) => Math.max(0, Math.min(span, Math.round(v * span)));
+  const x0 = px(box.x, w), x1 = px(box.x + box.w, w);
+  const y0 = px(box.y, h), y1 = px(box.y + box.h, h);
 
-  let best = null;
-  for (let y = margin; y + boxH <= 1 - margin; y += step) {
-    for (let x = margin; x + boxW <= 1 - margin; x += step) {
-      const x0 = px(x, w), x1 = px(x + boxW, w);
-      const y0 = px(y, h), y1 = px(y + boxH, h);
+  // Sample a little wider than the type itself: copy needs quiet around it,
+  // not just under it, or it ends up tucked against the subject's outline.
+  const pad = Math.round(0.022 * w);
+  const detail = boxMean(m.detailSum, w,
+    Math.max(0, x0 - pad), Math.max(0, y0 - pad),
+    Math.min(w, x1 + pad), Math.min(h, y1 + pad));
 
-      // Pad the sampled region a little: text needs quiet around it, not just
-      // under it, or it ends up tucked against the subject's outline.
-      const pad = Math.round(0.02 * w);
-      const detail = boxMean(detailSum, w, Math.max(0, x0 - pad), Math.max(0, y0 - pad),
-        Math.min(w, x1 + pad), Math.min(h, y1 + pad));
-      const lum = boxMean(lumSum, w, x0, y0, x1, y1);
+  const lum = boxMean(m.lumSum, w, x0, y0, x1, y1);
+  const variance = Math.max(0, boxMean(m.lum2Sum, w, x0, y0, x1, y1) - lum * lum);
+  const evenness = clamp01(Math.sqrt(variance) / 0.22);
 
-      let score = detail * 3.2;
-      score += Math.abs(y + boxH / 2 - topBias) * 0.5;   // hold the upper third
-      score += Math.max(0, lum - 0.62) * 0.9;            // white type needs a darker ground
-      score += x > 0.5 ? 0.04 : 0;                       // mild preference for the left
+  // How far the ground sits from the type's colour. The vignette can buy some
+  // of this back, so it is a preference rather than a hard cut.
+  const inkLum = tone === 'dark' ? 0.17 : 1;
+  const contrast = clamp01(1 - Math.abs(lum - inkLum) / 0.55);
 
-      if (!best || score < best.score) best = { x, y, w: boxW, h: boxH, score, detail, lum };
-    }
-  }
+  const cx = box.x + box.w / 2, cy = box.y + box.h / 2;
+  // Sit away from the subject's mass, but not so far that the box falls off
+  // into a corner — the penalty fades out once there is real separation.
+  const dist = Math.hypot(cx - m.subject.x, cy - m.subject.y);
+  const balance = clamp01(1 - dist / 0.48);
+
+  const thirds = clamp01((toThird(cx) + toThird(cy)) / 0.34);
+
+  // Hugging the safe edge looks like a mistake even when the pixels are empty.
+  const edge = clamp01(1 - Math.min(box.x, box.y, 1 - box.x - box.w, 1 - box.y - box.h) / 0.075);
 
   return {
-    ...best,
-    /** Light ground gets ink type, dark ground gets white — same rule as the site. */
-    tone: best.lum > 0.62 ? 'dark' : 'light',
+    total: detail * 3.6 + evenness * 0.9 + contrast * 1.5 + balance * 0.8 + thirds * 0.35 + edge * 0.6,
+    detail, lum, evenness, contrast, balance,
   };
+}
+
+/**
+ * Pick the best text box for a photo, trying both type colours and keeping
+ * whichever the frame supports better.
+ *
+ * `box` is normalised {x, y, w, h} in 0..1 of the rendered canvas — analysis
+ * runs on the already-cropped frame, so the box the analyser picks is the box
+ * the viewer sees.
+ */
+export async function findTextBox(file, opts = {}) {
+  const { boxW = 0.46, boxH = 0.16, margin = 0.075, step = 0.02, tone = 'auto' } = opts;
+
+  const m = await maps(file);
+  const tones = tone === 'auto' ? ['light', 'dark'] : [tone];
+
+  const all = [];
+  for (let y = margin; y + boxH <= 1 - margin; y += step) {
+    for (let x = margin; x + boxW <= 1 - margin; x += step) {
+      const box = { x, y, w: boxW, h: boxH };
+      for (const t of tones) all.push({ ...box, ...score(m, box, t), tone: t });
+    }
+  }
+  all.sort((a, b) => a.total - b.total);
+
+  // Geometry cannot tell flat sky from a flat shirt — both read as empty, and
+  // the second one covers the subject. So the analyser offers the strongest
+  // few placements that are actually far apart, and the agent looks at the
+  // rendered slide to make the call that needs eyes.
+  const options = [];
+  for (const c of all) {
+    const far = options.every((o) => Math.hypot(o.x - c.x, o.y - c.y) > 0.18);
+    if (far) options.push(c);
+    if (options.length === 4) break;
+  }
+
+  return { ...options[0], options, subject: m.subject };
 }
 
 /** Round a box for readable JSON without losing placement accuracy. */
