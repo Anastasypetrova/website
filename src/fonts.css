@@ -1,4 +1,15 @@
 /* Self-hosted webfonts. Generated from Google Fonts; latin + cyrillic subsets. */
+
+/* Stand-ins whose measured width matches the real font, so nothing reflows when
+   the real one arrives. Both sit on the first screen, inside a block anchored to
+   the bottom of the window — there, a line more or less moves the whole block.
+   The percentages are measured against Arial specifically, which is why the
+   local() list names it first — a generic `cursive` resolves to a different
+   font on every platform and cannot be matched. The accent word set in Great
+   Vibes is 343 units wide against Arial's 535, and a line of body copy is 3714
+   against Arial's 3650. */
+@font-face{font-family:'Script Fallback';src:local('Arial'),local('Helvetica'),local('Liberation Sans');size-adjust:64.2%}
+@font-face{font-family:'Sans Fallback';src:local('Arial'),local('Helvetica'),local('Liberation Sans');size-adjust:101.7%}
 @font-face{font-family:'Great Vibes';font-style:normal;font-weight:400;font-display:swap;src:url('./fonts/great-vibes-400-cyrillic-ext.woff2') format('woff2');unicode-range:U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F}
 @font-face{font-family:'Great Vibes';font-style:normal;font-weight:400;font-display:swap;src:url('./fonts/great-vibes-400-cyrillic.woff2') format('woff2');unicode-range:U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116}
 @font-face{font-family:'Great Vibes';font-style:normal;font-weight:400;font-display:swap;src:url('./fonts/great-vibes-400-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}

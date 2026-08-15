@@ -6,8 +6,8 @@
   --clay:#C79A78;--clay-d:#8F5A3B;--danger:#C16A4A;
   --font-display:'Playfair Display',Georgia,'Times New Roman',serif;
   --font-head:'Onest',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;
-  --font-script:'Great Vibes',cursive;
-  --font-sans:'Manrope',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;
+  --font-script:'Great Vibes','Script Fallback',cursive;
+  --font-sans:'Manrope','Sans Fallback',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;
   /* Neutral grotesque for the thin display numbers and the About statements.
      The design asks for Helvetica at weight 100, but Helvetica ships on
      neither Windows nor Android, and both those platforms (and fontconfig on
@@ -112,9 +112,16 @@ em.accent{font-family:var(--font-script)!important;font-weight:400!important;fon
 .hero-bg{position:absolute;inset:0;z-index:1}
 .hero-scrim{position:absolute;inset:0;z-index:2;pointer-events:none;background:linear-gradient(180deg,rgba(30,28,25,.42) 0%,rgba(30,28,25,.05) 30%,rgba(30,28,25,.08) 55%,rgba(30,28,25,.72) 100%)}
 .hero-in{position:relative;z-index:3;width:100%;max-width:var(--wrap-wide);margin-inline:auto;padding:118px 34px 82px;color:#fff}
-.hero-h{font-family:var(--font-head);font-weight:400;font-size:calc(clamp(36px,5.3vw,78px)*var(--ts,1)*var(--hs));line-height:1.07;letter-spacing:-.02em;color:#fff;max-width:17ch;text-wrap:balance;margin:0}
+/* Widths above the fold are in em, not ch, on purpose. `ch` is the width of a
+   character in the font currently rendering, so before the webfont arrives the
+   column is measured with the fallback — 577px here against Onest's 690 — and
+   the heading wraps to two extra lines. The hero is anchored to the bottom of
+   the screen, so when the real font lands and the lines collapse, the entire
+   block jumps: 0.10 of layout shift, most of the page's total. 11.3em is the
+   same 690px under Onest, and it does not move. */
+.hero-h{font-family:var(--font-head);font-weight:400;font-size:calc(clamp(36px,5.3vw,78px)*var(--ts,1)*var(--hs));line-height:1.07;letter-spacing:-.02em;color:#fff;max-width:11.3em;text-wrap:balance;margin:0}
 .hero-h em{font-family:var(--font-script);font-style:normal;font-weight:400}
-.hero-sub{font-size:calc(clamp(16px,1.4vw,20px)*var(--ts,1));line-height:1.65;color:rgba(255,255,255,.92);max-width:52ch;margin-top:24px}
+.hero-sub{font-size:calc(clamp(16px,1.4vw,20px)*var(--ts,1));line-height:1.65;color:rgba(255,255,255,.92);max-width:31.7em;margin-top:24px}
 .hero-social{display:flex;gap:12px;margin-top:34px}
 @media(max-width:680px){.hero-in{padding:104px 20px 56px}}
 .soc{width:46px;height:46px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;transition:transform .22s var(--ease-soft),background .22s var(--ease-soft)}
