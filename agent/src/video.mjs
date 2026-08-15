@@ -17,6 +17,13 @@
  *   --out <dir>         output root            (default: out)
  *   --trim <seconds>    cut to length from the start
  *   --focus <pos>       crop anchor: centre | top | bottom
+ *   --audio <file>      burn a track in, replacing the clip's own sound
+ *
+ * On --audio: Instagram's own music library is not reachable from the
+ * publishing API — no catalogue tracks, no trending sounds. Burning a file in
+ * here is the only way a Reel published through the API can carry music, and
+ * it buys none of the discoverability a trending sound does. Use it for your
+ * own or licensed audio; anything else gets muted by Instagram's matching.
  */
 import ffmpegPath from 'ffmpeg-static';
 import { execFile } from 'node:child_process';
@@ -72,25 +79,30 @@ export async function inspect(file) {
  * front — without faststart the API has to pull the whole file before it can
  * read the header, and large uploads time out.
  */
-export async function prepVideo(src, dest, { kind = 'reel', trim = null, focus = 'centre' } = {}) {
+export async function prepVideo(src, dest, { kind = 'reel', trim = null, focus = 'centre', audio = null } = {}) {
   const target = KINDS[kind];
   if (!target) throw new Error(`unknown kind "${kind}" — use ${Object.keys(KINDS).join(', ')}`);
 
   const info = await inspect(src);
   const y = CROP_Y[focus] ?? CROP_Y.centre;
   const limit = trim ?? (info.seconds > target.maxSeconds ? target.maxSeconds : null);
+  const sound = audio ? 'burned' : info.hasAudio ? 'original' : 'none';
 
   const args = [
     '-y', '-i', src,
+    ...(audio ? ['-i', audio] : []),
     ...(limit ? ['-t', String(limit)] : []),
     '-vf', [
       `scale=${target.w}:${target.h}:force_original_aspect_ratio=increase`,
       `crop=${target.w}:${target.h}:(iw-ow)/2:${y}`,
     ].join(','),
+    // With a track supplied, take video from the clip and sound from the track,
+    // and stop at whichever runs out first.
+    ...(audio ? ['-map', '0:v:0', '-map', '1:a:0', '-shortest'] : []),
     '-c:v', 'libx264', '-profile:v', 'high', '-level', '4.2',
     '-preset', 'slow', '-crf', '20', '-pix_fmt', 'yuv420p',
     '-r', '30', '-g', '60',
-    ...(info.hasAudio ? ['-c:a', 'aac', '-b:a', '128k', '-ar', '48000', '-ac', '2'] : ['-an']),
+    ...(sound === 'none' ? ['-an'] : ['-c:a', 'aac', '-b:a', '128k', '-ar', '48000', '-ac', '2']),
     '-movflags', '+faststart',
     dest,
   ];
@@ -100,19 +112,20 @@ export async function prepVideo(src, dest, { kind = 'reel', trim = null, focus =
   const poster = dest.replace(/\.mp4$/, '.jpg');
   await run(ffmpegPath, ['-y', '-i', dest, '-frames:v', '1', '-q:v', '3', poster]);
 
-  return { ...info, trimmedTo: limit, out: dest, poster };
+  return { ...info, trimmedTo: limit, sound, out: dest, poster };
 }
 
 /* ------------------------------------------------------------------ main -- */
 
 function parseArgs(argv) {
-  const args = { src: null, kind: 'reel', out: 'out', trim: null, focus: 'centre' };
+  const args = { src: null, kind: 'reel', out: 'out', trim: null, focus: 'centre', audio: null };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     if (a === '--kind') args.kind = argv[++i];
     else if (a === '--out') args.out = argv[++i];
     else if (a === '--trim') args.trim = Number(argv[++i]);
     else if (a === '--focus') args.focus = argv[++i];
+    else if (a === '--audio') args.audio = argv[++i];
     else if (!a.startsWith('--')) args.src = a;
   }
   return args;
@@ -121,7 +134,7 @@ function parseArgs(argv) {
 async function main() {
   const args = parseArgs(process.argv.slice(2));
   if (!args.src) {
-    console.error('usage: npm run video -- <файл> [--kind reel|slide] [--out dir] [--trim сек] [--focus centre|top|bottom]');
+    console.error('usage: npm run video -- <файл> [--kind reel|slide] [--out dir] [--trim сек] [--focus centre|top|bottom] [--audio файл]');
     process.exit(1);
   }
 
@@ -136,7 +149,12 @@ async function main() {
   const target = KINDS[args.kind];
   console.log(`\n  ${path.basename(src)} → ${path.relative(ROOT, dest)}`);
   console.log(`  исходник: ${r.width}×${r.height}, ${r.seconds?.toFixed(1)} с, ${r.fps ?? '?'} fps${r.hasAudio ? ', со звуком' : ', без звука'}`);
-  console.log(`  результат: ${target.w}×${target.h}${r.trimmedTo ? `, обрезано до ${r.trimmedTo} с` : ''}`);
+  const sound = { burned: 'вшитый трек', original: 'родной звук клипа', none: 'без звука' }[r.sound];
+  console.log(`  результат: ${target.w}×${target.h}${r.trimmedTo ? `, обрезано до ${r.trimmedTo} с` : ''}, ${sound}`);
+  if (r.sound === 'burned') {
+    console.log('  ! Вшитый трек не даёт привязки к звуку в Instagram и не попадает в ленту по нему.');
+    console.log('    Трендовый звук ставится только вручную из приложения.');
+  }
   if (r.trimmedTo && !args.trim) {
     console.log(`  ! ${args.kind === 'slide' ? 'В карусели видео не длиннее 60 с' : 'Слишком длинно'} — лишнее отрезано с конца.`);
   }
