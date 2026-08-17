@@ -1,0 +1,121 @@
+{
+  "_": "Пресет монтажа рилс. Числа сняты с референса, не на глаз — см. README.",
+  "version": 1,
+
+  "output": {
+    "width": 1080,
+    "height": 1920,
+    "fps": 30,
+    "codec": "h264",
+    "crf": 18,
+    "preset": "slow",
+    "audio_bitrate": "192k",
+    "_comment": "Референс отдан инстаграмом в 720x1280 @ 1.9 Мбит/с. Рендерим выше, чтобы после их пережатия осталось качество."
+  },
+
+  "source": {
+    "expects": "мастер после ретуши лица в CapCut, без субтитров и цветокора",
+    "_comment": "Ретушь — единственный ручной шаг. Программной замены, которая выглядит так же естественно, нет."
+  },
+
+  "cut": {
+    "mode": "conservative",
+    "_comment": "При сомнении кусок ОСТАЁТСЯ. Лучше на секунду длиннее, чем потерянная мысль.",
+    "silence_threshold_db": -32,
+    "pause_trim_over_ms": 700,
+    "pause_keep_ms": 250,
+    "edge_padding_ms": 100,
+    "audio_crossfade_ms": 40,
+    "remove_fillers_isolated_only": true,
+    "fillers_ru": ["э", "ээ", "эм", "мм", "ну", "вот", "как бы", "то есть", "типа", "короче", "в общем", "значит"],
+    "collapse_adjacent_repeats": true,
+    "jump_cut_zoom": [1.0, 1.04],
+    "_pace_reference": "в рефе 24 склейки на 75.8 с — медиана куска 2.2 с"
+  },
+
+  "transcribe": {
+    "engine": "whisper.cpp",
+    "package": "@remotion/install-whisper-cpp",
+    "model": "medium",
+    "language": "ru",
+    "token_level_timestamps": true,
+    "_comment": "НЕ medium.en — это англо-только модель, на русском выдаст мусор. При нехватке точности поднять до large-v3 (~3 ГБ, медленнее)."
+  },
+
+  "captions": {
+    "font_file": null,
+    "_font_todo": "ждём .ttf/.otf от заказчицы",
+    "size_pct_of_height": 1.9,
+    "size_px_at_1920": 37,
+    "weight": 300,
+    "case": "lowercase",
+    "letter_spacing_em": 0.06,
+    "color": "#FFFFFF",
+    "outline": false,
+    "shadow": false,
+    "background": false,
+    "align": "left",
+    "x_pct": 20,
+    "y_pct": 19,
+    "words_per_card": [2, 4],
+    "_comment": "Кегль намеренно мелкий — так в референсе. Это сдержанная подача, не типовые крупные рилс-субтитры."
+  },
+
+  "color": {
+    "vignette_edge_ratio": 0.65,
+    "_vignette_measured": "по ровной стене: центр Y=184, края Y=118 и 126",
+    "saturation": 0.5,
+    "_saturation_measured": "SATAVG=10 при типичных 20-30",
+    "brightness": -0.02,
+    "contrast": 1.06,
+    "unsharp": { "luma_msize": 5, "luma_amount": 0.8 }
+  },
+
+  "stickers": {
+    "style": "B",
+    "_style_desc": "белая обводка + тень + наклон -8°, телеграм/инста-подача",
+    "size": {
+      "mode": "adaptive",
+      "_comment": "Размер НЕ фиксирован: план бывает крупнее и мельче, свободная полоса от этого меняется. Считаем от реально доступного места в окне стикера.",
+      "fill_ratio_of_free_strip": 0.8,
+      "min_px_at_1920": 110,
+      "max_px_at_1920": 300,
+      "target_px_at_1920": 190,
+      "_target_comment": "к чему стремимся, когда места достаточно"
+    },
+    "tilt_deg": -8,
+    "outline_color": "#FFFFFF",
+    "shadow": { "dy": 6, "blur": 7, "opacity": 0.38 },
+    "duration_s": [1.5, 2.5],
+    "lead_in_ms": 125,
+    "_lead_comment": "появляется чуть РАНЬШЕ слова — точно на слово ощущается опозданием",
+    "entry": { "scale_from": 0.8, "scale_to": 1.0, "duration_ms": 250, "overshoot": true },
+    "formats": ["png", "svg", "lottie", "gif"],
+    "placement": {
+      "detector": "yunet",
+      "model": "models/yunet.onnx",
+      "per_window": true,
+      "_per_window_comment": "зона лица считается по окну жизни стикера, не по одному кадру и не по всему ролику",
+      "face_padding": { "x": 0.45, "top": 0.65, "bottom": 0.55 },
+      "forbid_face": true,
+      "forbid_hair": true,
+      "_forbid_comment": "выбран вариант 2 — волосы тоже неприкосновенны",
+      "forbid_caption_band_pct": [14, 24],
+      "margin_px": 24,
+      "fallback_order": ["side_strip", "below_face", "above_face", "shrink_to_min"],
+      "_fallback_comment": "Если сбоку не влезает даже min — уходим вниз, потом вверх, и только потом ужимаем. Стикер никогда не ставится поверх лица."
+    }
+  },
+
+  "removed_from_reference": {
+    "flower_icon": "убрать совсем",
+    "styled_title_card": "первую фразу НЕ оформлять особо — всё обычным шрифтом титров"
+  },
+
+  "workflow": {
+    "gates": 1,
+    "_comment": "Ровно одно согласование. Всё безопасное делается молча.",
+    "review_sheet": "сценарий с таймкодами + предложения что проиллюстрировать",
+    "approval": "одна строка в ответ: «да» / «все кроме 4 и 9» / «7 — глобус вместо города»"
+  }
+}
