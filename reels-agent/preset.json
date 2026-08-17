@@ -43,8 +43,14 @@
   },
 
   "captions": {
-    "font_file": null,
-    "_font_todo": "ждём .ttf/.otf от заказчицы",
+    "font_family": "Inter",
+    "font_files": [
+      "src/fonts/inter-300-cyrillic.woff2",
+      "src/fonts/inter-300-cyrillic-ext.woff2",
+      "src/fonts/inter-300-latin.woff2",
+      "src/fonts/inter-300-latin-ext.woff2"
+    ],
+    "_font_comment": "Выбран вариант A. Шрифт на скриншоте-референсе — проприетарный Instagram Sans, вшивать нельзя; Inter из того же семейства нейтральных гротесков и уже лежит в репозитории. Подключать всеми четырьмя подмножествами через @font-face с unicode-range, как это сделано на сайте: кириллица и латиница живут в разных файлах, и без латинского подмножества точки с запятыми останутся без глифов.",
     "size_pct_of_height": 1.9,
     "size_px_at_1920": 37,
     "weight": 300,
