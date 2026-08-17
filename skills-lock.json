@@ -6,6 +6,24 @@
       "sourceType": "github",
       "skillPath": "skills/remotion-best-practices/SKILL.md",
       "computedHash": "eaa2ef95fea6be9fb1cd60231292ecbd9cc26b277b5b1427ce142abe717e4fd9"
+    },
+    "remotion-captions": {
+      "source": "remotion-dev/skills",
+      "sourceType": "github",
+      "skillPath": "skills/remotion-captions/SKILL.md",
+      "computedHash": "a48ba36d969eb4dad0283692533851c09391721143820228e9713dfcc4eb1546"
+    },
+    "remotion-multimedia": {
+      "source": "remotion-dev/skills",
+      "sourceType": "github",
+      "skillPath": "skills/remotion-multimedia/SKILL.md",
+      "computedHash": "e08cd7127aa38b84d3fbeb9d352bcd91f80e15f78691b8800b3edc0b45785e11"
+    },
+    "remotion-render": {
+      "source": "remotion-dev/skills",
+      "sourceType": "github",
+      "skillPath": "skills/remotion-render/SKILL.md",
+      "computedHash": "2e222bb317f292989b981056b7af96deb6cd456df0ef652a9f5867c050596d03"
     }
   }
 }
