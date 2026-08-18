@@ -1,0 +1,15 @@
+{
+  "name": "reels-agent",
+  "private": true,
+  "type": "module",
+  "description": "Сборка вертикальных рилс: нарезка, цветокор, субтитры, стикеры",
+  "scripts": {
+    "probe": "node scripts/probe.mjs",
+    "grade": "node scripts/grade.mjs",
+    "transcribe": "node scripts/transcribe.mjs",
+    "plan": "node scripts/plan.mjs"
+  },
+  "dependencies": {
+    "@remotion/install-whisper-cpp": "^4.0.0"
+  }
+}

@@ -1,0 +1,9 @@
+node_modules/
+input/*
+work/*
+output/*
+whisper.cpp/
+models/
+!input/.gitkeep
+!work/.gitkeep
+!output/.gitkeep
