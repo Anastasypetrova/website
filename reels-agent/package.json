@@ -4,12 +4,18 @@
   "type": "module",
   "description": "Сборка вертикальных рилс: нарезка, цветокор, субтитры, стикеры",
   "scripts": {
+    "doctor": "node scripts/doctor.mjs",
     "probe": "node scripts/probe.mjs",
     "transcribe": "node scripts/transcribe.mjs",
     "plan": "node scripts/plan.mjs",
     "grade": "node scripts/grade.mjs"
   },
   "dependencies": {
-    "@remotion/install-whisper-cpp": "^4.0.0"
+    "@remotion/install-whisper-cpp": "^4.0.0",
+    "ffmpeg-static": "^5.2.0",
+    "ffprobe-static": "^3.1.0"
+  },
+  "engines": {
+    "node": ">=20"
   }
 }
