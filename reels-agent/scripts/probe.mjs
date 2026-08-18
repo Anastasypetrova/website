@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 // Что за файл принесли: разрешение, кадры, звук. Отсюда решается, надо ли масштабировать.
-import { FFPROBE, run, resolveInput, preset } from "../lib/env.mjs";
+import { ffprobe, run, resolveInput, preset } from "../lib/env.mjs";
 
 const input = resolveInput(process.argv[2]);
-const raw = run(FFPROBE, [
+const raw = run(ffprobe(), [
   "-v", "error", "-print_format", "json", "-show_format", "-show_streams", input,
 ]);
 const { streams, format } = JSON.parse(raw);

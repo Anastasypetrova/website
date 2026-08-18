@@ -2,7 +2,7 @@
 // отдельный проход ffmpeg — это лишнее поколение сжатия.
 import { join } from "node:path";
 import { existsSync } from "node:fs";
-import { preset, ROOT, FFMPEG, run } from "./env.mjs";
+import { preset, ROOT, ffmpeg, run } from "./env.mjs";
 
 /**
  * Виньетка своей маской, а не фильтром vignette.
@@ -56,7 +56,7 @@ export function buildFilterComplex({ width, height, srcW, srcH }) {
 export function ensureMask(width, height) {
   const path = join(ROOT, "work", `vignette_${width}x${height}.png`);
   if (!existsSync(path)) {
-    run(FFMPEG, [
+    run(ffmpeg(), [
       "-v", "error", "-y",
       "-f", "lavfi", "-i", `color=white:s=${width}x${height}`,
       "-vf", `${vignetteMask(width, height)},format=gray`,

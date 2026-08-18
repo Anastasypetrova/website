@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 // Цветокор в промежуточный ProRes. Один filter_complex, один энкод.
 import { join } from "node:path";
-import { FFMPEG, FFPROBE, run, resolveInput, preset, ROOT } from "../lib/env.mjs";
+import { ffmpeg, ffprobe, run, resolveInput, preset, ROOT } from "../lib/env.mjs";
 import { buildFilterComplex, maskSource, ensureMask, intermediateArgs } from "../lib/grade.mjs";
 
 const input = resolveInput(process.argv[2]);
 const output = process.argv[3] || join(ROOT, "work", "graded.mov");
 
 const meta = JSON.parse(
-  run(FFPROBE, ["-v", "error", "-print_format", "json", "-show_streams", input])
+  run(ffprobe(), ["-v", "error", "-print_format", "json", "-show_streams", input])
 );
 const v = meta.streams.find((s) => s.codec_type === "video");
 const hasAudio = meta.streams.some((s) => s.codec_type === "audio");
@@ -21,7 +21,7 @@ const fc = buildFilterComplex({ width, height, srcW: v.width, srcH: v.height });
 console.log("filter_complex:\n  " + fc.replace(/;/g, ";\n  "));
 
 const t0 = Date.now();
-run(FFMPEG, [
+run(ffmpeg(), [
   "-v", "error", "-y",
   "-i", input,
   "-t", process.env.LIMIT_SECONDS || "999999",
