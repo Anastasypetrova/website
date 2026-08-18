@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Финальный рендер: субтитры поверх покрашенной картинки → готовый MP4.
-import { existsSync, mkdirSync, copyFileSync, readdirSync } from "node:fs";
+import { existsSync, mkdirSync, copyFileSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { ROOT, preset, run } from "../lib/env.mjs";
 
@@ -33,6 +33,24 @@ if (existsSync(fontSrc)) {
 }
 if (!copied) console.warn("⚠ Шрифты Inter не найдены — субтитры уйдут в системный гротеск.");
 
+// План уходит в рендер пропсами: композиция ничего не импортирует из work/,
+// поэтому сборка не разваливается, пока ролик ещё не прогоняли.
+const plan = JSON.parse(readFileSync(join(work, "plan.json"), "utf8"));
+const propsPath = join(work, "props.json");
+writeFileSync(propsPath, JSON.stringify({
+  video: "graded.mov",
+  cards: plan.cards,
+  captionStyle: {
+    size_pct_of_height: preset.captions.size_pct_of_height,
+    weight: preset.captions.weight,
+    letter_spacing_em: preset.captions.letter_spacing_em,
+    color: preset.captions.color,
+    align: preset.captions.align,
+    x_pct: preset.captions.x_pct,
+    y_pct: preset.captions.y_pct,
+  },
+}));
+
 const stamp = new Date().toISOString().slice(0, 16).replace(/[:T]/g, "-");
 const dst = join(out, `reel-${stamp}.mp4`);
 const o = preset.output;
@@ -45,6 +63,7 @@ run("npx", [
   "--crf", String(o.crf),
   "--x264-preset", o.preset,
   "--pixel-format", o.pix_fmt,
+  "--props", propsPath,
   "--public-dir", pub,
   "--log", "error",
 ], { cwd: ROOT, stdio: ["ignore", "inherit", "inherit"] });

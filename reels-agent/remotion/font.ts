@@ -30,7 +30,9 @@ export const loadInter = () => {
         style: "normal",
       });
       await face.load();
-      document.fonts.add(face);
+      // FontFaceSet в текущих типах DOM не объявляет add — приведение
+      // нужно только для тайпчека, в браузере метод есть.
+      (document.fonts as unknown as { add: (f: FontFace) => void }).add(face);
     })
   )
     .then(() => continueRender(handle))
