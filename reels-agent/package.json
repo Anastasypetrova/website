@@ -8,14 +8,24 @@
     "probe": "node scripts/probe.mjs",
     "transcribe": "node scripts/transcribe.mjs",
     "plan": "node scripts/plan.mjs",
-    "grade": "node scripts/grade.mjs"
+    "grade": "node scripts/grade.mjs",
+    "render": "node scripts/render.mjs",
+    "all": "npm run probe && npm run transcribe && npm run plan && npm run grade && npm run render"
   },
   "dependencies": {
     "@remotion/install-whisper-cpp": "^4.0.0",
     "ffmpeg-static": "^5.2.0",
-    "ffprobe-static": "^3.1.0"
+    "ffprobe-static": "^3.1.0",
+    "remotion": "^4.0.0",
+    "@remotion/cli": "^4.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   },
   "engines": {
     "node": ">=20"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "typescript": "^5.5.0"
   }
 }
