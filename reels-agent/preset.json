@@ -1,23 +1,30 @@
 {
   "_": "Пресет монтажа рилс. Числа сняты с референса, не на глаз — см. README.",
   "version": 1,
-
   "output": {
     "width": 1080,
     "height": 1920,
     "fps": 30,
-    "codec": "h264",
-    "crf": 18,
+    "codec": "libx264",
+    "crf": 16,
     "preset": "slow",
-    "audio_bitrate": "192k",
-    "_comment": "Референс отдан инстаграмом в 720x1280 @ 1.9 Мбит/с. Рендерим выше, чтобы после их пережатия осталось качество."
+    "profile": "high",
+    "pix_fmt": "yuv420p",
+    "audio_codec": "aac",
+    "audio_bitrate": "256k",
+    "audio_sample_rate": 48000,
+    "color": {
+      "primaries": "bt709",
+      "trc": "bt709",
+      "space": "bt709"
+    },
+    "_comment": "CRF 16, не 18: инстаграм всё равно пережмёт сверху, и чем чище отдадим, тем меньше их кодеку останется испортить.",
+    "_no_rescale": "Если мастер уже 1080x1920 — не масштабировать вообще. Если больше (4K) — вниз через lanczos. Вверх не тянуть никогда: резкости не прибавит, а артефакты размажет."
   },
-
   "source": {
     "expects": "мастер после ретуши лица в CapCut, без субтитров и цветокора",
     "_comment": "Ретушь — единственный ручной шаг. Программной замены, которая выглядит так же естественно, нет."
   },
-
   "cut": {
     "mode": "conservative",
     "_comment": "При сомнении кусок ОСТАЁТСЯ. Лучше на секунду длиннее, чем потерянная мысль.",
@@ -27,12 +34,27 @@
     "edge_padding_ms": 100,
     "audio_crossfade_ms": 40,
     "remove_fillers_isolated_only": true,
-    "fillers_ru": ["э", "ээ", "эм", "мм", "ну", "вот", "как бы", "то есть", "типа", "короче", "в общем", "значит"],
+    "fillers_ru": [
+      "э",
+      "ээ",
+      "эм",
+      "мм",
+      "ну",
+      "вот",
+      "как бы",
+      "то есть",
+      "типа",
+      "короче",
+      "в общем",
+      "значит"
+    ],
     "collapse_adjacent_repeats": true,
-    "jump_cut_zoom": [1.0, 1.04],
+    "jump_cut_zoom": [
+      1,
+      1.04
+    ],
     "_pace_reference": "в рефе 24 склейки на 75.8 с — медиана куска 2.2 с"
   },
-
   "transcribe": {
     "engine": "whisper.cpp",
     "package": "@remotion/install-whisper-cpp",
@@ -41,7 +63,6 @@
     "token_level_timestamps": true,
     "_comment": "НЕ medium.en — это англо-только модель, на русском выдаст мусор. При нехватке точности поднять до large-v3 (~3 ГБ, медленнее)."
   },
-
   "captions": {
     "font_family": "Inter",
     "font_files": [
@@ -63,10 +84,12 @@
     "align": "left",
     "x_pct": 20,
     "y_pct": 19,
-    "words_per_card": [2, 4],
+    "words_per_card": [
+      2,
+      4
+    ],
     "_comment": "Кегль намеренно мелкий — так в референсе. Это сдержанная подача, не типовые крупные рилс-субтитры."
   },
-
   "color": {
     "vignette_edge_ratio": 0.65,
     "_vignette_measured": "по ровной стене: центр Y=184, края Y=118 и 126",
@@ -74,9 +97,11 @@
     "_saturation_measured": "SATAVG=10 при типичных 20-30",
     "brightness": -0.02,
     "contrast": 1.06,
-    "unsharp": { "luma_msize": 5, "luma_amount": 0.8 }
+    "unsharp": {
+      "luma_msize": 5,
+      "luma_amount": 0.8
+    }
   },
-
   "stickers": {
     "style": "B",
     "_style_desc": "белая обводка + тень + наклон -8°, телеграм/инста-подача",
@@ -91,37 +116,90 @@
     },
     "tilt_deg": -8,
     "outline_color": "#FFFFFF",
-    "shadow": { "dy": 6, "blur": 7, "opacity": 0.38 },
-    "duration_s": [1.5, 2.5],
+    "shadow": {
+      "dy": 6,
+      "blur": 7,
+      "opacity": 0.38
+    },
+    "duration_s": [
+      1.5,
+      2.5
+    ],
     "lead_in_ms": 125,
     "_lead_comment": "появляется чуть РАНЬШЕ слова — точно на слово ощущается опозданием",
-    "entry": { "scale_from": 0.8, "scale_to": 1.0, "duration_ms": 250, "overshoot": true },
-    "formats": ["png", "svg", "lottie", "gif"],
+    "entry": {
+      "scale_from": 0.8,
+      "scale_to": 1,
+      "duration_ms": 250,
+      "overshoot": true
+    },
+    "formats": [
+      "png",
+      "svg",
+      "lottie",
+      "gif"
+    ],
     "placement": {
       "detector": "yunet",
       "model": "models/yunet.onnx",
       "per_window": true,
       "_per_window_comment": "зона лица считается по окну жизни стикера, не по одному кадру и не по всему ролику",
-      "face_padding": { "x": 0.45, "top": 0.65, "bottom": 0.55 },
+      "face_padding": {
+        "x": 0.45,
+        "top": 0.65,
+        "bottom": 0.55
+      },
       "forbid_face": true,
       "forbid_hair": true,
       "_forbid_comment": "выбран вариант 2 — волосы тоже неприкосновенны",
-      "forbid_caption_band_pct": [14, 24],
+      "forbid_caption_band_pct": [
+        14,
+        24
+      ],
       "margin_px": 24,
-      "fallback_order": ["side_strip", "below_face", "above_face", "shrink_to_min"],
+      "fallback_order": [
+        "side_strip",
+        "below_face",
+        "above_face",
+        "shrink_to_min"
+      ],
       "_fallback_comment": "Если сбоку не влезает даже min — уходим вниз, потом вверх, и только потом ужимаем. Стикер никогда не ставится поверх лица."
     }
   },
-
   "removed_from_reference": {
     "flower_icon": "убрать совсем",
     "styled_title_card": "первую фразу НЕ оформлять особо — всё обычным шрифтом титров"
   },
-
   "workflow": {
     "gates": 1,
     "_comment": "Ровно одно согласование. Всё безопасное делается молча.",
     "review_sheet": "сценарий с таймкодами + предложения что проиллюстрировать",
     "approval": "одна строка в ответ: «да» / «все кроме 4 и 9» / «7 — глобус вместо города»"
+  },
+  "pipeline": {
+    "_principle": "Одно сжатие за весь путь. Всё промежуточное — без потерь.",
+    "stages": [
+      {
+        "n": 1,
+        "what": "рез + цветокор",
+        "tool": "ffmpeg",
+        "out": "промежуточный ProRes 422 HQ",
+        "_why": "ProRes визуально без потерь, поэтому второе кодирование ничего не отъедает. H.264 здесь дал бы второе поколение сжатия."
+      },
+      {
+        "n": 2,
+        "what": "субтитры + стикеры",
+        "tool": "remotion",
+        "out": "финальный H.264",
+        "_why": "Remotion читает кадры через ffmpeg, а не через декодер браузера, поэтому ProRes на входе его устраивает."
+      }
+    ],
+    "intermediate": {
+      "codec": "prores_ks",
+      "profile": 3,
+      "pix_fmt": "yuv422p10le"
+    },
+    "_single_filter_chain": "Внутри первой стадии рез, виньетка, яркость, контраст и резкость идут ОДНОЙ цепочкой фильтров — один декод, один энкод. Промежуточных файлов между ними нет.",
+    "_audio": "Звук из мастера копируется без перекодирования до самого финала. Перекодировать AAC в AAC по дороге — потеря на ровном месте."
   }
 }
