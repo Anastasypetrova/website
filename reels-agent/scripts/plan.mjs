@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Собирает план монтажа и лист для согласования.
+// Собирает план монтажа и отчёт о сделанном.
 import { writeFileSync, readFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
 import { ROOT, preset, resolveInput } from "../lib/env.mjs";
@@ -28,16 +28,15 @@ const plan = {
   keep: cut.keep,
   removals: cut.removals,
   cards,
-  stickers: [],
 };
 writeFileSync(join(ROOT, "work", "plan.json"), JSON.stringify(plan, null, 2));
 
-// ── лист для человека ──
+// ── отчёт постфактум, не запрос на согласование ──
 const ts = (s) => `${String(Math.floor(s / 60)).padStart(2, "0")}:${(s % 60).toFixed(1).padStart(4, "0")}`;
 const auto = cut.removals.filter((r) => r.kind === "mechanical");
 const ask = cut.removals.filter((r) => r.kind === "review");
 
-let md = `# Лист согласования\n\n`;
+let md = `# Что сделано\n\n`;
 md += `Было **${duration.toFixed(1)} с** → станет **${kept.toFixed(1)} с** `;
 md += `(вырезано ${(duration - kept).toFixed(1)} с)\n\n`;
 md += `## Вырезано автоматически — ${auto.length} правок\n\n`;
@@ -47,22 +46,23 @@ for (const r of auto) byReason[r.reason] = (byReason[r.reason] || 0) + 1;
 for (const [k, v] of Object.entries(byReason)) md += `- ${k}: ${v}\n`;
 
 if (ask.length) {
-  md += `\n## Нужно твоё решение — ${ask.length}\n\n`;
+  md += `\n## Оставлено намеренно — ${ask.length}\n\n`;
+  md += `Похоже на дубли, но уверенности нет. По правилу «при сомнении оставляем» — не тронуто.\n\n`;
   ask.forEach((r, i) => {
     md += `**[${i + 1}]** ${ts(r.start)}–${ts(r.end)} · ${r.reason}\n`;
     md += `> ${r.text.slice(0, 200)}\n\n`;
   });
 }
 
-md += `\n## Сценарий — что предлагаю проиллюстрировать\n\n`;
+md += `\n## Субтитры\n\n`;
 cards.forEach((c, i) => {
   md += `\`[${String(i + 1).padStart(2, "0")}]\` \`${ts(c.start)}\`  ${c.text}\n`;
 });
-md += `\n---\n\nОтветь одной строкой: «да» / «все кроме 4 и 9» / «7 — глобус».\n`;
+md += `\n---\n\nЭто отчёт, а не запрос. Если что-то не так — скажи, что именно, и я поправлю пресет.\n`;
 
-writeFileSync(join(ROOT, "work", "review.md"), md);
-console.log(`план:  work/plan.json`);
-console.log(`лист:  work/review.md`);
+writeFileSync(join(ROOT, "work", "report.md"), md);
+console.log(`план:   work/plan.json`);
+console.log(`отчёт:  work/report.md`);
 console.log(`\nбыло ${duration.toFixed(1)} с → станет ${kept.toFixed(1)} с`);
-console.log(`правок автоматом: ${auto.length}, на решение: ${ask.length}`);
+console.log(`вырезано: ${auto.length}, оставлено под вопросом: ${ask.length}`);
 console.log(`карточек субтитров: ${cards.length}`);
