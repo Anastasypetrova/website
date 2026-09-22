@@ -32,3 +32,4 @@ bot/.wrangler
 
 # bundled worker, rebuilt on demand
 api/dist
+dist-preview
