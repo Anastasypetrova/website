@@ -128,8 +128,8 @@ export function ClubSection() {
                       {plan.months > 1 && (
                         <span className="prow-sub">
                           <T
-                            ru={<>· {clubPerMonth(plan, 'ru')} в месяц</>}
-                            en={<>· {clubPerMonth(plan, 'en')} a month</>}
+                            ru={<>· ≈{clubPerMonth(plan, 'ru')} в месяц</>}
+                            en={<>· ≈{clubPerMonth(plan, 'en')} a month</>}
                           />
                         </span>
                       )}

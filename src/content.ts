@@ -134,10 +134,15 @@ export const clubPlans: ClubPlan[] = [
 /** Помесячный тариф — то, с чем сравнивается всё остальное. */
 const monthlyPrice = clubPlans[0].price;
 
-/** Во сколько обходится месяц внутри тарифа: 199 € за год → 16,6 € в месяц. */
+/**
+ * Во сколько обходится месяц внутри тарифа: 199 € за год → 17 € в месяц.
+ * Округляется до целого — дробные хвосты в колонке цен читаются хуже, чем
+ * круглые числа, а точность до копейки здесь никому не нужна. Там, где эта
+ * цифра показывается, рядом стоит «≈».
+ */
 export function clubPerMonth(plan: ClubPlan, lang: 'ru' | 'en' = 'ru'): string {
-  const value = (plan.price / plan.months).toFixed(1).replace(/\.0$/, '');
-  return lang === 'ru' ? `${value.replace('.', ',')} €` : `€${value}`;
+  const value = Math.round(plan.price / plan.months);
+  return lang === 'ru' ? `${value} €` : `€${value}`;
 }
 
 /**
@@ -149,11 +154,11 @@ export const pricing = {
   club: {
     ru:
       clubPlans.map((p) => `${p.label.ru} — ${p.price} €`).join(', ') +
-      `. Год выходит ${clubPerMonth(clubPlans[3])} в месяц вместо ${monthlyPrice} €. ` +
+      `. Год выходит примерно ${clubPerMonth(clubPlans[3])} в месяц вместо ${monthlyPrice} €. ` +
       'Оплата и автопродление идут через Tribute, автопродление отменяется там же в любой момент.',
     en:
       clubPlans.map((p) => `${p.label.en} — €${p.price}`).join(', ') +
-      `. A year works out at ${clubPerMonth(clubPlans[3], 'en')} a month instead of €${monthlyPrice}. ` +
+      `. A year works out at roughly ${clubPerMonth(clubPlans[3], 'en')} a month instead of €${monthlyPrice}. ` +
       'Payment and renewal run through Tribute, and renewal can be cancelled there at any time.',
   },
   consultation: { ru: '300€ / 30000 руб.', en: '300€ / 30000 RUB' },
