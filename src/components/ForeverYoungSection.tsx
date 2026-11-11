@@ -25,8 +25,8 @@ export function ForeverYoungSection() {
             <h2 className="dh dh2">Forever Young</h2>
             <p className="lede">
               <T
-                ru="Мой второй закрытый канал — о теле и о том, как обмануть время. Не стареть, двигаться, восстанавливаться, ухаживать за собой и есть так, чтобы это работало на вас."
-                en="My second private channel — about the body, and about outwitting time. Not ageing, moving, recovering, taking care of yourself and eating in a way that actually works for you."
+                ru="Мой второй закрытый канал — о теле и о том, как обмануть время. Двигаться, восстанавливаться, ухаживать за собой и питаться так, чтобы годы были к вам добры."
+                en="My second private channel — about the body, and about outwitting time. Moving, recovering, caring for yourself and eating in a way that keeps the years kind to you."
               />
             </p>
             {/* Её же фраза, и она здесь главная: именно она объясняет, почему
