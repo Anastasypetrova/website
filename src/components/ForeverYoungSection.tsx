@@ -25,8 +25,8 @@ export function ForeverYoungSection() {
             <h2 className="dh dh2">Forever Young</h2>
             <p className="lede">
               <T
-                ru="Канал о том, как обмануть время. Про нестарение и заботу о теле: спорт, массажи, красота, питание."
-                en="A channel about outwitting time. On staying young and caring for the body: training, massage, beauty, nutrition."
+                ru="Мой второй закрытый канал — о теле и о том, как обмануть время. Не стареть, двигаться, восстанавливаться, ухаживать за собой и есть так, чтобы это работало на вас."
+                en="My second private channel — about the body, and about outwitting time. Not ageing, moving, recovering, taking care of yourself and eating in a way that actually works for you."
               />
             </p>
             {/* Её же фраза, и она здесь главная: именно она объясняет, почему
@@ -39,6 +39,12 @@ export function ForeverYoungSection() {
                 />
               </p>
             </div>
+            <p className="p">
+              <T
+                ru="Samadhi Club — про внимание и состояние. Forever Young — про то, в чём они живут."
+                en="Samadhi Club is about attention and state. Forever Young is about what they live in."
+              />
+            </p>
             <div className="block">
               <span className="klabel"><T ru="О чём канал" en="What the channel covers" /></span>
               <div className="chips">
