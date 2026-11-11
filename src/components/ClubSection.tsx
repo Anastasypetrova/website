@@ -34,14 +34,14 @@ const chips: [string, string][] = [
 ];
 
 /**
- * Экраны приложения. Первым — рабочий стол телефона: он доказывает ровно то,
- * что обещает плашка выше, — приложение ставится рядом с остальными.
+ * Экраны приложения — сначала то, что внутри, и только потом рабочий стол:
+ * иконка на экране телефона читается как итог, а не как вступление.
  */
 const appShots: [PhotoKey, string, string][] = [
-  ['app1', 'На рабочем столе телефона', 'On your phone’s home screen'],
   ['app2', 'Главный экран клуба', 'The club home screen'],
   ['app3', 'Практики, медитации, марафоны', 'Practices, meditations, marathons'],
   ['app4', 'Книжный клуб, кино, музыка', 'Book club, films, music'],
+  ['app1', 'И всё это — на рабочем столе', 'And all of it on your home screen'],
 ];
 
 export function ClubSection() {
@@ -100,19 +100,6 @@ export function ClubSection() {
             </div>
           </div>
         </div>
-        {/* Доказательство к словам «это приложение»: читать про удобство можно
-            бесконечно, а увидеть экран — секунда. */}
-        <div className="appshots">
-          {appShots.map(([name, ru, en]) => (
-            <figure className="appshot" key={name}>
-              <div className="appshot-screen">
-                <Photo name={name} alt={ru} objectPosition="top" />
-              </div>
-              <figcaption><T ru={ru} en={en} /></figcaption>
-            </figure>
-          ))}
-        </div>
-
         <div className="tagfull">
           <span className="klabel"><T ru="Темы разборов и эфиров" en="Topics of breakdowns and sessions" /></span>
           <div className="chips">
@@ -169,6 +156,19 @@ export function ClubSection() {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Под составом подписки: сначала человек прочитал, что входит, —
+            теперь видит, как это выглядит в руках. */}
+        <div className="appshots">
+          {appShots.map(([name, ru, en]) => (
+            <figure className="appshot" key={name}>
+              <div className="appshot-screen">
+                <Photo name={name} alt={ru} objectPosition="top" />
+              </div>
+              <figcaption><T ru={ru} en={en} /></figcaption>
+            </figure>
+          ))}
         </div>
 
         <div className="mm-cta">

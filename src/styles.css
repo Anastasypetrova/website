@@ -297,7 +297,7 @@ em.accent{font-family:var(--font-script)!important;font-weight:400!important;fon
 /* Экраны приложения. Рамка повторяет пропорции телефона (9:19), поэтому
    обычный скриншот садится в неё почти без обрезки; object-position:top
    бережёт шапку экрана, если скриншот окажется длиннее. */
-.appshots{margin-top:44px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px;max-width:840px}
+.appshots{margin:44px auto 0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px;max-width:840px}
 .appshot{margin:0;display:flex;flex-direction:column;gap:10px}
 /* 920×2000 — пропорции присланных скриншотов, рамка повторяет их ровно,
    поэтому не срезается ни верх, ни низ экрана. */
