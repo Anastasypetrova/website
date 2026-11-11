@@ -128,12 +128,13 @@ export function ClubSection() {
           {/* Прочитал, что входит, — увидел, как это выглядит в руках. */}
           <div className="appshots">
             {appShots.map(([name, ru, en]) => (
-              <figure className="appshot" key={name}>
+              <div className="appshot" key={name}>
                 <div className="appshot-screen">
-                  <Photo name={name} alt={ru} objectPosition="top" />
+                  {/* Подписи убраны, но описание остаётся — его читает вслух
+                      программа для незрячих и показывает поиск по картинкам. */}
+                  <Photo name={name} alt={lang === 'en' ? en : ru} objectPosition="top" />
                 </div>
-                <figcaption><T ru={ru} en={en} /></figcaption>
-              </figure>
+              </div>
             ))}
           </div>
 
