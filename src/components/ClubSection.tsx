@@ -147,12 +147,6 @@ export function ClubSection() {
                     en="Payment and renewal go through Tribute, from any country and with cards issued anywhere, Russia included. The subscription renews automatically; you can cancel renewal in Tribute at any time, and access stays until the end of the paid period."
                   />
                 </p>
-                <p>
-                  <T
-                    ru="Вернуть деньги можно в течение 48 часов после оплаты, если вы ещё не заходили в клуб. После первого входа возврат за оплаченный период не делается."
-                    en="You can request a refund within 48 hours of payment if you have not yet entered the club. After the first entry the paid period is not refunded."
-                  />
-                </p>
               </div>
             </div>
           </div>
