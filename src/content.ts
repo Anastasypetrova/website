@@ -1,5 +1,11 @@
 import type { Bi } from './i18n';
 
+/**
+ * Адрес для всей переписки. Объявлен здесь, а не внутри `links`: на него
+ * ссылается ответ в частых вопросах, а те стоят в файле выше.
+ */
+export const CONTACT_EMAIL = 'hello@metasouls.co';
+
 export interface Video {
   id: string;
   url: string;
@@ -98,6 +104,16 @@ export const faqItems: FaqItem[] = [
       en: "I work ecologically and without pressure: no obligation to continue if the format turns out not to be what you need. We'll discuss it openly and find together what genuinely suits you, whether that's another format or a pause.",
     },
   },
+  {
+    q: {
+      ru: 'Хочу предложить совместный проект или коллаборацию',
+      en: 'I want to propose a joint project or collaboration',
+    },
+    a: {
+      ru: `Напишите на ${CONTACT_EMAIL} и поставьте в теме письма слово «коллаборация» — так предложение не потеряется среди вопросов по форматам работы. Коротко опишите, что предлагаете, какое участие видите с моей стороны и в какие сроки.`,
+      en: `Write to ${CONTACT_EMAIL} with "collaboration" in the subject line, so the proposal does not get lost among questions about the formats. Describe briefly what you are proposing, what part you see me playing and on what timeline.`,
+    },
+  },
 ];
 
 export const links = {
@@ -109,7 +125,7 @@ export const links = {
   clubJoin: 'https://t.me/tribute/app?startapp=sr53',
   mastermindForm: 'https://forms.gle/8MB1UucBcKHaGxSp7',
   clubAudio: 'https://t.me/into_samadhi/2531',
-  email: 'hello@metasouls.co',
+  email: CONTACT_EMAIL,
   site: 'https://anastasia-samadhi.club',
 };
 
