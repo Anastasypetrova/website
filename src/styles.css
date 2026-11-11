@@ -368,9 +368,10 @@ em.accent{font-family:var(--font-script)!important;font-weight:400!important;fon
    строки Forever Young показывался дефолтным: вступление 20px, абзац 15.5px
    и выключка по левому краю. Выравниваю по менторству. */
 #forever-young .lede,#forever-young .p{font-size:16px;text-align:left}
-/* Цвет взят из самой фотографии рядом: её тёплый песочно-розовый
-   полутон (#d5beb3), разбавленный до оттенка страницы. */
-#forever-young .prod-main .callout{background:rgba(213,190,179,.5)}
+/* Цвет взят из самой фотографии рядом — но из моря, а не из песка:
+   её холодный серо-голубой полутон (#c7cfd5), разбавленный до оттенка
+   страницы. На тёплом кремовом фоне читается отчётливо голубым. */
+#forever-young .prod-main .callout{background:rgba(199,207,213,.6)}
 #mentorship .prod-grid{gap:0}
 #mentorship .prod-main{padding-right:32px;justify-content:space-between}
 #mastermind .prod-main{gap:10px;padding-right:32px}
