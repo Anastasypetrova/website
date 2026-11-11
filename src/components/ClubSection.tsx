@@ -143,8 +143,8 @@ export function ClubSection() {
               <div className="finep">
                 <p>
                   <T
-                    ru="Оплата и продление — через Tribute, из любой страны. Подписка продлевается автоматически; отменить продление можно в любой момент там же, доступ сохранится до конца оплаченного периода."
-                    en="Payment and renewal go through Tribute, from any country. The subscription renews automatically; you can cancel renewal there at any time and keep access until the paid period ends."
+                    ru="Оплата и продление — через Tribute, из любой страны, картами любых стран (России в том числе). Подписка продлевается автоматически; отменить продление можно в любой момент в Tribute, доступ сохранится до конца оплаченного периода."
+                    en="Payment and renewal go through Tribute, from any country and with cards issued anywhere, Russia included. The subscription renews automatically; you can cancel renewal in Tribute at any time, and access stays until the end of the paid period."
                   />
                 </p>
                 <p>
