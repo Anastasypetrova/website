@@ -1,5 +1,5 @@
 import { T, useLang } from '../i18n';
-import { clubPerMonth, clubPlans, clubSaving, links } from '../content';
+import { clubPerMonth, clubPlans, links } from '../content';
 import { Photo } from './Photo';
 import { ConsentGate } from './ConsentGate';
 import { ArrowUpRightIcon } from './Icons';
@@ -121,27 +121,24 @@ export function ClubSection() {
             <div className="mm-card">
               <span className="klabel"><T ru="Стоимость подписки" en="Subscription pricing" /></span>
               <div className="pricetable" style={{ marginTop: 16 }}>
-                {clubPlans.map((plan) => {
-                  const saving = clubSaving(plan);
-                  return (
-                    <div className={`prow${plan.months === 12 ? ' prow-best' : ''}`} key={plan.months}>
-                      <span className="prow-l">
-                        <T ru={plan.label.ru} en={plan.label.en} />
-                        {saving > 0 && (
-                          <span className="prow-sub">
-                            <T
-                              ru={<>{clubPerMonth(plan, 'ru')} в месяц · экономия {saving} €</>}
-                              en={<>{clubPerMonth(plan, 'en')} a month · saves €{saving}</>}
-                            />
-                          </span>
-                        )}
-                      </span>
-                      <span className="prow-p">
-                        {lang === 'en' ? `€${plan.price}` : `${plan.price} €`}
-                      </span>
-                    </div>
-                  );
-                })}
+                {clubPlans.map((plan) => (
+                  <div className={`prow${plan.months === 12 ? ' prow-best' : ''}`} key={plan.months}>
+                    <span className="prow-l">
+                      <T ru={plan.label.ru} en={plan.label.en} />
+                      {plan.months > 1 && (
+                        <span className="prow-sub">
+                          <T
+                            ru={<>{clubPerMonth(plan, 'ru')} в месяц</>}
+                            en={<>{clubPerMonth(plan, 'en')} a month</>}
+                          />
+                        </span>
+                      )}
+                    </span>
+                    <span className="prow-p">
+                      {lang === 'en' ? `€${plan.price}` : `${plan.price} €`}
+                    </span>
+                  </div>
+                ))}
               </div>
               <div className="finep">
                 <p>

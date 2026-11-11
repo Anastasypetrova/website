@@ -140,11 +140,6 @@ export function clubPerMonth(plan: ClubPlan, lang: 'ru' | 'en' = 'ru'): string {
   return lang === 'ru' ? `${value.replace('.', ',')} €` : `€${value}`;
 }
 
-/** Сколько экономит этот срок против помесячной оплаты. 0 — для самого месяца. */
-export function clubSaving(plan: ClubPlan): number {
-  return plan.months * monthlyPrice - plan.price;
-}
-
 /**
  * Every price the site quotes, in one place — the page and the automatic
  * replies both read from here, so a price can never be current in one and
