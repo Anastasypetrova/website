@@ -129,13 +129,13 @@ export function ClubSection() {
             <span className="klabel"><T ru="Что входит в подписку" en="What the subscription includes" /></span>
             {/* Перед списком, а не внутри него: это свойство всего клуба, а не
                 ещё один его пункт. Заодно отвечает на «а это не архив?». */}
-            <p className="mm-sub" style={{ marginTop: 10 }}>
+            <p className="card-note">
               <T
                 ru="Контент добавляется и обновляется каждый день."
                 en="Content is added and updated every day."
               />
             </p>
-            <div className="list list-2col" style={{ marginTop: 18 }}>
+            <div className="list list-2col" style={{ marginTop: 16 }}>
               {includes.map(([ru, en]) => (
                 <div className="li" key={ru}>
                   <span className="li-mk"></span>
