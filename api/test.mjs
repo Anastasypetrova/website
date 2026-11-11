@@ -128,8 +128,10 @@ check(
   brief.includes('1200 евро') === showMastermind &&
     brief.includes('Мастермайнд') === showMastermind,
 );
-check('Forever Young в справке есть, но без выдуманной цены',
-  brief.includes('Forever Young') && brief.includes('СТОИМОСТЬ ПОКА НЕ ОБЪЯВЛЕНА'));
+check('в справке есть вход в Forever Young и предупреждение о росте цены',
+  brief.includes('Forever Young') &&
+    brief.includes('вход сейчас 300 рублей') &&
+    brief.includes('цена будет расти'));
 check('в справке есть отзывы участников', brief.includes('ОТЗЫВЫ УЧАСТНИКОВ'));
 check('ответ просят строго в JSON', prompts[0]?.response_format?.type === 'json_object');
 
