@@ -1,5 +1,7 @@
 import { T } from '../i18n';
+import { links } from '../content';
 import { Photo } from './Photo';
+import { ConsentGate } from './ConsentGate';
 
 /**
  * Пятый формат. Текст — целиком авторский, слово в слово; правлены только
@@ -62,6 +64,20 @@ export function ForeverYoungSection() {
               <Photo name="foreveryoung" alt="Forever Young" />
             </div>
           </div>
+        </div>
+
+        {/* Ссылки на вступление ещё нет: пока её нет, кнопка остаётся на этом
+            же разделе и никуда не уводит. Появится — впишется в
+            links.foreverYoungJoin, и больше ничего менять не нужно. */}
+        <div className="mm-cta">
+          <ConsentGate
+            href={links.foreverYoungJoin || '#forever-young'}
+            product="forever-young"
+            slugs={['oferta', 'disclaimer']}
+            buttonStyle={{ width: 'auto', padding: '16px 28px' }}
+          >
+            <T ru="Присоединиться" en="Join" />
+          </ConsentGate>
         </div>
       </div>
     </section>
