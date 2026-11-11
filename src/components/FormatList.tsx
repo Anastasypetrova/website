@@ -1,4 +1,5 @@
 import { T } from '../i18n';
+import { showMastermind } from '../content';
 
 interface Item {
   href: string;
@@ -14,7 +15,9 @@ const items: Item[] = [
   { href: '#club', nameRu: 'Samadhi Club', nameEn: 'Samadhi Club', subRu: 'Клуб по подписке', subEn: 'Subscription club' },
   { href: '#personal-session', nameRu: 'Личная консультация', nameEn: 'Personal consultation', subRu: 'Одна сессия', subEn: 'One session' },
   { href: '#mentorship', nameRu: 'Индивидуальное менторство', nameEn: 'Individual mentorship', subRu: 'Глубокая работа', subEn: 'Deep work' },
-  { href: '#mastermind', nameRu: 'Мастермайнд-группа', nameEn: 'Mastermind', subRu: 'Групповой формат', subEn: 'Group format' },
+  ...(showMastermind
+    ? [{ href: '#mastermind', nameRu: 'Мастермайнд-группа', nameEn: 'Mastermind', subRu: 'Групповой формат', subEn: 'Group format' }]
+    : []),
   { href: '#forever-young', nameRu: 'Forever Young', nameEn: 'Forever Young', subRu: 'Клуб по подписке', subEn: 'Subscription club', isNew: true },
 ];
 

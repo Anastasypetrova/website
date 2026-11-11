@@ -7,6 +7,16 @@
 import { build } from 'vite';
 import { pathToFileURL } from 'node:url';
 import { resolve } from 'node:path';
+import { readFileSync } from 'node:fs';
+
+/**
+ * Мастермайнд скрыт одним выключателем в src/content.ts. Тест читает его
+ * оттуда же, а не держит собственную копию ответа: иначе он начнёт падать
+ * ровно в тот день, когда формат вернут.
+ */
+const showMastermind = /export const showMastermind = true/.test(
+  readFileSync('src/content.ts', 'utf8'),
+);
 
 const DIR = 'node_modules/.tmp/api-test';
 await build({ logLevel: 'error', build: { ssr: 'api/src/index.ts', outDir: DIR, emptyOutDir: true } });
@@ -100,7 +110,7 @@ check('в уведомлении есть копия того, что ушло �
   to('hello@metasouls.co')?.text.includes('Что ушло от вашего имени'));
 check('модели передали справку о сайте',
   prompts[0]?.messages?.[1]?.content.includes('Samadhi Club') &&
-  prompts[0]?.messages?.[1]?.content.includes('Мастермайнд'));
+  prompts[0]?.messages?.[1]?.content.includes('Индивидуальное менторство'));
 check('модели разрешено называть цены только дословно',
   prompts[0]?.messages?.[0]?.content.includes('ТОЛЬКО те, что дословно указаны'));
 check('и запрещено называть даты и наличие мест',
@@ -111,7 +121,15 @@ check('в справке есть все сроки подписки на клу
 check('в справке сказано, что автопродление отменяется', brief.includes('автопродление отменяется'));
 check('в справке есть цена консультации', brief.includes('300€'));
 check('в справке есть обе программы менторства', brief.includes('2500 €') && brief.includes('5000 €'));
-check('в справке есть цена мастермайнда', brief.includes('1200 евро'));
+check(
+  showMastermind
+    ? 'в справке есть цена мастермайнда'
+    : 'про мастермайнд модель не знает, пока он скрыт',
+  brief.includes('1200 евро') === showMastermind &&
+    brief.includes('Мастермайнд') === showMastermind,
+);
+check('Forever Young в справке есть, но без выдуманной цены',
+  brief.includes('Forever Young') && brief.includes('СТОИМОСТЬ ПОКА НЕ ОБЪЯВЛЕНА'));
 check('в справке есть отзывы участников', brief.includes('ОТЗЫВЫ УЧАСТНИКОВ'));
 check('ответ просят строго в JSON', prompts[0]?.response_format?.type === 'json_object');
 

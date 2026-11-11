@@ -6,14 +6,14 @@
  * time — a crawler has to find it in the HTML, and Google's FAQ rich result in
  * particular is only granted to markup that matches visible page content.
  */
-import { clubPlans, faqItems, links, pricing, type FaqItem } from './content';
+import { clubPlans, faqItems, links, pricing, showMastermind, type FaqItem } from './content';
 
 export const SITE_URL = 'https://anastasia-samadhi.club';
 export const SITE_NAME = 'Анастасия Петрова';
 export const SITE_TAGLINE = 'исследователь сознания и трансформационный ментор';
 export const SITE_DESCRIPTION =
   'Помогаю выйти за пределы ограничивающих концепций через внимание и состояние. ' +
-  'Samadhi Club, личные консультации, менторство и мастермайнд-группы.';
+  'Два клуба по подписке, личные консультации и индивидуальное менторство.';
 
 /** `price` is the number Google reads; `note` is what a person is told. */
 const services: { name: string; description: string; url: string; price?: number; currency?: string; note?: string }[] = [
@@ -43,14 +43,20 @@ const services: { name: string; description: string; url: string; price?: number
     price: 2500,
     currency: 'EUR',
   },
-  {
-    name: 'Мастермайнд-группа',
-    description:
-      'Групповой онлайн-формат: работа в кругу единомышленников, брейнсторм и разбор ваших кейсов.',
-    url: `${SITE_URL}/#mastermind`,
-    price: 1200,
-    currency: 'EUR',
-  },
+  // Разметка описывает только то, что на странице действительно есть:
+  // услуга без своего раздела — это то, за что Google снимает сниппет.
+  ...(showMastermind
+    ? [
+        {
+          name: 'Мастермайнд-группа',
+          description:
+            'Групповой онлайн-формат: работа в кругу единомышленников, брейнсторм и разбор ваших кейсов.',
+          url: `${SITE_URL}/#mastermind`,
+          price: 1200,
+          currency: 'EUR',
+        },
+      ]
+    : []),
   {
     // Без offers: цена ещё не заведена, а выдуманная цена в разметке — ровно
     // то, за что Google снимает сниппет.

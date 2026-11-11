@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from 'react';
 import { T, useLang } from '../i18n';
-import { docs, docHref, links } from '../content';
+import { docs, docHref, links, showMastermind } from '../content';
 import { apiConfigured, submitNewsletter } from '../api';
 import { InstagramIcon, TelegramIcon, YoutubeIcon } from './Icons';
 
@@ -16,7 +16,7 @@ const formatLinks: { href: string; ru: string; en: string }[] = [
   { href: '#club', ru: 'Samadhi Club', en: 'Samadhi Club' },
   { href: '#personal-session', ru: 'Личная консультация', en: 'Personal consultation' },
   { href: '#mentorship', ru: 'Менторство', en: 'Mentorship' },
-  { href: '#mastermind', ru: 'Мастермайнд-группа', en: 'Mastermind' },
+  ...(showMastermind ? [{ href: '#mastermind', ru: 'Мастермайнд-группа', en: 'Mastermind' }] : []),
   { href: '#forever-young', ru: 'Forever Young', en: 'Forever Young' },
 ];
 

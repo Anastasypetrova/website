@@ -21,6 +21,7 @@ import { TelegramBand } from './components/TelegramBand';
 import { Faq } from './components/Faq';
 import { Contact } from './components/Contact';
 import { Footer } from './components/Footer';
+import { showMastermind } from './content';
 import { T } from './i18n';
 
 const SITE_TITLE = 'Анастасия Петрова — трансформационный ментор';
@@ -126,7 +127,7 @@ function App() {
       <ClubSection />
       <PersonalSessionSection />
       <MentorshipSection />
-      <MastermindSection />
+      {showMastermind && <MastermindSection />}
       <ForeverYoungSection />
       <AwakeningQuote />
       <About />

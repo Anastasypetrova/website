@@ -6,6 +6,13 @@ import type { Bi } from './i18n';
  */
 export const CONTACT_EMAIL = 'hello@metasouls.co';
 
+/**
+ * Один выключатель на весь мастермайнд: раздел, ссылка в подвале, место в
+ * списке форматов, разметка для поисковиков, описание страницы и знания, из
+ * которых бот пишет ответы. Поставить `true` — вернётся всё и сразу.
+ */
+export const showMastermind = false;
+
 export interface Video {
   id: string;
   url: string;
@@ -65,8 +72,26 @@ export const faqItems: FaqItem[] = [
   {
     q: { ru: 'Какой формат мне подойдёт?', en: 'Which format is right for me?' },
     a: {
-      ru: 'Если хотите разово разобраться с конкретным запросом, подойдёт личная консультация: час один на один, где мы разберём именно вашу ситуацию. Если ищете постоянную поддержку, практики и живое общение каждый день, лучше Samadhi Club. Для глубокой длительной работы над одной темой, растянутой на несколько сессий, подойдёт индивидуальное менторство. Для группового формата, где вы работаете вместе с другими участниками и обмениваетесь опытом, подойдёт мастермайнд. Если сомневаетесь, напишите мне, и я подскажу, с чего лучше начать.',
-      en: "If you want a one-off deep dive into a specific request, a personal consultation is right: an hour one on one, where we work through your exact situation. If you're looking for ongoing support, practices and live interaction every day, Samadhi Club is better. For deep, sustained work on one topic across several sessions, individual mentorship fits. For a group format, working alongside other participants and exchanging experience, choose the mastermind. If you're unsure, message me and I'll help you decide where to start.",
+      // Предложение про мастермайнд встаёт на место только вместе с разделом,
+      // иначе ответ отправлял бы человека туда, где ничего нет.
+      ru: [
+        'Если хотите разово разобраться с конкретным запросом, подойдёт личная консультация: час один на один, где мы разберём именно вашу ситуацию.',
+        'Если ищете постоянную поддержку, практики и живое общение каждый день, лучше Samadhi Club.',
+        'Для глубокой длительной работы над одной темой, растянутой на несколько сессий, подойдёт индивидуальное менторство.',
+        ...(showMastermind
+          ? ['Для группового формата, где вы работаете вместе с другими участниками и обмениваетесь опытом, подойдёт мастермайнд.']
+          : []),
+        'Если сомневаетесь, напишите мне, и я подскажу, с чего лучше начать.',
+      ].join(' '),
+      en: [
+        'If you want a one-off deep dive into a specific request, a personal consultation is right: an hour one on one, where we work through your exact situation.',
+        "If you're looking for ongoing support, practices and live interaction every day, Samadhi Club is better.",
+        'For deep, sustained work on one topic across several sessions, individual mentorship fits.',
+        ...(showMastermind
+          ? ['For a group format, working alongside other participants and exchanging experience, choose the mastermind.']
+          : []),
+        "If you're unsure, message me and I'll help you decide where to start.",
+      ].join(' '),
     },
   },
   {
