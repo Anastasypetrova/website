@@ -62,12 +62,6 @@ export function ClubSection() {
                 <span className="mstat-cap"><T ru="эфиров в записи" en="recorded sessions" /></span>
               </div>
             </div>
-            <p className="p">
-              <T
-                ru="Здесь живое сообщество, которое общается и развивается вместе со мной. Здесь инсайты, энергия и состояние в моменте."
-                en="Here's a living community that talks and grows together with me. Here are insights, energy, and being present in the moment."
-              />
-            </p>
             {/* Клуб давно не просто канал, и об этом стоит сказать отдельно:
                 «приложение» — это и есть ответ на вопрос «а как я этим пользуюсь». */}
             <div className="callout">
