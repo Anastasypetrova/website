@@ -362,6 +362,10 @@ em.accent{font-family:var(--font-script)!important;font-weight:400!important;fon
 #club .audio-m{font-size:11px!important}
 #mentorship .lede,#mentorship .p{font-size:16px}
 #mentorship .lede,#mentorship .p,#mentorship .mm-sub{text-align:justify;text-align-last:left}
+/* У каждого продуктового раздела размер текста задан отдельно, и без своей
+   строки Forever Young показывался дефолтным: вступление 20px, абзац 15.5px
+   и выключка по левому краю. Выравниваю по менторству. */
+#forever-young .lede,#forever-young .p{font-size:16px;text-align:justify;text-align-last:left}
 #mentorship .prod-grid{gap:0}
 #mentorship .prod-main{padding-right:32px;justify-content:space-between}
 #mastermind .prod-main{gap:10px;padding-right:32px}
