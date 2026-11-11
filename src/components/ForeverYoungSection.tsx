@@ -14,18 +14,12 @@ export function ForeverYoungSection() {
           <div className="prod-main">
             <span className="taglead"><T ru="Новый клуб по подписке" en="A new subscription club" /></span>
             <h2 className="dh dh2">Forever Young</h2>
+            {/* Одним абзацем: обещание обмануть время и личное доказательство
+                стоят в нём подряд, без паузы между ними. */}
             <p className="lede">
               <T
-                ru="Мой второй закрытый канал — о теле и заботе о нём, ведь это наш храм души. Уникальная информация о том, как через осознанный подход и присутствие в настоящем оставаться молодым — о том, как буквально обмануть время."
-                en="My second private channel — about the body and caring for it, since it is the temple of the soul. Rare knowledge on staying young through a conscious approach and presence in the now: on how to genuinely outwit time."
-              />
-            </p>
-            {/* Личное доказательство сразу за обещанием обмануть время: возраст
-                и то, как она выглядит, убеждают сильнее любого перечисления. */}
-            <p className="p">
-              <T
-                ru="Это мой личный опыт — тренировки, питание, биохакинг, красота, уход за телом и лицом. Всё, что помогает мне выглядеть на 10–15 лет моложе. Мне 38."
-                en="This is my own experience — training, nutrition, biohacking, beauty, caring for the body and the face. Everything that helps me look 10 to 15 years younger. I am 38."
+                ru="Мой второй закрытый канал — о теле и заботе о нём, ведь это наш храм души. Уникальная информация о том, как через осознанный подход и присутствие в настоящем оставаться молодым — о том, как буквально обмануть время. Это мой личный опыт — тренировки, питание, биохакинг, красота, уход за телом и лицом. Всё, что помогает мне выглядеть на 10–15 лет моложе. Мне 38."
+                en="My second private channel — about the body and caring for it, since it is the temple of the soul. Rare knowledge on staying young through a conscious approach and presence in the now: on how to genuinely outwit time. This is my own experience — training, nutrition, biohacking, beauty, caring for the body and the face. Everything that helps me look 10 to 15 years younger. I am 38."
               />
             </p>
             {/* Плашкой — вывод, которым раздел закрывается. */}
