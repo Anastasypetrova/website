@@ -6,6 +6,20 @@ import { Photo } from './Photo';
  * опечатка и тире. Цены и ссылка на оплату ещё не заведены: блок сознательно
  * обходится без них, вместо того чтобы показывать выдуманные.
  */
+const includes: [string, string][] = [
+  [
+    'Живые эфиры с ответами на вопросы — питание, красота, спорт, нестарение',
+    'Live sessions answering your questions on nutrition, beauty, training and staying young',
+  ],
+  ['Чат единомышленников', 'A chat of like-minded people'],
+  [
+    'Обмен уникальной информацией об осознанном отношении к телу',
+    'Sharing rare knowledge on a conscious relationship with the body',
+  ],
+  ['Тренировки и практики', 'Workouts and practices'],
+  ['Инструкции по красоте и здоровью', 'Beauty and health guides'],
+];
+
 export function ForeverYoungSection() {
   return (
     <section className="sec bg2" id="forever-young">
@@ -30,6 +44,17 @@ export function ForeverYoungSection() {
                   en="Because the physical and the mental cannot exist without each other — two sides of one coin."
                 />
               </p>
+            </div>
+            <div className="block">
+              <span className="klabel"><T ru="Что включено в подписку" en="What the subscription includes" /></span>
+              <div className="list" style={{ marginTop: 4 }}>
+                {includes.map(([ru, en]) => (
+                  <div className="li" key={ru}>
+                    <span className="li-mk"></span>
+                    <span><T ru={ru} en={en} /></span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
           <div className="prod-right">
