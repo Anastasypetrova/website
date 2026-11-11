@@ -9,19 +9,23 @@ import { ArrowUpRightIcon } from './Icons';
  * абзац читают по диагонали, список читают целиком.
  */
 const includes: [string, string][] = [
-  ['Я здесь каждый день и отвечаю на ваши вопросы', "I'm here every day and answer your questions"],
-  ['Более 200 часов подкастов — открыты с первого дня', '200+ hours of podcasts, open to you from day one'],
-  ['Разборы ваших ситуаций', 'Breakdowns of your situations'],
-  ['Живые эфиры', 'Live streams'],
-  ['Авторские практики', 'Original practices'],
-  ['Челленджи, совместные просмотры, музыка', 'Challenges, films we watch together, music'],
-  ['Закрытое сообщество, которое общается и растёт вместе', 'A private community that talks and grows together'],
+  ['20+ эфиров в записи — на темы, с которыми приходят на личные консультации', '20+ recorded live sessions, on the themes people bring to private consultations'],
+  ['Вопросы и разборы: вы задаёте вопрос — я его разбираю', 'Questions and breakdowns: you ask, I work through it'],
+  ['20 авторских практик, медитаций и техник', '20 original practices, meditations and techniques'],
+  ['10+ марафонов и челленджей вместе с единомышленниками', '10+ marathons and challenges alongside like-minded people'],
+  ['Живое сообщество — чат, где вас понимают', 'A living community — a chat where you are understood'],
+  ['Подкасты, комната медитаций, книжный клуб, киноклуб, плейлисты', 'Podcasts, a meditation room, a book club, a film club, playlists'],
 ];
 
 const chips: [string, string][] = [
   ['Реализация', 'Fulfillment'],
   ['Деньги', 'Money'],
   ['Отношения', 'Relationships'],
+  ['Любовь к себе', 'Self-love'],
+  ['Тень и триггеры', 'The shadow and triggers'],
+  ['Убеждения', 'Beliefs'],
+  ['Желания', 'Desires'],
+  ['Исцеление и нестарение', 'Healing and staying young'],
   ['Контроль и тревога', 'Control and anxiety'],
   ['Пробуждение', 'Awakening'],
   ['Поиск себя', 'Finding yourself'],
@@ -40,22 +44,22 @@ export function ClubSection() {
             <h2 className="dh dh2">Samadhi Club</h2>
             <p className="lede">
               <T
-                ru="Это место моего ежедневного присутствия, закрытый канал-приложение, в котором я постоянно отвечаю на ваши вопросы, записываю подкасты по темам, делаю разборы, веду живые эфиры и создаю авторские практики."
-                en="This is where I show up every day, a private channel-app where I constantly answer your questions, record podcasts on various topics, do breakdowns, host live streams and create original practices."
+                ru="Мой закрытый канал разборов с живыми эфирами, авторскими практиками и возможностью задать вопрос и получить ответ. Это место моего ежедневного присутствия."
+                en="My private channel of breakdowns, with live sessions, original practices and the chance to ask a question and get an answer. This is where I show up every day."
               />
             </p>
             <div className="statrow">
               <div className="ministat">
-                <b>200<span className="mstat-sup">+</span></b>
-                <span className="mstat-cap"><T ru="часов подкастов" en="hours of podcasts" /></span>
+                <b>150<span className="mstat-sup">+</span></b>
+                <span className="mstat-cap"><T ru="часов контента" en="hours of content" /></span>
               </div>
               <div className="ministat">
                 <b>24<span className="mstat-slash">/</span>7</b>
                 <span className="mstat-cap"><T ru="живое сообщество" en="live community" /></span>
               </div>
               <div className="ministat">
-                <b>50<span className="mstat-sup">+</span></b>
-                <span className="mstat-cap"><T ru="эфиров и практик" en="livestreams and practices" /></span>
+                <b>20<span className="mstat-sup">+</span></b>
+                <span className="mstat-cap"><T ru="эфиров в записи" en="recorded sessions" /></span>
               </div>
             </div>
             <p className="p">
@@ -64,6 +68,16 @@ export function ClubSection() {
                 en="Here's a living community that talks and grows together with me. Here are insights, energy, and being present in the moment."
               />
             </p>
+            {/* Клуб давно не просто канал, и об этом стоит сказать отдельно:
+                «приложение» — это и есть ответ на вопрос «а как я этим пользуюсь». */}
+            <div className="callout">
+              <p>
+                <T
+                  ru="Теперь это не только канал, а приложение. Поставили на рабочий стол, открыли и слушаете — ничего не теряется в чатах."
+                  en="It is no longer just a channel — it is an app. Put it on your home screen, open it and listen; nothing gets lost in chats."
+                />
+              </p>
+            </div>
             <a className="audio" href={links.clubAudio} target="_blank" rel="noopener">
               <span className="audio-play">▶</span>
               <span className="audio-body">
@@ -81,7 +95,7 @@ export function ClubSection() {
           </div>
         </div>
         <div className="tagfull">
-          <span className="klabel"><T ru="В клубе более 200 часов информации на темы" en="The club holds 200+ hours of content on topics" /></span>
+          <span className="klabel"><T ru="Темы разборов и эфиров" en="Topics of breakdowns and sessions" /></span>
           <div className="chips">
             {chips.map(([ru, en]) => (
               <span className="chip" key={ru}><T ru={ru} en={en} /></span>
