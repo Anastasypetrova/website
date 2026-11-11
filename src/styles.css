@@ -324,7 +324,12 @@ em.accent{font-family:var(--font-script)!important;font-weight:400!important;fon
 .club-stack>*{width:100%;max-width:840px}
 .club-stack .appshots{margin:0}
 .club-stack .mm-cta{margin-top:4px}
-.cta-left{justify-content:flex-start}
+/* Галочка и кнопка занимают всю ширину колонки: строка согласия перестаёт
+   ломаться надвое, а кнопка становится такой же широкой, как всё над ней. */
+.cta-left{justify-content:flex-start;align-items:stretch}
+.cta-left .consent-wrap{width:100%}
+.cta-left .consent{max-width:none}
+.cta-left .btn-onsage{width:100%}
 /* Приписка под заголовком карточки: курсивом и мельче, чтобы сказать своё и
    не отодвинуть список вниз. */
 .card-note{margin:6px 0 0;font-size:calc(13px*var(--ts,1));line-height:1.4;font-style:italic;color:var(--taupe-500);text-align:left}
