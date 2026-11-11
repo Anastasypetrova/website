@@ -21,10 +21,11 @@ export type PhotoKey =
   | 'hero'
   | 'about'
   | 'club'
-  // Скриншоты приложения клуба: файлы app-1 / app-2 / app-3 в src/photos/.
+  // Скриншоты приложения клуба: файлы app-1 … app-4 в src/photos/.
   | 'app1'
   | 'app2'
   | 'app3'
+  | 'app4'
   | 'consultation'
   | 'mentorship'
   | 'mastermind'

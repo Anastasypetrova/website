@@ -297,9 +297,11 @@ em.accent{font-family:var(--font-script)!important;font-weight:400!important;fon
 /* Экраны приложения. Рамка повторяет пропорции телефона (9:19), поэтому
    обычный скриншот садится в неё почти без обрезки; object-position:top
    бережёт шапку экрана, если скриншот окажется длиннее. */
-.appshots{margin-top:44px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:26px;max-width:620px}
+.appshots{margin-top:44px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px;max-width:840px}
 .appshot{margin:0;display:flex;flex-direction:column;gap:10px}
-.appshot-screen{position:relative;aspect-ratio:9/19;max-width:100%;border-radius:22px;overflow:hidden;background:var(--cream-2);border:1px solid var(--border-default);box-shadow:var(--shadow-md)}
+/* 920×2000 — пропорции присланных скриншотов, рамка повторяет их ровно,
+   поэтому не срезается ни верх, ни низ экрана. */
+.appshot-screen{position:relative;aspect-ratio:920/2000;max-width:100%;border-radius:22px;overflow:hidden;background:var(--cream-2);border:1px solid var(--border-default);box-shadow:var(--shadow-md)}
 .appshot figcaption{font-size:calc(12.5px*var(--ts,1));line-height:1.4;color:var(--taupe-600);text-align:center}
 @media(max-width:680px){
   /* На телефоне три экрана в ряд были бы по сантиметру шириной — лента с

@@ -33,11 +33,15 @@ const chips: [string, string][] = [
   ['Самоценность', 'Self-worth'],
 ];
 
-/** Три экрана приложения. Подписи заодно говорят, что именно снимать. */
+/**
+ * Экраны приложения. Первым — рабочий стол телефона: он доказывает ровно то,
+ * что обещает плашка выше, — приложение ставится рядом с остальными.
+ */
 const appShots: [PhotoKey, string, string][] = [
-  ['app1', 'Главный экран клуба', 'The club home screen'],
-  ['app2', 'Эфиры и практики', 'Sessions and practices'],
-  ['app3', 'Чат сообщества', 'The community chat'],
+  ['app1', 'На рабочем столе телефона', 'On your phone’s home screen'],
+  ['app2', 'Главный экран клуба', 'The club home screen'],
+  ['app3', 'Практики, медитации, марафоны', 'Practices, meditations, marathons'],
+  ['app4', 'Книжный клуб, кино, музыка', 'Book club, films, music'],
 ];
 
 export function ClubSection() {
