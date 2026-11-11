@@ -17,6 +17,7 @@ const formatLinks: { href: string; ru: string; en: string }[] = [
   { href: '#personal-session', ru: 'Личная консультация', en: 'Personal consultation' },
   { href: '#mentorship', ru: 'Менторство', en: 'Mentorship' },
   { href: '#mastermind', ru: 'Мастермайнд-группа', en: 'Mastermind' },
+  { href: '#forever-young', ru: 'Forever Young', en: 'Forever Young' },
 ];
 
 export function Footer() {

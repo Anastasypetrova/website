@@ -1,11 +1,26 @@
 import { T } from '../i18n';
 
-const items: { href: string; nameRu: string; nameEn: string; subRu: string; subEn: string; idx: string }[] = [
-  { href: '#club', nameRu: 'Samadhi Club', nameEn: 'Samadhi Club', subRu: 'Клуб по подписке', subEn: 'Subscription club', idx: '01 / 04' },
-  { href: '#personal-session', nameRu: 'Личная консультация', nameEn: 'Personal consultation', subRu: 'Одна сессия', subEn: 'One session', idx: '02 / 04' },
-  { href: '#mentorship', nameRu: 'Индивидуальное менторство', nameEn: 'Individual mentorship', subRu: 'Глубокая работа', subEn: 'Deep work', idx: '03 / 04' },
-  { href: '#mastermind', nameRu: 'Мастермайнд-группа', nameEn: 'Mastermind', subRu: 'Групповой формат', subEn: 'Group format', idx: '04 / 04' },
+interface Item {
+  href: string;
+  nameRu: string;
+  nameEn: string;
+  subRu: string;
+  subEn: string;
+  /** Ставит метку NEW рядом с названием. */
+  isNew?: boolean;
+}
+
+const items: Item[] = [
+  { href: '#club', nameRu: 'Samadhi Club', nameEn: 'Samadhi Club', subRu: 'Клуб по подписке', subEn: 'Subscription club' },
+  { href: '#personal-session', nameRu: 'Личная консультация', nameEn: 'Personal consultation', subRu: 'Одна сессия', subEn: 'One session' },
+  { href: '#mentorship', nameRu: 'Индивидуальное менторство', nameEn: 'Individual mentorship', subRu: 'Глубокая работа', subEn: 'Deep work' },
+  { href: '#mastermind', nameRu: 'Мастермайнд-группа', nameEn: 'Mastermind', subRu: 'Групповой формат', subEn: 'Group format' },
+  { href: '#forever-young', nameRu: 'Forever Young', nameEn: 'Forever Young', subRu: 'Клуб по подписке', subEn: 'Subscription club', isNew: true },
 ];
+
+// Нумерация считается, а не пишется руками: добавится формат — «01 / 04» не
+// останется висеть над пятью строчками.
+const pad = (n: number) => String(n).padStart(2, '0');
 
 export function FormatList() {
   return (
@@ -19,13 +34,16 @@ export function FormatList() {
           />
         </h2>
         <div className="flist">
-          {items.map((it) => (
+          {items.map((it, i) => (
             <a className="frow" href={it.href} key={it.href}>
               <span>
-                <span className="frow-n"><T ru={it.nameRu} en={it.nameEn} /></span>
+                <span className="frow-n">
+                  <T ru={it.nameRu} en={it.nameEn} />
+                  {it.isNew && <span className="frow-new">NEW</span>}
+                </span>
                 <span className="frow-sub"><T ru={it.subRu} en={it.subEn} /></span>
               </span>
-              <span className="frow-idx">{it.idx}</span>
+              <span className="frow-idx">{`${pad(i + 1)} / ${pad(items.length)}`}</span>
             </a>
           ))}
         </div>

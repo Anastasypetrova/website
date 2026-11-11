@@ -29,6 +29,7 @@ export type PhotoKey =
   | 'consultation'
   | 'mentorship'
   | 'mastermind'
+  | 'foreveryoung'
   | 'quote'
   | 'telegram'
   | 'contacts';

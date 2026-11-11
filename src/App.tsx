@@ -14,6 +14,7 @@ import { ClubSection } from './components/ClubSection';
 import { PersonalSessionSection } from './components/PersonalSessionSection';
 import { MentorshipSection } from './components/MentorshipSection';
 import { MastermindSection } from './components/MastermindSection';
+import { ForeverYoungSection } from './components/ForeverYoungSection';
 import { AwakeningQuote } from './components/AwakeningQuote';
 import { About } from './components/About';
 import { TelegramBand } from './components/TelegramBand';
@@ -126,6 +127,7 @@ function App() {
       <PersonalSessionSection />
       <MentorshipSection />
       <MastermindSection />
+      <ForeverYoungSection />
       <AwakeningQuote />
       <About />
       <Faq />
