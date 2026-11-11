@@ -368,10 +368,9 @@ em.accent{font-family:var(--font-script)!important;font-weight:400!important;fon
    строки Forever Young показывался дефолтным: вступление 20px, абзац 15.5px
    и выключка по левому краю. Выравниваю по менторству. */
 #forever-young .lede,#forever-young .p{font-size:16px;text-align:left}
-/* Плашка в розовом — в тон метке NEW у этого формата; та же прозрачная
-   заливка, что у глиняной в остальных блоках, поэтому цвет читается
-   как оттенок страницы, а не как наклейка поверх неё. */
-#forever-young .prod-main .callout{background:rgba(158,45,91,.08)}
+/* Цвет взят из самой фотографии рядом: её тёплый песочно-розовый
+   полутон (#d5beb3), разбавленный до оттенка страницы. */
+#forever-young .prod-main .callout{background:rgba(213,190,179,.5)}
 #mentorship .prod-grid{gap:0}
 #mentorship .prod-main{padding-right:32px;justify-content:space-between}
 #mastermind .prod-main{gap:10px;padding-right:32px}
