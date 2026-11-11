@@ -61,10 +61,9 @@ const services: { name: string; description: string; url: string; price?: number
     name: 'Forever Young',
     description:
       'Клуб по подписке о нестарении и заботе о теле: спорт, массажи, красота и питание.',
+    // Без offers: цена пока не объявлена, а выдуманная цена в разметке —
+    // ровно то, за что Google снимает сниппет.
     url: `${SITE_URL}/#forever-young`,
-    price: 300,
-    currency: 'RUB',
-    note: 'Вход сейчас 300 ₽. Для новых участников цена будет расти каждый месяц.',
   },
 ];
 

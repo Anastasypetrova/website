@@ -53,20 +53,6 @@ export function ForeverYoungSection() {
                 ))}
               </div>
             </div>
-            <div className="pricerow">
-              <div className="pricebox">
-                <span className="klabel"><T ru="Вход сейчас" en="Entry today" /></span>
-                <div className="price" style={{ marginTop: 8, fontFamily: 'var(--font-grotesk)', fontWeight: 100 }}>
-                  <T ru="300 ₽" en="300 RUB" />
-                </div>
-                <p className="card-note">
-                  <T
-                    ru="Для новых участников цена будет расти каждый месяц."
-                    en="For new members the price will rise every month."
-                  />
-                </p>
-              </div>
-            </div>
           </div>
           <div className="prod-right">
             <div className="prod-photo">
