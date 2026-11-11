@@ -1,6 +1,7 @@
 import { T, useLang } from '../i18n';
 import { clubPerMonth, clubPlans, links } from '../content';
 import { Photo } from './Photo';
+import type { PhotoKey } from '../photos';
 import { ConsentGate } from './ConsentGate';
 import { ArrowUpRightIcon } from './Icons';
 
@@ -30,6 +31,13 @@ const chips: [string, string][] = [
   ['Пробуждение', 'Awakening'],
   ['Поиск себя', 'Finding yourself'],
   ['Самоценность', 'Self-worth'],
+];
+
+/** Три экрана приложения. Подписи заодно говорят, что именно снимать. */
+const appShots: [PhotoKey, string, string][] = [
+  ['app1', 'Главный экран клуба', 'The club home screen'],
+  ['app2', 'Эфиры и практики', 'Sessions and practices'],
+  ['app3', 'Чат сообщества', 'The community chat'],
 ];
 
 export function ClubSection() {
@@ -88,6 +96,19 @@ export function ClubSection() {
             </div>
           </div>
         </div>
+        {/* Доказательство к словам «это приложение»: читать про удобство можно
+            бесконечно, а увидеть экран — секунда. */}
+        <div className="appshots">
+          {appShots.map(([name, ru, en]) => (
+            <figure className="appshot" key={name}>
+              <div className="appshot-screen">
+                <Photo name={name} alt={ru} objectPosition="top" />
+              </div>
+              <figcaption><T ru={ru} en={en} /></figcaption>
+            </figure>
+          ))}
+        </div>
+
         <div className="tagfull">
           <span className="klabel"><T ru="Темы разборов и эфиров" en="Topics of breakdowns and sessions" /></span>
           <div className="chips">

@@ -294,6 +294,20 @@ em.accent{font-family:var(--font-script)!important;font-weight:400!important;fon
 
 .mm-tier{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;margin-top:36px;padding-top:40px;border-top:1px solid var(--border-subtle)}
 @media(max-width:820px){.mm-tier{grid-template-columns:1fr;gap:18px}}
+/* Экраны приложения. Рамка повторяет пропорции телефона (9:19), поэтому
+   обычный скриншот садится в неё почти без обрезки; object-position:top
+   бережёт шапку экрана, если скриншот окажется длиннее. */
+.appshots{margin-top:44px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:26px;max-width:620px}
+.appshot{margin:0;display:flex;flex-direction:column;gap:10px}
+.appshot-screen{position:relative;aspect-ratio:9/19;max-width:100%;border-radius:22px;overflow:hidden;background:var(--cream-2);border:1px solid var(--border-default);box-shadow:var(--shadow-md)}
+.appshot figcaption{font-size:calc(12.5px*var(--ts,1));line-height:1.4;color:var(--taupe-600);text-align:center}
+@media(max-width:680px){
+  /* На телефоне три экрана в ряд были бы по сантиметру шириной — лента с
+     прокруткой показывает первый крупно и приглашает листать. */
+  .appshots{display:flex;overflow-x:auto;gap:16px;margin-inline:-20px;padding-inline:20px;scroll-snap-type:x mandatory;max-width:none}
+  .appshot{flex:0 0 62%;scroll-snap-align:start}
+}
+
 /* Две колонки вместо трёх — для клуба: «что входит» и «сколько стоит». */
 /* align-items:start — иначе более короткая карточка растягивается под
    соседнюю и внизу остаётся пустая половина. */
