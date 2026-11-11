@@ -41,8 +41,8 @@ export function ForeverYoungSection() {
             </div>
             <p className="p">
               <T
-                ru="Samadhi Club — про внимание и состояние. Forever Young — про то, в чём они живут."
-                en="Samadhi Club is about attention and state. Forever Young is about what they live in."
+                ru="Samadhi Club — про внимание и состояние. Forever Young — про тот храм, в котором они живут."
+                en="Samadhi Club is about attention and state. Forever Young is about the temple they live in."
               />
             </p>
             <div className="block">
