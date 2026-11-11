@@ -213,7 +213,9 @@ em.accent{font-family:var(--font-script)!important;font-weight:400!important;fon
 .prod-main .numrow-n,.prod-main .prow-p,.prod-main .klabel{color:var(--clay-d)}
 .prod-main .li-mk{background:var(--clay-d)}
 .prod-main .callout{background:rgba(143,90,59,.08)}
-.prod-main .lede,.prod-main>.p{max-width:52ch}
+/* Без ограничения в 52 символа: колонка в продуктовых блоках шире, и
+   ограничение оставляло справа пустую полосу в треть колонки. */
+.prod-main .lede,.prod-main>.p{max-width:none}
 .prod-photo{position:relative;border-radius:6px;overflow:hidden;background:var(--sand-200);min-height:420px;height:100%}
 .pc-cap{position:absolute;left:0;right:0;bottom:0;z-index:3;padding:44px 24px 22px;background:linear-gradient(to top,rgba(44,42,37,.62),rgba(44,42,37,0));color:var(--cream);font-family:var(--font-head);font-weight:500;font-size:19px;line-height:1.3;letter-spacing:-.01em}
 .prod-right{display:flex;flex-direction:column;gap:22px}
@@ -352,26 +354,26 @@ em.accent{font-family:var(--font-script)!important;font-weight:400!important;fon
 /* per-format overrides */
 .tagfull .chip{border-color:rgba(143,90,59,.22)}
 #club .prod-main{gap:34px;justify-content:space-between}
-/* text-align-last:left, not justify: justifying the final line stretches a
-   handful of words across the whole column with gaping holes between them,
-   which the wider column made glaring. */
-#club .lede,#club .p{font-size:14.5px!important;line-height:1.65!important;text-align:justify;text-align-last:left;max-width:none}
+/* Выключка по левому краю, а не по ширине: в русском тексте слова длинные,
+   переносов нет, и выключка по ширине раздвигает пробелы до дыр поперёк
+   колонки. Рваный правый край читается ровнее. */
+#club .lede,#club .p{font-size:14.5px!important;line-height:1.65!important;text-align:left}
 #club .klabel{font-size:11px!important}
 #club .chip{font-size:12.5px!important}
 #club .audio-t{font-size:14.5px!important}
 #club .audio-m{font-size:11px!important}
 #mentorship .lede,#mentorship .p{font-size:16px}
-#mentorship .lede,#mentorship .p,#mentorship .mm-sub{text-align:justify;text-align-last:left}
+#mentorship .lede,#mentorship .p,#mentorship .mm-sub{text-align:left}
 /* У каждого продуктового раздела размер текста задан отдельно, и без своей
    строки Forever Young показывался дефолтным: вступление 20px, абзац 15.5px
    и выключка по левому краю. Выравниваю по менторству. */
-#forever-young .lede,#forever-young .p{font-size:16px;text-align:justify;text-align-last:left}
+#forever-young .lede,#forever-young .p{font-size:16px;text-align:left}
 #mentorship .prod-grid{gap:0}
 #mentorship .prod-main{padding-right:32px;justify-content:space-between}
 #mastermind .prod-main{gap:10px;padding-right:32px}
 #mastermind .prod-main h2{margin-bottom:8px}
 #mastermind .prod-grid{gap:0}
-#mastermind .lede,#mastermind .p{font-size:16px!important;text-align:justify;text-align-last:left}
+#mastermind .lede,#mastermind .p{font-size:16px!important;text-align:left}
 
 /* about */
 .about{display:grid;grid-template-columns:minmax(0,1fr);gap:44px}
@@ -386,7 +388,7 @@ em.accent{font-family:var(--font-script)!important;font-weight:400!important;fon
 /* Every body paragraph in About shares one face, size and colour. */
 .about-intro,.about-body>.p,.about-key{
   font-family:var(--font-sans);font-size:calc(16px*var(--ts,1));line-height:1.65;
-  color:var(--taupe-700);text-align:justify;text-align-last:left;margin:0;
+  color:var(--taupe-700);text-align:left;margin:0;
 }
 .about-key{border-left:3px solid var(--clay-d);padding-left:20px;font-style:italic;font-weight:400}
 .about-callout{margin-top:auto;padding-top:10px}
