@@ -1,8 +1,22 @@
-import { T } from '../i18n';
-import { links } from '../content';
+import { T, useLang } from '../i18n';
+import { clubPerMonth, clubPlans, clubSaving, links } from '../content';
 import { Photo } from './Photo';
 import { ConsentGate } from './ConsentGate';
 import { ArrowUpRightIcon } from './Icons';
+
+/**
+ * То, за что человек платит, строчками. Раньше это лежало внутри абзаца —
+ * абзац читают по диагонали, список читают целиком.
+ */
+const includes: [string, string][] = [
+  ['Я здесь каждый день и отвечаю на ваши вопросы', "I'm here every day and answer your questions"],
+  ['Более 200 часов подкастов — открыты с первого дня', '200+ hours of podcasts, open to you from day one'],
+  ['Разборы ваших ситуаций', 'Breakdowns of your situations'],
+  ['Живые эфиры', 'Live streams'],
+  ['Авторские практики', 'Original practices'],
+  ['Челленджи, совместные просмотры, музыка', 'Challenges, films we watch together, music'],
+  ['Закрытое сообщество, которое общается и растёт вместе', 'A private community that talks and grows together'],
+];
 
 const chips: [string, string][] = [
   ['Реализация', 'Fulfillment'],
@@ -15,6 +29,8 @@ const chips: [string, string][] = [
 ];
 
 export function ClubSection() {
+  const lang = useLang();
+
   return (
     <section className="sec bg1" id="club">
       <div className="wrap">
@@ -44,8 +60,8 @@ export function ClubSection() {
             </div>
             <p className="p">
               <T
-                ru="Здесь живое сообщество, которое общается и развивается вместе со мной. Мы проходим челленджи вместе, смотрим фильмы и даже создаём музыку. Здесь инсайты, энергия и состояние в моменте. Подписаться можно на месяц, 3 месяца, полгода и год."
-                en="Here's a living community that talks and grows together with me. We go through challenges together, watch films and even make music. Here are insights, energy, and being present in the moment. You can subscribe for a month, 3 months, six months or a year."
+                ru="Здесь живое сообщество, которое общается и развивается вместе со мной. Здесь инсайты, энергия и состояние в моменте."
+                en="Here's a living community that talks and grows together with me. Here are insights, energy, and being present in the moment."
               />
             </p>
             <a className="audio" href={links.clubAudio} target="_blank" rel="noopener">
@@ -56,19 +72,6 @@ export function ClubSection() {
               </span>
               <span className="audio-ar"><ArrowUpRightIcon /></span>
             </a>
-            <div className="btns btns-consent">
-              <ConsentGate
-                href={links.clubJoin}
-                product="samadhi-club"
-                slugs={['oferta', 'club-terms', 'disclaimer']}
-                buttonStyle={{ width: 'auto', padding: '16px 28px' }}
-              >
-                <T ru="Присоединиться" en="Join" />
-              </ConsentGate>
-              <a className="btn-outline" href={links.reviewsChannel} target="_blank" rel="noopener">
-                <T ru="Отзывы" en="Reviews" />
-              </a>
-            </div>
           </div>
           <div className="prod-right">
             <div className="prod-photo">
@@ -84,6 +87,78 @@ export function ClubSection() {
               <span className="chip" key={ru}><T ru={ru} en={en} /></span>
             ))}
           </div>
+        </div>
+
+        <div className="mm-tier two">
+          <div className="mm-col">
+            <div className="mm-card">
+              <span className="klabel"><T ru="Что входит в подписку" en="What the subscription includes" /></span>
+              <div className="list" style={{ marginTop: 16 }}>
+                {includes.map(([ru, en]) => (
+                  <div className="li" key={ru}>
+                    <span className="li-mk"></span>
+                    <span><T ru={ru} en={en} /></span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+          <div className="mm-col">
+            <div className="mm-card">
+              <span className="klabel"><T ru="Стоимость подписки" en="Subscription pricing" /></span>
+              <div className="pricetable" style={{ marginTop: 16 }}>
+                {clubPlans.map((plan) => {
+                  const saving = clubSaving(plan);
+                  return (
+                    <div className={`prow${plan.months === 12 ? ' prow-best' : ''}`} key={plan.months}>
+                      <span className="prow-l">
+                        <T ru={plan.label.ru} en={plan.label.en} />
+                        {saving > 0 && (
+                          <span className="prow-sub">
+                            <T
+                              ru={<>{clubPerMonth(plan, 'ru')} в месяц · экономия {saving} €</>}
+                              en={<>{clubPerMonth(plan, 'en')} a month · saves €{saving}</>}
+                            />
+                          </span>
+                        )}
+                      </span>
+                      <span className="prow-p">
+                        {lang === 'en' ? `€${plan.price}` : `${plan.price} €`}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="finep">
+                <p>
+                  <T
+                    ru="Оплата и продление — через Tribute, из любой страны. Подписка продлевается автоматически; отменить продление можно в любой момент там же, доступ сохранится до конца оплаченного периода."
+                    en="Payment and renewal go through Tribute, from any country. The subscription renews automatically; you can cancel renewal there at any time and keep access until the paid period ends."
+                  />
+                </p>
+                <p>
+                  <T
+                    ru="Вернуть деньги можно в течение 48 часов после оплаты, если вы ещё не заходили в клуб. После первого входа возврат за оплаченный период не делается."
+                    en="You can request a refund within 48 hours of payment if you have not yet entered the club. After the first entry the paid period is not refunded."
+                  />
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="mm-cta">
+          <ConsentGate
+            href={links.clubJoin}
+            product="samadhi-club"
+            slugs={['oferta', 'club-terms', 'disclaimer']}
+            buttonStyle={{ width: 'auto', padding: '16px 28px' }}
+          >
+            <T ru="Присоединиться" en="Join" />
+          </ConsentGate>
+          <a className="btn-outline" href={links.reviewsChannel} target="_blank" rel="noopener">
+            <T ru="Отзывы" en="Reviews" />
+          </a>
         </div>
       </div>
     </section>

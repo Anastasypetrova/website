@@ -90,13 +90,13 @@ let page = html
   .replace(/^[\s\S]*?<head>/, '')
   .replace(/<\/head>\s*<body>/, '')
   .replace(/<\/body>\s*<\/html>\s*$/, '')
+  .replace(/<meta charset[^>]*>|<meta name="viewport"[^>]*>/g, '')
   // Preloads, icons and the link-preview block are all about the published
   // URL, and point at files this single page does not carry.
   .replace(/^.*<link rel="preload"[^>]*>.*$/gm, '')
   .replace(/^.*<link rel="(icon|apple-touch-icon|canonical)"[^>]*>.*$/gm, '')
   .replace(/^.*<meta (property="og:|name="twitter:)[^>]*>.*$/gm, '')
   .replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/g, '')
-  .replace(/<meta charset[^>]*>|<meta name="viewport"[^>]*>/g, '')
   // Named for what it is, so it is never mistaken for the published site.
   .replace(/<title>[\s\S]*?<\/title>/, '<title>Превью сайта</title>')
   // Replacer functions, not strings: the bundle contains `$&` sequences of its
@@ -149,10 +149,12 @@ const banner = `
 </script>
 `;
 
+page += banner;
+
 mkdirSync(OUT_FILE.split('/').slice(0, -1).join('/') || '.', { recursive: true });
-writeFileSync(OUT_FILE, page + banner);
+writeFileSync(OUT_FILE, page);
 rmSync(OUT_DIR, { recursive: true, force: true });
 
-const mb = (Buffer.byteLength(page + banner) / 1024 / 1024).toFixed(1);
+const mb = (Buffer.byteLength(page) / 1024 / 1024).toFixed(1);
 console.log(`${OUT_FILE}: ${mb} MB, встроено файлов: ${embedded}`);
 if (Number(mb) > 15) throw new Error('страница больше 15 МБ — публикация не пройдёт');

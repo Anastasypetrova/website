@@ -114,14 +114,52 @@ export const links = {
 };
 
 /**
+ * Подписка на клуб: сроки и цены ровно те, что стоят в Tribute.
+ * Цена месяца внутри тарифа и экономия считаются, а не пишутся руками —
+ * поменяется одна цифра здесь, и всё остальное пересчитается само.
+ */
+export interface ClubPlan {
+  months: number;
+  price: number;
+  label: Bi;
+}
+
+export const clubPlans: ClubPlan[] = [
+  { months: 1, price: 23, label: { ru: '1 месяц', en: '1 month' } },
+  { months: 3, price: 59, label: { ru: '3 месяца', en: '3 months' } },
+  { months: 6, price: 109, label: { ru: 'Полгода', en: '6 months' } },
+  { months: 12, price: 199, label: { ru: 'Год', en: '1 year' } },
+];
+
+/** Помесячный тариф — то, с чем сравнивается всё остальное. */
+const monthlyPrice = clubPlans[0].price;
+
+/** Во сколько обходится месяц внутри тарифа: 199 € за год → 16,6 € в месяц. */
+export function clubPerMonth(plan: ClubPlan, lang: 'ru' | 'en' = 'ru'): string {
+  const value = (plan.price / plan.months).toFixed(1).replace(/\.0$/, '');
+  return lang === 'ru' ? `${value.replace('.', ',')} €` : `€${value}`;
+}
+
+/** Сколько экономит этот срок против помесячной оплаты. 0 — для самого месяца. */
+export function clubSaving(plan: ClubPlan): number {
+  return plan.months * monthlyPrice - plan.price;
+}
+
+/**
  * Every price the site quotes, in one place — the page and the automatic
  * replies both read from here, so a price can never be current in one and
  * stale in the other.
  */
 export const pricing = {
   club: {
-    ru: 'от 17 € в месяц. С сентября стоимость повышается до 23 € в месяц.',
-    en: 'from €17 per month. From September the price rises to €23 per month.',
+    ru:
+      clubPlans.map((p) => `${p.label.ru} — ${p.price} €`).join(', ') +
+      `. Год выходит ${clubPerMonth(clubPlans[3])} в месяц вместо ${monthlyPrice} €. ` +
+      'Оплата и автопродление идут через Tribute, автопродление отменяется там же в любой момент.',
+    en:
+      clubPlans.map((p) => `${p.label.en} — €${p.price}`).join(', ') +
+      `. A year works out at ${clubPerMonth(clubPlans[3], 'en')} a month instead of €${monthlyPrice}. ` +
+      'Payment and renewal run through Tribute, and renewal can be cancelled there at any time.',
   },
   consultation: { ru: '300€ / 30000 руб.', en: '300€ / 30000 RUB' },
   mentorship: [

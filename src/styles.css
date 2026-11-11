@@ -253,6 +253,18 @@ em.accent{font-family:var(--font-script)!important;font-weight:400!important;fon
 .prow:last-child{border-bottom:1px solid var(--border-subtle)}
 .prow-l{font-size:calc(15px*var(--ts,1));line-height:1.45;color:var(--taupe-700)}
 .prow-p{font-family:var(--font-head);font-weight:500;font-size:18px;color:var(--ink);white-space:nowrap}
+/* Цена месяца внутри срока: человек не считает в уме, ему показывают. */
+.prow-sub{display:block;margin-top:4px;font-size:calc(12.5px*var(--ts,1));line-height:1.4;color:var(--taupe-500)}
+/* Годовой тариф выделен тем же, чем выделяют строку в таблице: фоном и весом,
+   без бейджей и восклицаний. */
+.prow-best{background:var(--mist-100);margin-inline:-14px;padding-inline:14px;border-radius:12px}
+.prow-best .prow-l{color:var(--ink);font-weight:600}
+.prow-best .prow-p{font-size:21px}
+.prow-best .prow-sub{color:var(--taupe-700);font-weight:400}
+/* Мелкий шрифт под ценой: продление, отмена, возврат. Он снимает главный
+   страх подписки, поэтому читаемый, а не серый на сером. */
+.finep{display:flex;flex-direction:column;gap:10px;margin-top:18px}
+.finep p{margin:0;font-size:calc(12.5px*var(--ts,1));line-height:1.55;color:var(--taupe-600);text-align:left}
 .audio{display:flex;align-items:center;gap:16px;background:var(--sage-deep);color:var(--cream);border-radius:18px;padding:15px 18px;transition:transform .25s var(--ease-soft),box-shadow .25s var(--ease-soft)}
 .audio:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);color:var(--cream)}
 .audio-play{width:46px;height:46px;border-radius:50%;background:var(--sage);color:#fff;display:flex;align-items:center;justify-content:center;flex:none;font-size:15px;padding-left:3px}
@@ -280,6 +292,11 @@ em.accent{font-family:var(--font-script)!important;font-weight:400!important;fon
 
 .mm-tier{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;margin-top:36px;padding-top:40px;border-top:1px solid var(--border-subtle)}
 @media(max-width:820px){.mm-tier{grid-template-columns:1fr;gap:18px}}
+/* Две колонки вместо трёх — для клуба: «что входит» и «сколько стоит». */
+/* align-items:start — иначе более короткая карточка растягивается под
+   соседнюю и внизу остаётся пустая половина. */
+.mm-tier.two{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}
+@media(max-width:820px){.mm-tier.two{grid-template-columns:1fr}}
 .mm-col{display:flex;flex-direction:column;gap:18px}
 .mm-tier .mm-card{height:100%}
 .mm-card{background:#fff;border:1px solid var(--border-subtle);border-radius:20px;padding:24px;box-shadow:var(--shadow-sm)}

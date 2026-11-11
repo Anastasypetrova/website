@@ -6,7 +6,7 @@
  * time — a crawler has to find it in the HTML, and Google's FAQ rich result in
  * particular is only granted to markup that matches visible page content.
  */
-import { faqItems, links, pricing, type FaqItem } from './content';
+import { clubPlans, faqItems, links, pricing, type FaqItem } from './content';
 
 export const SITE_URL = 'https://anastasia-samadhi.club';
 export const SITE_NAME = 'Анастасия Петрова';
@@ -23,7 +23,7 @@ const services: { name: string; description: string; url: string; price?: number
       'Закрытый клуб по подписке: ежедневное присутствие автора, более 200 часов подкастов, ' +
       'разборы, авторские практики и живые эфиры.',
     url: `${SITE_URL}/#club`,
-    price: 17,
+    price: clubPlans[0].price,
     currency: 'EUR',
     note: pricing.club.ru,
   },
