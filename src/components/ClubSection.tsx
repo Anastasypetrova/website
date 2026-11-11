@@ -3,7 +3,7 @@ import { clubPerMonth, clubPlans, links } from '../content';
 import { Photo } from './Photo';
 import type { PhotoKey } from '../photos';
 import { ConsentGate } from './ConsentGate';
-import { ArrowUpRightIcon } from './Icons';
+import { ArrowUpRightIcon, TelegramIcon } from './Icons';
 
 /**
  * То, за что человек платит, строчками. Раньше это лежало внутри абзаца —
@@ -84,14 +84,26 @@ export function ClubSection() {
                 />
               </p>
             </div>
-            <a className="audio" href={links.clubAudio} target="_blank" rel="noopener">
-              <span className="audio-play">▶</span>
-              <span className="audio-body">
-                <span className="audio-t"><T ru="Рассказываю, что такое Samadhi Club" en="I explain what Samadhi Club is" /></span>
-                <span className="audio-m"><T ru="Аудио · Telegram" en="Audio · Telegram" /></span>
-              </span>
-              <span className="audio-ar"><ArrowUpRightIcon /></span>
-            </a>
+            {/* Две плашки в ряд: мой голос и голоса участников. Отзывы раньше
+                висели кнопкой под ценой, где их никто не искал. */}
+            <div className="audio-row">
+              <a className="audio" href={links.clubAudio} target="_blank" rel="noopener">
+                <span className="audio-play">▶</span>
+                <span className="audio-body">
+                  <span className="audio-t"><T ru="Что такое Samadhi Club" en="What Samadhi Club is" /></span>
+                  <span className="audio-m"><T ru="Аудио · Telegram" en="Audio · Telegram" /></span>
+                </span>
+                <span className="audio-ar"><ArrowUpRightIcon /></span>
+              </a>
+              <a className="audio audio-alt" href={links.reviewsChannel} target="_blank" rel="noopener">
+                <span className="audio-play audio-play-icon"><TelegramIcon /></span>
+                <span className="audio-body">
+                  <span className="audio-t"><T ru="Отзывы ребят из клуба" en="Reviews from club members" /></span>
+                  <span className="audio-m"><T ru="Канал · Telegram" en="Channel · Telegram" /></span>
+                </span>
+                <span className="audio-ar"><ArrowUpRightIcon /></span>
+              </a>
+            </div>
           </div>
           <div className="prod-right">
             <div className="prod-photo">
@@ -180,9 +192,6 @@ export function ClubSection() {
           >
             <T ru="Присоединиться" en="Join" />
           </ConsentGate>
-          <a className="btn-outline" href={links.reviewsChannel} target="_blank" rel="noopener">
-            <T ru="Отзывы" en="Reviews" />
-          </a>
         </div>
       </div>
     </section>
