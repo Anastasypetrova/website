@@ -34,8 +34,8 @@ export function ForeverYoungSection() {
             <div className="callout">
               <p>
                 <T
-                  ru="Потому что без физики нет менталки, и наоборот."
-                  en="Because there is no mental work without the physical, and none the other way round."
+                  ru="Потому что внимание живёт в теле — и одно не меняется без другого."
+                  en="Because attention lives in the body — and neither one changes without the other."
                 />
               </p>
             </div>
