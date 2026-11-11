@@ -323,6 +323,8 @@ em.accent{font-family:var(--font-script)!important;font-weight:400!important;fon
 .club-stack{margin-top:40px;padding-top:40px;border-top:1px solid var(--border-subtle);display:flex;flex-direction:column;align-items:center;gap:28px}
 .club-stack>*{width:100%;max-width:840px}
 .club-stack .appshots{margin:0}
+.club-stack .mm-cta{margin-top:4px}
+.cta-left{justify-content:flex-start}
 /* Приписка под заголовком карточки: курсивом и мельче, чтобы сказать своё и
    не отодвинуть список вниз. */
 .card-note{margin:6px 0 0;font-size:calc(13px*var(--ts,1));line-height:1.4;font-style:italic;color:var(--taupe-500);text-align:left}

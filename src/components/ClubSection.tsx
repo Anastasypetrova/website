@@ -189,17 +189,19 @@ export function ClubSection() {
                 </p>
             </div>
           </div>
-        </div>
 
-        <div className="mm-cta">
-          <ConsentGate
-            href={links.clubJoin}
-            product="samadhi-club"
-            slugs={['oferta', 'club-terms', 'disclaimer']}
-            buttonStyle={{ width: 'auto', padding: '16px 28px' }}
-          >
-            <T ru="Присоединиться" en="Join" />
-          </ConsentGate>
+          {/* Внутри той же колонки, что карточки, и по её левому краю —
+              галочка и кнопка продолжают цену, а не висят отдельно по центру. */}
+          <div className="mm-cta cta-left">
+            <ConsentGate
+              href={links.clubJoin}
+              product="samadhi-club"
+              slugs={['oferta', 'club-terms', 'disclaimer']}
+              buttonStyle={{ width: 'auto', padding: '16px 28px' }}
+            >
+              <T ru="Присоединиться" en="Join" />
+            </ConsentGate>
+          </div>
         </div>
       </div>
     </section>
