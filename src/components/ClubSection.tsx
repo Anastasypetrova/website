@@ -109,22 +109,35 @@ export function ClubSection() {
           </div>
         </div>
 
-        <div className="mm-tier two">
-          <div className="mm-col">
-            <div className="mm-card">
-              <span className="klabel"><T ru="Что входит в подписку" en="What the subscription includes" /></span>
-              <div className="list" style={{ marginTop: 16 }}>
-                {includes.map(([ru, en]) => (
-                  <div className="li" key={ru}>
-                    <span className="li-mk"></span>
-                    <span><T ru={ru} en={en} /></span>
-                  </div>
-                ))}
-              </div>
+        {/* Один столбец сверху вниз: что входит → как это выглядит → сколько
+            стоит → кнопка. Все три блока одной ширины, чтобы читалось как
+            одно движение, а не как три отдельные карточки. */}
+        <div className="club-stack">
+          <div className="mm-card">
+            <span className="klabel"><T ru="Что входит в подписку" en="What the subscription includes" /></span>
+            <div className="list list-2col" style={{ marginTop: 16 }}>
+              {includes.map(([ru, en]) => (
+                <div className="li" key={ru}>
+                  <span className="li-mk"></span>
+                  <span><T ru={ru} en={en} /></span>
+                </div>
+              ))}
             </div>
           </div>
-          <div className="mm-col">
-            <div className="mm-card">
+
+          {/* Прочитал, что входит, — увидел, как это выглядит в руках. */}
+          <div className="appshots">
+            {appShots.map(([name, ru, en]) => (
+              <figure className="appshot" key={name}>
+                <div className="appshot-screen">
+                  <Photo name={name} alt={ru} objectPosition="top" />
+                </div>
+                <figcaption><T ru={ru} en={en} /></figcaption>
+              </figure>
+            ))}
+          </div>
+
+          <div className="mm-card">
               <span className="klabel"><T ru="Стоимость подписки" en="Subscription pricing" /></span>
               <div className="pricetable" style={{ marginTop: 16 }}>
                 {clubPlans.map((plan) => (
@@ -153,22 +166,8 @@ export function ClubSection() {
                     en="Payment and renewal go through Tribute, from any country and with cards issued anywhere, Russia included. The subscription renews automatically; you can cancel renewal in Tribute at any time, and access stays until the end of the paid period."
                   />
                 </p>
-              </div>
             </div>
           </div>
-        </div>
-
-        {/* Под составом подписки: сначала человек прочитал, что входит, —
-            теперь видит, как это выглядит в руках. */}
-        <div className="appshots">
-          {appShots.map(([name, ru, en]) => (
-            <figure className="appshot" key={name}>
-              <div className="appshot-screen">
-                <Photo name={name} alt={ru} objectPosition="top" />
-              </div>
-              <figcaption><T ru={ru} en={en} /></figcaption>
-            </figure>
-          ))}
         </div>
 
         <div className="mm-cta">
