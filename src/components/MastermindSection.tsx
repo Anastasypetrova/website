@@ -111,16 +111,17 @@ export function MastermindSection() {
                   />
                 </div>
               </div>
-              <ConsentGate
-                href={links.mastermindForm}
-                product="mastermind"
-                slugs={['oferta', 'disclaimer']}
-                style={{ marginTop: 'auto' }}
-              >
-                <T ru="Заполнить анкету" en="Fill out the form" />
-              </ConsentGate>
             </div>
           </div>
+        </div>
+
+        {/* Галочка стояла внутри карточки с ценой — в колонке шириной 340px
+            строка согласия ломалась надвое. Внизу, во всю ширину, она читается
+            одной строкой, и раздел встаёт в один ряд с менторством. */}
+        <div className="mm-cta">
+          <ConsentGate href={links.mastermindForm} product="mastermind" slugs={['oferta', 'disclaimer']}>
+            <T ru="Заполнить анкету" en="Fill out the form" />
+          </ConsentGate>
         </div>
       </div>
     </section>
