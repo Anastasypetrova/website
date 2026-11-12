@@ -149,9 +149,7 @@ export const links = {
   consultBot: 'https://t.me/consultpay_bot',
   clubJoin: 'https://t.me/tribute/app?startapp=sr53',
   mastermindForm: 'https://forms.gle/8MB1UucBcKHaGxSp7',
-  /** Куда ведёт кнопка Forever Young. Пусто — ссылки ещё нет, кнопка
-      никуда не уходит: вписать сюда, и она заработает. */
-  foreverYoungJoin: '',
+  foreverYoungJoin: 'https://t.me/tribute/app?startapp=s1ceR',
   clubAudio: 'https://t.me/into_samadhi/2531',
   email: CONTACT_EMAIL,
   site: 'https://anastasia-samadhi.club',

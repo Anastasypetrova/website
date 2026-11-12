@@ -66,12 +66,9 @@ export function ForeverYoungSection() {
           </div>
         </div>
 
-        {/* Ссылки на вступление ещё нет: пока её нет, кнопка остаётся на этом
-            же разделе и никуда не уводит. Появится — впишется в
-            links.foreverYoungJoin, и больше ничего менять не нужно. */}
         <div className="mm-cta">
           <ConsentGate
-            href={links.foreverYoungJoin || '#forever-young'}
+            href={links.foreverYoungJoin}
             product="forever-young"
             slugs={['oferta', 'disclaimer']}
             buttonStyle={{ width: 'auto', padding: '16px 28px' }}
