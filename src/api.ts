@@ -79,3 +79,45 @@ export function mailtoFallback(fields: Partial<ContactFields>): string {
     .join('\n');
   return `mailto:${links.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }
+
+/**
+ * Откуда человек пришёл: метка ?from= со ссылки, иначе домен, с которого
+ * перешли, иначе «напрямую». Ни адреса страницы, ни параметров поиска —
+ * только название источника.
+ */
+function visitSource(): string {
+  try {
+    const marked = new URLSearchParams(window.location.search).get('from');
+    if (marked) return marked.slice(0, 40);
+    if (!document.referrer) return '';
+    const host = new URL(document.referrer).hostname.replace(/^www\./, '');
+    return host === window.location.hostname ? '' : host;
+  } catch {
+    return '';
+  }
+}
+
+/**
+ * Считает нажатие на кнопку формата.
+ *
+ * sendBeacon, а не fetch: человек в этот момент уходит на оплату, и обычный
+ * запрос браузер оборвёт вместе со страницей. Beacon встаёт в очередь и
+ * уходит сам, уже после перехода.
+ *
+ * Ничего не ждёт и ничего не ломает: счётчик, который задерживает переход к
+ * оплате, обходится дороже, чем несосчитанный клик.
+ */
+export function trackClick(event: string): void {
+  if (!apiConfigured) return;
+  try {
+    const body = JSON.stringify({ event, source: visitSource() });
+    const url = `${API_BASE}/event`;
+    if (navigator.sendBeacon) {
+      navigator.sendBeacon(url, new Blob([body], { type: 'application/json' }));
+      return;
+    }
+    void fetch(url, { method: 'POST', body, keepalive: true, headers: { 'content-type': 'application/json' } });
+  } catch {
+    // счётчик молчит и не мешает
+  }
+}

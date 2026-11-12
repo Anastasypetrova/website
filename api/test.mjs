@@ -251,5 +251,38 @@ res = await worker.fetch(
 );
 check('и чужой сайт по-прежнему получает 403', res.status === 403);
 
+// --- счётчик кликов --------------------------------------------------------
+
+const click = (body, origin = 'https://anastasia-samadhi.club') =>
+  worker.fetch(
+    new Request('https://api.example/event', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', origin },
+      body: JSON.stringify(body),
+    }),
+    env,
+  );
+
+reset();
+res = await click({ event: 'samadhi-club', source: 'youtube' });
+check('клик по кнопке формата принят', res.status === 200);
+check('клик записан в таблицу', rows.length === 1 && rows[0].kind === 'event');
+check('записано, какая кнопка и откуда пришли',
+  rows[0].outcome === 'samadhi-club' && rows[0].message === 'youtube');
+check('в строке клика нет ничего личного',
+  !rows[0].name && !rows[0].email && !rows[0].telegram);
+
+reset();
+res = await click({ event: 'forever-young' });
+check('клик по Forever Young тоже считается', res.status === 200 && rows.length === 1);
+
+reset();
+res = await click({ event: 'сделай мне строку в таблице' });
+check('выдуманное событие отклонено', res.status === 400 && rows.length === 0);
+
+reset();
+res = await click({ event: 'samadhi-club' }, 'https://evil.example');
+check('и чужой сайт не может накручивать клики', res.status === 403 && rows.length === 0);
+
 console.log(`\n${failures === 0 ? 'Все проверки пройдены.' : `ПРОВАЛЕНО: ${failures}`}`);
 process.exit(failures === 0 ? 0 : 1);

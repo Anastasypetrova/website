@@ -1,6 +1,7 @@
 import { useId, useState, type CSSProperties, type ReactNode } from 'react';
 import { T } from '../i18n';
 import { docHref, docs } from '../content';
+import { trackClick } from '../api';
 import { legalDocs } from '../legal';
 
 /**
@@ -97,6 +98,9 @@ export function ConsentGate({ href, slugs, product, children, style, buttonStyle
             return;
           }
           recordConsent(product, slugs);
+          // Считается только нажатие, которое действительно уводит на оплату:
+          // заблокированная кнопка выше по коду до сюда не доходит.
+          trackClick(product);
         }}
       >
         {children}

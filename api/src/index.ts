@@ -6,6 +6,7 @@
  *
  *   POST /contact    — the "Остались вопросы?" form
  *   POST /subscribe  — the newsletter form
+ *   POST /event      — a click on one of the format buttons, counted
  *
  * What happens to a question, in order:
  *
@@ -25,6 +26,7 @@ import { appendRow, type ContactRow } from './sheet';
 import { draftReply } from './openai';
 import { sendLetter } from './resend';
 import { runChecks } from './check';
+import { handleEvent } from './events';
 
 /**
  * Only these four are secret and only these four have to be set. The rest are
@@ -48,7 +50,7 @@ export interface Env {
   OPENAI_MODEL?: string;
 }
 
-export const VERSION = 5;
+export const VERSION = 6;
 
 const DEFAULTS = {
   ALLOWED_ORIGINS: 'https://anastasia-samadhi.club,https://www.anastasia-samadhi.club',
@@ -59,7 +61,7 @@ const DEFAULTS = {
   OPENAI_MODEL: 'gpt-4o-mini',
 } as const;
 
-interface Config {
+export interface Config {
   openaiKey: string;
   resendKey: string;
   sheetEndpoint: string;
@@ -293,6 +295,7 @@ export default {
     try {
       if (url.pathname === '/contact') return await handleContact(request, cfg, cors);
       if (url.pathname === '/subscribe') return await handleSubscribe(request, cfg, cors);
+      if (url.pathname === '/event') return await handleEvent(request, cfg, cors);
     } catch (error) {
       console.error(error);
       return json({ error: 'server_error' }, 500, cors);

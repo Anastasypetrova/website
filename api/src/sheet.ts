@@ -9,7 +9,7 @@
  */
 
 export interface ContactRow {
-  kind: 'contact' | 'subscribe';
+  kind: 'contact' | 'subscribe' | 'event';
   name?: string;
   email: string;
   telegram?: string;
