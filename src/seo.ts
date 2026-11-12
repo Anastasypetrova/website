@@ -111,6 +111,10 @@ export function buildStructuredData(): string {
     description: SITE_DESCRIPTION,
     inLanguage: 'ru-RU',
     isPartOf: { '@id': `${SITE_URL}/#website` },
+    // mainEntity, а не только about: для карточки профиля в выдаче Google
+    // требует именно его — «эта страница про вот этого человека», а не
+    // «эта страница упоминает вот этого человека».
+    mainEntity: { '@id': `${SITE_URL}/#person` },
     about: { '@id': `${SITE_URL}/#person` },
     primaryImageOfPage: `${SITE_URL}/og-image.jpg`,
   };
