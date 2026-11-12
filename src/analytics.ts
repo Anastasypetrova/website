@@ -15,7 +15,7 @@ export const analytics = {
    * dash.cloudflare.com → Analytics & Logs → Web Analytics → Add a site.
    * Выдаст кусок кода; нужен из него только token — строка из букв и цифр.
    */
-  cloudflareToken: '',
+  cloudflareToken: '6468fc5178ba4e2eab22586da98549a6',
 
   /**
    * Яндекс.Метрика — номер счётчика, восемь-девять цифр.
