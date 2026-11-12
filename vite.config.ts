@@ -1,6 +1,7 @@
 import { defineConfig, type Plugin } from 'vite'
 import react from '@vitejs/plugin-react'
 import { buildSitemap, buildStructuredData } from './src/seo'
+import { buildAnalyticsTags } from './src/analytics'
 
 /**
  * The fonts the first screen is drawn with. Until they arrive the hero is laid
@@ -42,9 +43,15 @@ function seo(): Plugin {
         .filter(Boolean)
         .join('\n')
 
+      // Счётчики посещаемости: ни одного тега, пока ключ не вписан в
+      // src/analytics.ts — ненастроенный счётчик не стоит и запроса.
+      const counters = buildAnalyticsTags()
+
       return html.replace(
         '</head>',
-        `${preloads}\n  <script type="application/ld+json">${buildStructuredData()}</script>\n  </head>`,
+        `${preloads}\n  <script type="application/ld+json">${buildStructuredData()}</script>\n` +
+          (counters ? `    ${counters}\n` : '') +
+          `  </head>`,
       )
     },
     generateBundle() {
