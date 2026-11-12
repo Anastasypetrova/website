@@ -7,6 +7,7 @@
  *   POST /contact    — the "Остались вопросы?" form
  *   POST /subscribe  — the newsletter form
  *   POST /event      — a click on one of the format buttons, counted
+ *   GET  /stats      — the dashboard's summary: counts only, never a person
  *
  * What happens to a question, in order:
  *
@@ -27,6 +28,7 @@ import { draftReply } from './openai';
 import { sendLetter } from './resend';
 import { runChecks } from './check';
 import { handleEvent } from './events';
+import { handleStats } from './stats';
 
 /**
  * Only these four are secret and only these four have to be set. The rest are
@@ -48,9 +50,16 @@ export interface Env {
   ALLOWED_ORIGINS?: string;
   SITE_URL?: string;
   OPENAI_MODEL?: string;
+
+  /** Пароль дашборда. Пока не задан, `/stats` не отвечает вообще. */
+  STATS_KEY?: string;
+  /** Токен Cloudflare с правом Account Analytics: Read — для цифр посещаемости. */
+  CF_API_TOKEN?: string;
+  /** Номер аккаунта Cloudflare. Нужен только если у токена их несколько. */
+  CF_ACCOUNT_ID?: string;
 }
 
-export const VERSION = 6;
+export const VERSION = 7;
 
 const DEFAULTS = {
   ALLOWED_ORIGINS: 'https://anastasia-samadhi.club,https://www.anastasia-samadhi.club',
@@ -72,6 +81,9 @@ export interface Config {
   replyTo: string;
   notifyTo: string;
   model: string;
+  statsKey: string;
+  cfToken: string;
+  cfAccount: string;
 }
 
 /**
@@ -92,6 +104,9 @@ function config(env: Env): Config {
     replyTo: env.REPLY_TO || DEFAULTS.REPLY_TO,
     notifyTo: env.NOTIFY_TO || DEFAULTS.NOTIFY_TO,
     model: env.OPENAI_MODEL || DEFAULTS.OPENAI_MODEL,
+    statsKey: clean(env.STATS_KEY),
+    cfToken: clean(env.CF_API_TOKEN),
+    cfAccount: clean(env.CF_ACCOUNT_ID),
   };
 }
 
@@ -262,6 +277,8 @@ function health(cfg: Config): Response {
           RESEND_API_KEY: cfg.resendKey.length,
           SHEET_ENDPOINT: cfg.sheetEndpoint.length,
           SHEET_SECRET: cfg.sheetSecret.length,
+          STATS_KEY: cfg.statsKey.length,
+          CF_API_TOKEN: cfg.cfToken.length,
         },
       },
       null,
@@ -279,6 +296,11 @@ export default {
 
     if (request.method === 'GET' && (url.pathname === '/' || url.pathname === '/health')) {
       return health(cfg);
+    }
+    // Сводка для дашборда: GET с ключом в адресе, отдельно от форм — у неё
+    // свой пароль и свой доступ, к списку разрешённых origin не привязана.
+    if (request.method === 'GET' && url.pathname === '/stats') {
+      return await handleStats(url, cfg);
     }
     if (request.method === 'GET' && url.pathname === '/check') {
       const checks = await runChecks(cfg.openaiKey, cfg.resendKey, cfg.model);

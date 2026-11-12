@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { Suspense, lazy, useEffect, useRef, useState } from 'react';
 import { LangContext, type Lang } from './i18n';
 import { LegalPage } from './components/LegalPage';
 import { findLegalDoc } from './legal';
@@ -26,6 +26,11 @@ import { trackClick } from './api';
 import { T } from './i18n';
 
 const SITE_TITLE = 'Анастасия Петрова — трансформационный ментор';
+
+// Дашборд — не часть сайта, а служебная страница, и её код незачем раздавать
+// посетителям: lazy уводит его в отдельный файл, который скачивает только тот,
+// кто открыл #/stats.
+const Dashboard = lazy(() => import('./components/Dashboard'));
 
 function getInitialLang(): Lang {
   if (typeof localStorage === 'undefined') return 'ru';
@@ -101,6 +106,14 @@ function App() {
       // ignore storage errors (private browsing, etc.)
     }
   };
+
+  if (hash.startsWith('#/stats')) {
+    return (
+      <Suspense fallback={null}>
+        <Dashboard />
+      </Suspense>
+    );
+  }
 
   if (doc) {
     return (

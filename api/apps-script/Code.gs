@@ -103,6 +103,89 @@ function appendEvent(data) {
   return json({ ok: true });
 }
 
+/**
+ * Чтение для дашборда: обработчик спрашивает итоги, а не строки.
+ *
+ * Наружу уходят только количества: по дням, по названиям событий, по
+ * источникам. Из вкладки обращений — одно число, сколько их было. Ни имени,
+ * ни почты, ни текста сообщения здесь нет и быть не может.
+ */
+function doGet(e) {
+  try {
+    var p = (e && e.parameter) || {};
+    if (p.secret !== SECRET) return json({ ok: false, error: 'forbidden' });
+    if (p.action !== 'stats') return json({ ok: false, error: 'unknown action' });
+
+    var days = parseInt(p.days, 10);
+    if (!isFinite(days) || days < 1) days = 30;
+    return json(buildStats(Math.min(days, 3650)));
+  } catch (err) {
+    return json({ ok: false, error: String(err) });
+  }
+}
+
+function buildStats(days) {
+  var tz = Session.getScriptTimeZone();
+  var book = SpreadsheetApp.getActiveSpreadsheet();
+  var sinceDay = Utilities.formatDate(new Date(Date.now() - (days - 1) * 86400000), tz, 'yyyy-MM-dd');
+
+  var out = {
+    ok: true,
+    tz: tz,
+    since: sinceDay,
+    total: 0,
+    byDay: {},
+    byEvent: {},
+    bySource: {},
+    contacts: 0,
+    contactsByDay: {},
+    firstDay: '',
+    totalAllTime: 0,
+  };
+
+  var ev = book.getSheetByName(EVENT_SHEET);
+  if (ev && ev.getLastRow() > 1) {
+    var rows = ev.getRange(2, 1, ev.getLastRow() - 1, EVENT_HEADERS.length).getValues();
+    for (var i = 0; i < rows.length; i++) {
+      var day = dayOf(rows[i][0], tz);
+      if (!day) continue;
+
+      out.totalAllTime++;
+      if (!out.firstDay || day < out.firstDay) out.firstDay = day;
+      if (day < sinceDay) continue;
+
+      var name = String(rows[i][1] || '—');
+      var source = String(rows[i][3] || 'напрямую');
+      out.byDay[day] = (out.byDay[day] || 0) + 1;
+      out.byEvent[name] = (out.byEvent[name] || 0) + 1;
+      out.bySource[source] = (out.bySource[source] || 0) + 1;
+      out.total++;
+    }
+  }
+
+  // Обращения: только счёт по дням. Первый столбец — дата, больше ничего
+  // отсюда не читается, чтобы персональным данным было некуда утечь.
+  var first = book.getSheets()[0];
+  if (first && first.getName() !== EVENT_SHEET && first.getLastRow() > 1) {
+    var dates = first.getRange(2, 1, first.getLastRow() - 1, 1).getValues();
+    for (var k = 0; k < dates.length; k++) {
+      var cday = dayOf(dates[k][0], tz);
+      if (!cday || cday < sinceDay) continue;
+      out.contactsByDay[cday] = (out.contactsByDay[cday] || 0) + 1;
+      out.contacts++;
+    }
+  }
+
+  return out;
+}
+
+/** Дата ячейки — в «2026-11-12» по часовому поясу таблицы. */
+function dayOf(value, tz) {
+  var d = value instanceof Date ? value : new Date(value);
+  if (!d || isNaN(d.getTime())) return '';
+  return Utilities.formatDate(d, tz, 'yyyy-MM-dd');
+}
+
 function json(payload) {
   return ContentService.createTextOutput(JSON.stringify(payload)).setMimeType(
     ContentService.MimeType.JSON,

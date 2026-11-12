@@ -1,0 +1,329 @@
+/* Дашборд `#/stats`. Отдельный файл: грузится только на этой странице.
+
+   Один цвет на все данные. Визиты и нажатия живут в разных рамках, поэтому
+   цвет здесь ничего не различает — различают заголовки, — и второй оттенок
+   был бы украшением, которое читается как смысл. Зелёный взят глубже
+   сайтового (--sage слишком светлый: на кремовом фоне у столбика контраст
+   2.8:1, то есть на солнце он пропадает). */
+.dash {
+  --d-mark: #5f7a52;
+  --d-mark-soft: rgba(95, 122, 82, 0.18);
+  --d-line: rgba(44, 44, 44, 0.1);
+  max-width: 1080px;
+  margin-inline: auto;
+  padding: clamp(24px, 4vw, 52px) clamp(16px, 3vw, 32px) 80px;
+  font-family: var(--font-sans);
+  color: var(--ink);
+}
+
+.dash h1 {
+  font-family: var(--font-head);
+  font-size: clamp(28px, 4vw, 40px);
+  font-weight: 400;
+  letter-spacing: -0.018em;
+  margin: 0;
+}
+
+.dash-eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--clay-d);
+  margin-bottom: 6px;
+}
+
+.dash-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 22px;
+}
+
+.dash-when {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  color: var(--taupe-500);
+}
+.dash-when button {
+  border: 1px solid var(--border-default);
+  background: none;
+  border-radius: 999px;
+  padding: 7px 15px;
+  font-size: 13px;
+  color: var(--taupe-700);
+  cursor: pointer;
+}
+.dash-when button:hover:not(:disabled) {
+  border-color: var(--d-mark);
+  color: var(--d-mark);
+}
+.dash-when button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* Фильтр периода — одной строкой над всеми графиками, как и положено фильтру. */
+.dash-periods {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 26px;
+}
+.dash-periods button {
+  border: 1px solid var(--border-default);
+  background: none;
+  border-radius: 999px;
+  padding: 9px 18px;
+  font-size: 14px;
+  color: var(--taupe-700);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.dash-periods button:hover {
+  border-color: var(--d-mark);
+}
+.dash-periods button.on {
+  background: var(--d-mark);
+  border-color: var(--d-mark);
+  color: #fff;
+}
+
+/* ---- крупные числа ------------------------------------------------------- */
+
+.dash-tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 14px;
+  margin-bottom: 26px;
+}
+
+.dash-tile {
+  background: #fff;
+  border: 1px solid var(--border-subtle);
+  border-radius: 14px;
+  padding: 20px 22px;
+}
+.dash-tile-v {
+  font-family: var(--font-grotesk);
+  font-weight: 200;
+  font-size: clamp(34px, 5vw, 46px);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+.dash-tile-l {
+  font-size: 13.5px;
+  color: var(--taupe-600);
+  margin-top: 6px;
+}
+.dash-tile-n {
+  font-size: 12px;
+  color: var(--clay-d);
+  margin-top: 4px;
+}
+
+/* ---- карточки ------------------------------------------------------------ */
+
+.dash-card {
+  background: #fff;
+  border: 1px solid var(--border-subtle);
+  border-radius: 14px;
+  padding: 20px 22px 18px;
+  margin-bottom: 14px;
+}
+
+.dash-card-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.dash-card-head h2 {
+  font-family: var(--font-head);
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+.dash-card-sum {
+  font-family: var(--font-grotesk);
+  font-weight: 300;
+  font-size: 20px;
+  font-variant-numeric: tabular-nums;
+  color: var(--taupe-600);
+}
+
+/* ---- столбики ------------------------------------------------------------ */
+
+.dash-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 146px;
+  /* место сверху — ровно под подпись максимума, иначе она ложится на столбик */
+  padding-top: 26px;
+  border-bottom: 1px solid var(--d-line);
+}
+
+.dash-bar-slot {
+  flex: 1 1 0;
+  min-width: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: stretch;
+  position: relative;
+  cursor: default;
+}
+.dash-bar-slot:hover {
+  background: rgba(95, 122, 82, 0.06);
+}
+
+.dash-bar {
+  display: block;
+  background: var(--d-mark);
+  /* скругление только сверху: низ столбика — это сама ось */
+  border-radius: 4px 4px 0 0;
+  min-height: 0;
+}
+
+/* Подпись только у наибольшего: число над каждым столбиком — это таблица,
+   прикидывающаяся графиком. */
+.dash-bar-peak {
+  position: absolute;
+  top: -19px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  color: var(--taupe-600);
+  white-space: nowrap;
+}
+
+.dash-axis {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11.5px;
+  color: var(--taupe-500);
+  margin-top: 7px;
+}
+
+/* ---- списки -------------------------------------------------------------- */
+
+.dash-two {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 14px;
+  margin-bottom: 14px;
+}
+.dash-two .dash-card {
+  margin-bottom: 0;
+}
+
+.dash-rows {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+.dash-rows th {
+  font-weight: 400;
+  text-align: left;
+  padding: 7px 0;
+  color: var(--ink);
+}
+.dash-rows td {
+  padding: 7px 0;
+  vertical-align: middle;
+}
+.dash-rows-n {
+  text-align: right;
+  width: 4.5em;
+  font-variant-numeric: tabular-nums;
+  color: var(--taupe-600);
+  padding-right: 12px !important;
+}
+.dash-rows-b {
+  width: 34%;
+}
+.dash-rows-b span:first-child {
+  display: block;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--d-mark-soft);
+  min-width: 2px;
+}
+
+.dash-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---- мелочи -------------------------------------------------------------- */
+
+.dash-note,
+.dash-empty {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--taupe-500);
+  max-width: 68ch;
+}
+.dash-err {
+  font-size: 13.5px;
+  color: var(--clay-d);
+  margin: 0;
+}
+.dash-err-top {
+  margin-bottom: 18px;
+}
+
+/* ---- вход ---------------------------------------------------------------- */
+
+.dash-gate {
+  max-width: 420px;
+  padding-top: 18vh;
+}
+.dash-gate p {
+  font-size: 14.5px;
+  color: var(--taupe-600);
+  line-height: 1.6;
+  margin: 12px 0 20px;
+}
+.dash-gate form {
+  display: flex;
+  gap: 8px;
+}
+.dash-gate input {
+  flex: 1 1 auto;
+  min-width: 0;
+  border: 1px solid var(--border-default);
+  border-radius: 10px;
+  padding: 12px 14px;
+  font: inherit;
+  font-size: 15px;
+  background: #fff;
+  color: var(--ink);
+}
+.dash-gate input:focus {
+  outline: 2px solid var(--d-mark);
+  outline-offset: 1px;
+}
+.dash-gate button {
+  border: none;
+  border-radius: 10px;
+  padding: 12px 20px;
+  background: var(--d-mark);
+  color: #fff;
+  font-size: 15px;
+  cursor: pointer;
+}
