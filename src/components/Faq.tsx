@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { T, useLang } from '../i18n';
 import { faqItems } from '../content';
+import { trackClick } from '../api';
 
 export function Faq() {
   const lang = useLang();
@@ -21,7 +22,7 @@ export function Faq() {
             const isOpen = open === i;
             return (
               <div className={`faqrow ${isOpen ? 'open' : ''}`} key={i}>
-                <button className="faqq" onClick={() => setOpen(isOpen ? -1 : i)}>
+                <button className="faqq" onClick={() => { setOpen(isOpen ? -1 : i); if (!isOpen) trackClick(`faq:${i + 1}`); }}>
                   <span className="faqq-text">{lang === 'en' ? item.q.en : item.q.ru}</span>
                   <span className="faqidx">{String(i + 1).padStart(2, '0')} / {String(faqItems.length).padStart(2, '0')}</span>
                 </button>

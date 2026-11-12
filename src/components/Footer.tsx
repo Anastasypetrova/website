@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from 'react';
 import { T, useLang } from '../i18n';
 import { docs, docHref, links, showMastermind } from '../content';
-import { apiConfigured, submitNewsletter } from '../api';
+import { apiConfigured, submitNewsletter, trackClick } from '../api';
 import { InstagramIcon, TelegramIcon, YoutubeIcon } from './Icons';
 
 const sectionLinks: { href: string; ru: string; en: string }[] = [
@@ -86,9 +86,9 @@ export function Footer() {
               />
             </div>
             <div className="c-social">
-              <a className="soc soc-l" href={links.instagram} target="_blank" rel="noopener" aria-label="Instagram"><InstagramIcon /></a>
-              <a className="soc soc-l" href={links.telegramChannel} target="_blank" rel="noopener" aria-label="Telegram"><TelegramIcon /></a>
-              <a className="soc soc-l" href={links.youtube} target="_blank" rel="noopener" aria-label="YouTube"><YoutubeIcon /></a>
+              <a className="soc soc-l" href={links.instagram} target="_blank" rel="noopener" aria-label="Instagram" onClick={() => trackClick('social:instagram')}><InstagramIcon /></a>
+              <a className="soc soc-l" href={links.telegramChannel} target="_blank" rel="noopener" aria-label="Telegram" onClick={() => trackClick('social:telegram')}><TelegramIcon /></a>
+              <a className="soc soc-l" href={links.youtube} target="_blank" rel="noopener" aria-label="YouTube" onClick={() => trackClick('social:youtube')}><YoutubeIcon /></a>
             </div>
           </div>
           <div className="foot-col">
@@ -106,7 +106,7 @@ export function Footer() {
           <div className="foot-col">
             <span className="foot-col-h"><T ru="Документы" en="Documents" /></span>
             {docs.map((d) => (
-              <a className="flink" href={docHref(d.slug)} key={d.slug}>
+              <a className="flink" href={docHref(d.slug)} key={d.slug} onClick={() => trackClick(`doc:${d.slug}`)}>
                 <T ru={d.label.ru} en={d.label.en} />
               </a>
             ))}

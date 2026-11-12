@@ -1,6 +1,8 @@
+import { useEffect, useRef } from 'react';
 import { T } from '../i18n';
 import { showMastermind } from '../content';
 import { Disclaimer } from './Disclaimer';
+import { trackClick } from '../api';
 
 interface Item {
   href: string;
@@ -27,8 +29,30 @@ const items: Item[] = [
 const pad = (n: number) => String(n).padStart(2, '0');
 
 export function FormatList() {
+  const seen = useRef<HTMLElement | null>(null);
+
+  /**
+   * Самый важный шаг воронки: доходят ли вообще до предложения. Считается
+   * один раз за визит и только когда блок действительно показался на экране.
+   */
+  useEffect(() => {
+    const node = seen.current;
+    if (!node || typeof IntersectionObserver === 'undefined') return;
+    const watcher = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          trackClick('formats-seen', true);
+          watcher.disconnect();
+        }
+      },
+      { threshold: 0.25 },
+    );
+    watcher.observe(node);
+    return () => watcher.disconnect();
+  }, []);
+
   return (
-    <section className="sec bg2" id="formats">
+    <section className="sec bg2" id="formats" ref={seen}>
       <div className="wrap">
         <span className="eyebrow"><T ru="форматы работы" en="work formats" /></span>
         <h2 className="dh dh2" style={{ marginTop: 14, maxWidth: '22ch' }}>

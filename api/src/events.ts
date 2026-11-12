@@ -1,10 +1,10 @@
 /**
- * Счётчик кликов по кнопкам форматов.
+ * Счётчик событий на сайте.
  *
- * Cloudflare Web Analytics считает визиты, но событий не умеет: нажатие на
- * кнопку он не видит. Этот эндпоинт закрывает ровно эту дыру и ничего больше.
+ * Cloudflare Web Analytics считает визиты, но событий не умеет: ни нажатия,
+ * ни прокрутку он не видит. Этот эндпоинт закрывает ровно эту дыру.
  *
- * Что пишется: что нажали, когда и откуда человек пришёл. Ничего, по чему
+ * Что пишется: что человек сделал, когда и откуда пришёл. Ничего, по чему
  * можно узнать человека: ни имени, ни почты, ни адреса, ни отпечатка браузера.
  * Имена и почты живут в таблице обращений — и только там.
  */
@@ -12,16 +12,46 @@ import { appendRow } from './sheet';
 import type { Config } from './index';
 
 /**
- * Белый список. Иначе любой желающий сможет накидать в таблицу произвольных
- * строк: эндпоинт открыт наружу, как и всё остальное на сайте.
+ * Эндпоинт открыт в интернет, поэтому принимаются только известные события:
+ * иначе любой желающий накидает в таблицу произвольных строк.
+ *
+ * Простые события целиком перечислены здесь. Составные — вида «что:какое
+ * именно», где «что» из второго списка, а «какое именно» обязано совпасть с
+ * образцом: так добавление нового вопроса в FAQ или видео не требует правки
+ * обработчика, а подставить туда произвольный текст всё равно нельзя.
  */
-const TRACKED = [
+const SIMPLE = new Set([
+  // кнопки форматов
   'samadhi-club',
   'personal-session',
   'mentorship',
   'mastermind',
   'forever-young',
-] as const;
+  // блок клуба
+  'club-audio',
+  'club-reviews',
+  // остальное
+  'formats-seen',
+  'lang-en',
+  'lang-ru',
+  'telegram-subscribe',
+  'youtube-all',
+]);
+
+const PREFIXED: Record<string, RegExp> = {
+  faq: /^\d{1,2}$/,
+  video: /^[a-z]{3,8}\d{1,2}$/,
+  doc: /^[a-z-]{3,20}$/,
+  social: /^(instagram|telegram|youtube)$/,
+};
+
+export function isTracked(event: string): boolean {
+  if (SIMPLE.has(event)) return true;
+  const [kind, detail, ...rest] = event.split(':');
+  if (rest.length || !detail) return false;
+  const shape = PREFIXED[kind];
+  return Boolean(shape && shape.test(detail));
+}
 
 /** Откуда пришёл человек: метка ?from= со ссылки или домен-источник. */
 function cleanSource(raw: unknown): string {
@@ -43,7 +73,7 @@ export async function handleEvent(
   }
 
   const event = String(body.event ?? '');
-  if (!TRACKED.includes(event as (typeof TRACKED)[number])) {
+  if (!isTracked(event)) {
     return new Response(JSON.stringify({ ok: false, error: 'unknown event' }), { status: 400, headers: cors });
   }
 

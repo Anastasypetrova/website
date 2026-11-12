@@ -1,4 +1,5 @@
 import { T } from '../i18n';
+import { trackClick } from '../api';
 import { links } from '../content';
 import { Photo } from './Photo';
 import { ArrowRightIcon, TelegramIcon } from './Icons';
@@ -25,7 +26,7 @@ export function TelegramBand() {
           <T ru="Мысли, практики и состояние в моменте для каждого" en="Thoughts, practices and presence for everyone" />
         </p>
         <div style={{ marginTop: 30, display: 'flex', justifyContent: 'center' }}>
-          <a className="tgband-cta" href={links.telegramChannel} target="_blank" rel="noopener">
+          <a className="tgband-cta" href={links.telegramChannel} target="_blank" rel="noopener" onClick={() => trackClick('telegram-subscribe')}>
             <T ru="Подписаться" en="Subscribe" />
             <ArrowRightIcon />
           </a>

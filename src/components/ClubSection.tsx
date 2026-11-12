@@ -1,6 +1,7 @@
 import { T, useLang } from '../i18n';
 import { clubPerMonth, clubPlans, links } from '../content';
 import { Photo } from './Photo';
+import { trackClick } from '../api';
 import type { PhotoKey } from '../photos';
 import { ConsentGate } from './ConsentGate';
 import { ArrowUpRightIcon, TelegramIcon } from './Icons';
@@ -87,7 +88,7 @@ export function ClubSection() {
             {/* Две плашки в ряд: мой голос и голоса участников. Отзывы раньше
                 висели кнопкой под ценой, где их никто не искал. */}
             <div className="audio-row">
-              <a className="audio" href={links.clubAudio} target="_blank" rel="noopener">
+              <a className="audio" href={links.clubAudio} target="_blank" rel="noopener" onClick={() => trackClick('club-audio')}>
                 <span className="audio-play">▶</span>
                 <span className="audio-body">
                   <span className="audio-t"><T ru="Что такое Samadhi Club" en="What Samadhi Club is" /></span>
@@ -95,7 +96,7 @@ export function ClubSection() {
                 </span>
                 <span className="audio-ar"><ArrowUpRightIcon /></span>
               </a>
-              <a className="audio audio-alt" href={links.reviewsChannel} target="_blank" rel="noopener">
+              <a className="audio audio-alt" href={links.reviewsChannel} target="_blank" rel="noopener" onClick={() => trackClick('club-reviews')}>
                 <span className="audio-play audio-play-icon"><TelegramIcon /></span>
                 <span className="audio-body">
                   <span className="audio-t"><T ru="Отзывы ребят из клуба" en="Reviews from club members" /></span>

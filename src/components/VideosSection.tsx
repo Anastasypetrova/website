@@ -1,5 +1,6 @@
 import { useRef } from 'react';
 import { T } from '../i18n';
+import { trackClick } from '../api';
 import { videos, podcasts, links } from '../content';
 import { ChevronLeftIcon, ChevronRightIcon } from './Icons';
 
@@ -39,7 +40,7 @@ export function VideosSection() {
         </div>
         <div className="rail" id="vrail" ref={vrail}>
           {videos.map((v) => (
-            <a className="vcard" href={v.url} target="_blank" rel="noopener" key={v.id} style={{ textDecoration: 'none', color: 'inherit' }}>
+            <a className="vcard" href={v.url} target="_blank" rel="noopener" key={v.id} onClick={() => trackClick(`video:${v.id}`)} style={{ textDecoration: 'none', color: 'inherit' }}>
               <div className="vthumb">
                 <img src={v.thumb} alt="Видео Анастасии Петровой на YouTube" loading="lazy" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
                 <div className="play"><span>▶</span></div>
@@ -57,7 +58,7 @@ export function VideosSection() {
         </div>
         <div className="rail" id="prail" ref={prail}>
           {podcasts.map((v) => (
-            <a className="vcard" href={v.url} target="_blank" rel="noopener" key={v.id} style={{ textDecoration: 'none', color: 'inherit' }}>
+            <a className="vcard" href={v.url} target="_blank" rel="noopener" key={v.id} onClick={() => trackClick(`video:${v.id}`)} style={{ textDecoration: 'none', color: 'inherit' }}>
               <div className="vthumb">
                 <img src={v.thumb} alt="Подкаст Анастасии Петровой" loading="lazy" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
                 <div className="play"><span>▶</span></div>
@@ -67,7 +68,7 @@ export function VideosSection() {
         </div>
 
         <div style={{ marginTop: 44 }}>
-          <a className="btn-onsage" href={links.youtube} target="_blank" rel="noopener" style={{ width: 'auto', padding: '16px 34px' }}>
+          <a className="btn-onsage" href={links.youtube} target="_blank" rel="noopener" onClick={() => trackClick('youtube-all')} style={{ width: 'auto', padding: '16px 34px' }}>
             <T ru="Смотреть на YouTube" en="Watch on YouTube" />
           </a>
         </div>

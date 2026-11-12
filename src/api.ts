@@ -97,18 +97,25 @@ function visitSource(): string {
   }
 }
 
+/** Одно и то же событие за визит считается один раз. */
+const seen = new Set<string>();
+
 /**
- * Считает нажатие на кнопку формата.
+ * Считает событие на сайте: нажатие, прокрутку, открытый вопрос.
  *
- * sendBeacon, а не fetch: человек в этот момент уходит на оплату, и обычный
- * запрос браузер оборвёт вместе со страницей. Beacon встаёт в очередь и
- * уходит сам, уже после перехода.
+ * sendBeacon, а не fetch: человек в этот момент часто уходит по ссылке, и
+ * обычный запрос браузер оборвёт вместе со страницей. Beacon встаёт в очередь
+ * и уходит сам, уже после перехода.
  *
  * Ничего не ждёт и ничего не ломает: счётчик, который задерживает переход к
- * оплате, обходится дороже, чем несосчитанный клик.
+ * оплате, обходится дороже, чем несосчитанное событие.
  */
-export function trackClick(event: string): void {
+export function trackClick(event: string, once = false): void {
   if (!apiConfigured) return;
+  if (once) {
+    if (seen.has(event)) return;
+    seen.add(event);
+  }
   try {
     const body = JSON.stringify({ event, source: visitSource() });
     const url = `${API_BASE}/event`;

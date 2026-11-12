@@ -276,9 +276,42 @@ reset();
 res = await click({ event: 'forever-young' });
 check('клик по Forever Young тоже считается', res.status === 200 && rows.length === 1);
 
-reset();
-res = await click({ event: 'сделай мне строку в таблице' });
-check('выдуманное событие отклонено', res.status === 400 && rows.length === 0);
+// каждое событие из схемы должно приниматься
+const SCHEME = [
+  'samadhi-club', 'personal-session', 'mentorship', 'forever-young',
+  'club-audio', 'club-reviews', 'formats-seen', 'lang-en', 'lang-ru',
+  'telegram-subscribe', 'youtube-all',
+  'faq:7', 'video:vid1', 'video:pod5', 'doc:oferta', 'doc:club-terms',
+  'social:instagram', 'social:telegram', 'social:youtube',
+];
+let accepted = 0;
+for (const name of SCHEME) {
+  reset();
+  const r = await click({ event: name });
+  if (r.status === 200 && rows.length === 1 && rows[0].outcome === name) accepted += 1;
+  else console.log('   не принято:', name, r.status);
+}
+check(`все ${SCHEME.length} событий схемы принимаются`, accepted === SCHEME.length);
+
+// и ничего, кроме них
+const JUNK = [
+  'сделай мне строку в таблице',
+  'faq:999',
+  'faq:abc',
+  'doc:../../etc',
+  'social:vk',
+  'video:drop table',
+  'samadhi-club:extra:bits',
+  '',
+];
+let refused = 0;
+for (const name of JUNK) {
+  reset();
+  const r = await click({ event: name });
+  if (r.status === 400 && rows.length === 0) refused += 1;
+  else console.log('   пролезло:', JSON.stringify(name), r.status);
+}
+check(`подделки отклонены (${JUNK.length} попыток)`, refused === JUNK.length);
 
 reset();
 res = await click({ event: 'samadhi-club' }, 'https://evil.example');

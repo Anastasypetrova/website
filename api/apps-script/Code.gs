@@ -15,15 +15,28 @@ const HEADERS = ['Дата', 'Тип', 'ФИО', 'Email', 'Telegram', 'Сооб�
 
 // Клики по кнопкам пишутся на отдельную вкладку: это статистика, а не
 // обращения, и смешивать их в одной таблице неудобно обоим.
-const EVENT_SHEET = 'Клики';
-const EVENT_HEADERS = ['Дата', 'Кнопка', 'Источник'];
+const EVENT_SHEET = 'События';
+const EVENT_HEADERS = ['Дата', 'Что произошло', 'Подробность', 'Источник'];
 
-const BUTTON_NAMES = {
-  'samadhi-club': 'Samadhi Club',
-  'personal-session': 'Личная консультация',
-  'mentorship': 'Менторство',
-  'mastermind': 'Мастермайнд-группа',
-  'forever-young': 'Forever Young',
+// Коды событий — в человеческие названия. Чего нет в списке, попадёт в
+// таблицу как есть: лучше непонятная строка, чем потерянное событие.
+const EVENT_NAMES = {
+  'samadhi-club': 'Кнопка: Samadhi Club',
+  'personal-session': 'Кнопка: личная консультация',
+  'mentorship': 'Кнопка: менторство',
+  'mastermind': 'Кнопка: мастермайнд',
+  'forever-young': 'Кнопка: Forever Young',
+  'club-audio': 'Клуб: включил аудио',
+  'club-reviews': 'Клуб: открыл отзывы',
+  'formats-seen': 'Долистал до форматов',
+  'lang-en': 'Переключил на английский',
+  'lang-ru': 'Переключил на русский',
+  'telegram-subscribe': 'Подписаться на Telegram',
+  'youtube-all': 'Все видео на YouTube',
+  'faq': 'Открыл вопрос в FAQ',
+  'video': 'Открыл видео',
+  'doc': 'Открыл документ',
+  'social': 'Ушёл в соцсеть',
 };
 
 function doPost(e) {
@@ -75,10 +88,15 @@ function appendEvent(data) {
     sheet.setFrozenRows(1);
   }
 
-  const key = data.outcome || '';
+  const raw = data.outcome || '';
+  const parts = raw.split(':');
+  const key = parts[0];
+  const detail = parts.length > 1 ? parts[1] : '';
+
   sheet.appendRow([
     new Date(data.at || Date.now()),
-    BUTTON_NAMES[key] || key,
+    EVENT_NAMES[raw] || EVENT_NAMES[key] || raw,
+    detail,
     data.message || 'напрямую',
   ]);
 

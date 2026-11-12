@@ -22,6 +22,7 @@ import { Faq } from './components/Faq';
 import { Contact } from './components/Contact';
 import { Footer } from './components/Footer';
 import { showMastermind } from './content';
+import { trackClick } from './api';
 import { T } from './i18n';
 
 const SITE_TITLE = 'Анастасия Петрова — трансформационный ментор';
@@ -90,6 +91,9 @@ function App() {
   }, []);
 
   const handleSetLang = (l: Lang) => {
+    // Считаем только настоящее переключение: нажатие на уже активную кнопку
+    // языка ничего не меняет и статистику бы только засоряло.
+    if (l !== lang) trackClick(`lang-${l}`);
     setLang(l);
     try {
       localStorage.setItem('ap_lang', l);
