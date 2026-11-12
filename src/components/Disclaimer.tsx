@@ -14,13 +14,11 @@ import { docHref } from '../content';
  */
 export function Disclaimer() {
   return (
-    <section className="sec-s bg1">
-      <div className="wrap">
-        <div className="disclaimer">
-          <span className="klabel"><T ru="Важно" en="Important" /></span>
-          <p>
-            <T
-              ru={
+    <div className="disclaimer">
+      <span className="klabel"><T ru="Важно" en="Important" /></span>
+      <p>
+        <T
+          ru={
                 <>
                   Форматы работы предназначены для людей, не имеющих диагностированных
                   психических расстройств, и не являются заменой профессиональной
@@ -28,7 +26,7 @@ export function Disclaimer() {
                   <a href={docHref('disclaimer')}>Дисклеймере</a>.
                 </>
               }
-              en={
+          en={
                 <>
                   These formats are intended for people without diagnosed mental health
                   conditions and are not a substitute for professional medical or
@@ -36,10 +34,8 @@ export function Disclaimer() {
                   <a href={docHref('disclaimer')}>Disclaimer</a>.
                 </>
               }
-            />
-          </p>
-        </div>
-      </div>
-    </section>
+        />
+      </p>
+    </div>
   );
 }

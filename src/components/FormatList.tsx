@@ -1,5 +1,6 @@
 import { T } from '../i18n';
 import { showMastermind } from '../content';
+import { Disclaimer } from './Disclaimer';
 
 interface Item {
   href: string;
@@ -50,6 +51,7 @@ export function FormatList() {
             </a>
           ))}
         </div>
+        <Disclaimer />
       </div>
     </section>
   );
