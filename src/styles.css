@@ -337,6 +337,13 @@ em.accent{font-family:var(--font-script)!important;font-weight:400!important;fon
 .cta-left .btn-onsage{width:100%}
 /* Приписка под заголовком карточки: курсивом и мельче, чтобы сказать своё и
    не отодвинуть список вниз. */
+/* Предупреждение после форматов: тонкая линия сверху, приглушённый текст,
+   узкая колонка. Заметно настолько, чтобы прочитали, и не настолько, чтобы
+   выглядело как крик. */
+.disclaimer{max-width:72ch;padding-top:26px;border-top:1px solid var(--border-subtle);display:flex;flex-direction:column;gap:10px}
+.disclaimer p{margin:0;font-size:calc(14px*var(--ts,1));line-height:1.6;color:var(--taupe-600)}
+.disclaimer a{color:var(--taupe-600);text-decoration:underline;text-underline-offset:2px}
+.disclaimer a:hover{color:var(--accent-hover)}
 .card-note{margin:6px 0 0;font-size:calc(13px*var(--ts,1));line-height:1.4;font-style:italic;color:var(--taupe-500);text-align:left}
 /* Шесть пунктов в столбик на всю ширину карточки вытягивают её в простыню —
    в два столбца они охватываются одним взглядом. */
