@@ -30,6 +30,7 @@ const SIMPLE = new Set([
   // блок клуба
   'club-audio',
   'club-reviews',
+  'club-app',
   // остальное
   'formats-seen',
   'lang-en',

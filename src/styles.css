@@ -316,24 +316,49 @@ em.accent{font-family:var(--font-script)!important;font-weight:400!important;fon
 /* Экраны приложения. Рамка повторяет пропорции телефона (9:19), поэтому
    обычный скриншот садится в неё почти без обрезки; object-position:top
    бережёт шапку экрана, если скриншот окажется длиннее. */
-.appshots{margin:44px auto 0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px;max-width:840px}
-.appshot{margin:0}
-/* 920×2000 — пропорции присланных скриншотов, рамка повторяет их ровно,
-   поэтому не срезается ни верх, ни низ экрана. */
-.appshot-screen{position:relative;aspect-ratio:920/2000;max-width:100%;border-radius:22px;overflow:hidden;background:var(--cream-2);border:1px solid var(--border-default);box-shadow:var(--shadow-md)}
-@media(max-width:680px){
-  /* На телефоне три экрана в ряд были бы по сантиметру шириной — лента с
-     прокруткой показывает первый крупно и приглашает листать. */
-  .appshots{display:flex;overflow-x:auto;gap:16px;margin-inline:-20px;padding-inline:20px;scroll-snap-type:x mandatory;max-width:none}
-  .appshot{flex:0 0 62%;scroll-snap-align:start}
+/* ---- приложение клуба: иконка-кнопка и окно с экранами ------------------ */
+
+.appcta{display:flex;align-items:center;gap:22px;padding:26px 28px;background:#fff;border:1px solid var(--border-subtle);border-radius:18px}
+.appicon{display:flex;flex-direction:column;align-items:center;gap:8px;background:none;border:none;padding:0;cursor:pointer;flex:none}
+/* Скругление как у иконки на телефоне: 22.5% стороны — пропорция iOS. */
+.appicon-img{position:relative;display:block;width:76px;height:76px;border-radius:22.5%;overflow:hidden;box-shadow:0 6px 18px rgba(44,36,26,.22);transition:transform .25s var(--ease-soft),box-shadow .25s var(--ease-soft)}
+.appicon:hover .appicon-img,.appicon:focus-visible .appicon-img{transform:translateY(-3px) scale(1.03);box-shadow:0 12px 26px rgba(44,36,26,.28)}
+.appicon-name{font-size:11px;color:var(--taupe-600);letter-spacing:.01em;white-space:nowrap}
+.appcta-text{display:flex;flex-direction:column;gap:6px;min-width:0}
+.appcta-t{font-family:var(--font-head);font-size:19px;font-weight:500;letter-spacing:-.01em}
+.appcta-link{align-self:flex-start;background:none;border:none;padding:0;font:inherit;font-size:14.5px;color:var(--clay-d);cursor:pointer;text-align:left}
+.appcta-link:hover{text-decoration:underline;text-underline-offset:3px}
+@media(max-width:600px){
+  .appcta{flex-direction:column;text-align:center;gap:16px;padding:24px 20px}
+  .appcta-text{align-items:center}
+  .appcta-link{align-self:center}
 }
 
-/* Клуб: один столбец сверху вниз — что входит, экраны, стоимость, кнопка.
-   Все блоки одной ширины, поэтому читаются как одно движение, а не как
-   разложенные рядом карточки. */
+/* Выше шапки (80) и мобильного меню (90): окно поверх страницы, над которым
+   висит чужая панель, выглядит сломанным и ловит нажатия вместо фона. */
+.appmodal{position:fixed;inset:0;z-index:120;background:rgba(26,24,21,.82);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:20px}
+.appmodal-box{position:relative;display:flex;flex-direction:column;align-items:center;gap:14px;max-width:100%}
+.appmodal-x{position:absolute;top:-6px;right:-6px;z-index:2;width:38px;height:38px;border-radius:50%;border:none;background:rgba(255,255,255,.14);color:#fff;font-size:24px;line-height:1;cursor:pointer}
+.appmodal-x:hover{background:rgba(255,255,255,.26)}
+.appmodal-row{display:flex;align-items:center;gap:14px}
+.appmodal-phone{position:relative;aspect-ratio:920/2000;height:min(72vh,660px);border-radius:26px;overflow:hidden;background:#000;box-shadow:0 30px 70px rgba(0,0,0,.45)}
+.appmodal-arw{width:44px;height:44px;flex:none;border-radius:50%;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.1);color:#fff;font-size:26px;line-height:1;cursor:pointer}
+.appmodal-arw:hover{background:rgba(255,255,255,.22)}
+.appmodal-cap{color:var(--cream);font-size:14.5px;text-align:center;max-width:36ch}
+.appmodal-dots{display:flex;gap:8px}
+.appmodal-dot{width:8px;height:8px;border-radius:50%;border:none;padding:0;background:rgba(255,255,255,.32);cursor:pointer}
+.appmodal-dot.on{background:var(--cream)}
+@media(max-width:600px){
+  .appmodal{padding:12px}
+  .appmodal-phone{height:min(66vh,560px)}
+  /* На телефоне экраны листаются пальцем, стрелки только отнимают место */
+  .appmodal-arw{display:none}
+  /* Без стрелок рамка шире телефона не бывает, и крестик налезал на его угол */
+  .appmodal-x{position:fixed;top:12px;right:12px;background:rgba(255,255,255,.2)}
+}
+
 .club-stack{margin-top:40px;padding-top:40px;border-top:1px solid var(--border-subtle);display:flex;flex-direction:column;align-items:center;gap:28px}
 .club-stack>*{width:100%;max-width:none}
-.club-stack .appshots{margin:0}
 .club-stack .mm-cta{margin-top:4px}
 /* Галочка и кнопка занимают всю ширину колонки: строка согласия перестаёт
    ломаться надвое, а кнопка становится такой же широкой, как всё над ней. */

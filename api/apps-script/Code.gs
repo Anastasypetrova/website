@@ -28,6 +28,7 @@ const EVENT_NAMES = {
   'forever-young': 'Кнопка: Forever Young',
   'club-audio': 'Клуб: включил аудио',
   'club-reviews': 'Клуб: открыл отзывы',
+  'club-app': 'Клуб: открыл приложение',
   'formats-seen': 'Долистал до форматов',
   'lang-en': 'Переключил на английский',
   'lang-ru': 'Переключил на русский',

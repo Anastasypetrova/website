@@ -1,8 +1,8 @@
 import { T, useLang } from '../i18n';
 import { clubPerMonth, clubPlans, links } from '../content';
 import { Photo } from './Photo';
+import { AppDemo } from './AppDemo';
 import { trackClick } from '../api';
-import type { PhotoKey } from '../photos';
 import { ConsentGate } from './ConsentGate';
 import { ArrowUpRightIcon, TelegramIcon } from './Icons';
 
@@ -38,13 +38,6 @@ const chips: [string, string][] = [
  * Экраны приложения — сначала то, что внутри, и только потом рабочий стол:
  * иконка на экране телефона читается как итог, а не как вступление.
  */
-const appShots: [PhotoKey, string, string][] = [
-  ['app2', 'Главный экран клуба', 'The club home screen'],
-  ['app3', 'Практики, медитации, марафоны', 'Practices, meditations, marathons'],
-  ['app4', 'Книжный клуб, кино, музыка', 'Book club, films, music'],
-  ['app1', 'И всё это — на рабочем столе', 'And all of it on your home screen'],
-];
-
 export function ClubSection() {
   const lang = useLang();
 
@@ -145,18 +138,8 @@ export function ClubSection() {
             </div>
           </div>
 
-          {/* Прочитал, что входит, — увидел, как это выглядит в руках. */}
-          <div className="appshots">
-            {appShots.map(([name, ru, en]) => (
-              <div className="appshot" key={name}>
-                <div className="appshot-screen">
-                  {/* Подписи убраны, но описание остаётся — его читает вслух
-                      программа для незрячих и показывает поиск по картинкам. */}
-                  <Photo name={name} alt={lang === 'en' ? en : ru} objectPosition="top" />
-                </div>
-              </div>
-            ))}
-          </div>
+          {/* Прочитал, что входит, — нажал на иконку и увидел, как это выглядит. */}
+          <AppDemo />
 
           <div className="mm-card">
               <span className="klabel"><T ru="Стоимость подписки" en="Subscription pricing" /></span>

@@ -26,6 +26,8 @@ export type PhotoKey =
   | 'app2'
   | 'app3'
   | 'app4'
+  // Иконка приложения, вырезана из app-1: она же кнопка, за которой экраны.
+  | 'appicon'
   | 'consultation'
   | 'mentorship'
   | 'mastermind'
