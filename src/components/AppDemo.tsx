@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { T, useLang } from '../i18n';
+import { useLang } from '../i18n';
 import { Photo } from './Photo';
 import { trackClick } from '../api';
 import { ExpandIcon } from './Icons';
@@ -64,7 +64,12 @@ export function AppDemo() {
 
   return (
     <>
-      <button type="button" className="appicon" onClick={show}>
+      <button
+        type="button"
+        className="appicon"
+        onClick={show}
+        aria-label={lang === 'en' ? 'See the app screens' : 'Посмотреть экраны приложения'}
+      >
         <span className="appicon-img">
           <Photo name="appicon" alt="Samadhi Club" />
           {/* Блик пробегает по иконке при наведении — так ведут себя стеклянные
@@ -75,9 +80,6 @@ export function AppDemo() {
           <span className="appicon-badge" aria-hidden="true">
             <ExpandIcon />
           </span>
-        </span>
-        <span className="appicon-link">
-          <T ru="Смотреть" en="View" />
         </span>
       </button>
 

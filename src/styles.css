@@ -326,9 +326,7 @@ em.accent{font-family:var(--font-script)!important;font-weight:400!important;fon
 /* Иконка живёт внутри плашки про приложение — плашка остаётся одна. */
 .callout-app{display:flex;align-items:center;gap:24px}
 .callout-app p{flex:1 1 auto;min-width:0}
-/* Столбик ровно по ширине иконки: подпись под ней центрируется по той же оси,
-   а не болтается шире неё. */
-.appicon{display:flex;flex-direction:column;align-items:center;gap:10px;background:none;border:none;padding:0;cursor:pointer;flex:none;width:76px}
+.appicon{display:block;background:none;border:none;padding:0;cursor:pointer;flex:none}
 /* Скругление как у иконки на телефоне: 22.5% стороны — пропорция iOS. */
 .appicon-img{position:relative;display:block;width:76px;height:76px;border-radius:22.5%;box-shadow:0 5px 16px rgba(44,36,26,.2);transition:transform .32s cubic-bezier(.34,1.56,.64,1),box-shadow .32s var(--ease-soft)}
 .appicon-img .photo-fill{border-radius:inherit}
@@ -346,9 +344,6 @@ em.accent{font-family:var(--font-script)!important;font-weight:400!important;fon
 .appicon-badge{position:absolute;right:-6px;bottom:-6px;width:26px;height:26px;border-radius:50%;background:var(--clay-d);color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 10px rgba(44,36,26,.3);transition:transform .32s cubic-bezier(.34,1.56,.64,1)}
 .appicon-badge svg{width:12px;height:12px}
 .appicon:hover .appicon-badge,.appicon:focus-visible .appicon-badge{transform:scale(1.18)}
-
-.appicon-link{font-size:12.5px;font-weight:600;color:var(--clay-d);line-height:1;background:rgba(143,90,59,.1);border-radius:999px;padding:6px 13px;white-space:nowrap;transition:background .25s var(--ease-soft)}
-.appicon:hover .appicon-link,.appicon:focus-visible .appicon-link{background:rgba(143,90,59,.2)}
 
 @media(prefers-reduced-motion:reduce){
   .appicon-img,.appicon-badge,.appicon-gloss::after{transition:none}
