@@ -27,27 +27,7 @@ export function AppDemo() {
   const [open, setOpen] = useState(false);
   const [i, setI] = useState(0);
   const closeRef = useRef<HTMLButtonElement>(null);
-  const iconRef = useRef<HTMLButtonElement>(null);
-  const [seen, setSeen] = useState(false);
   const touchX = useRef<number | null>(null);
-
-  // Подсказка срабатывает, когда до иконки действительно долистали: анимация,
-  // отыгравшая выше экрана, — это не подсказка, а потраченный зря кадр.
-  useEffect(() => {
-    const el = iconRef.current;
-    if (!el || typeof IntersectionObserver === 'undefined') return;
-    const watch = new IntersectionObserver(
-      (entries) => {
-        if (entries.some((e) => e.isIntersecting)) {
-          setSeen(true);
-          watch.disconnect();
-        }
-      },
-      { threshold: 0.6 },
-    );
-    watch.observe(el);
-    return () => watch.disconnect();
-  }, []);
 
   const go = useCallback((step: number) => {
     setI((n) => (n + step + shots.length) % shots.length);
@@ -84,9 +64,12 @@ export function AppDemo() {
 
   return (
     <>
-      <button type="button" className={`appicon${seen ? ' appicon-seen' : ''}`} onClick={show} ref={iconRef}>
+      <button type="button" className="appicon" onClick={show}>
         <span className="appicon-img">
           <Photo name="appicon" alt="Samadhi Club" />
+          {/* Блик пробегает по иконке при наведении — так ведут себя стеклянные
+              поверхности, и рука тянется проверить. */}
+          <span className="appicon-gloss" aria-hidden="true" />
           {/* Значок в углу, как на обложке видео: без него картинка читается
               как иллюстрация, с ним — как то, что можно открыть. */}
           <span className="appicon-badge" aria-hidden="true">
@@ -94,7 +77,7 @@ export function AppDemo() {
           </span>
         </span>
         <span className="appicon-link">
-          <T ru="Посмотреть экраны" en="See the screens" />
+          <T ru="Смотреть" en="View" />
         </span>
       </button>
 
