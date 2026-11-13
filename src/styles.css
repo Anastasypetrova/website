@@ -330,12 +330,13 @@ em.accent{font-family:var(--font-script)!important;font-weight:400!important;fon
 /* Скругление как у иконки на телефоне: 22.5% стороны — пропорция iOS. */
 /* Две обводки: снаружи тонкий тёмный волосок — иконка отделяется от плашки,
    внутри светлый — край выглядит отшлифованным, как на экране телефона. */
-.appicon-img{position:relative;display:block;width:76px;height:76px;border-radius:22.5%;box-shadow:0 0 0 1px rgba(44,44,44,.14),0 5px 16px rgba(44,36,26,.2);transition:transform .32s cubic-bezier(.34,1.56,.64,1),box-shadow .32s var(--ease-soft)}
+.appicon-img{position:relative;display:block;width:76px;height:76px;border-radius:22.5%;box-shadow:0 0 0 1px rgba(44,44,44,.18),0 5px 16px rgba(44,36,26,.2);transition:transform .32s cubic-bezier(.34,1.56,.64,1),box-shadow .32s var(--ease-soft)}
 .appicon-img .photo-fill{border-radius:inherit}
-/* Ореол вокруг иконки: мягкое кольцо, подсказывающее, что это кнопка. */
-.appicon-img::after{content:'';position:absolute;inset:-7px;border-radius:30%;border:1.5px solid rgba(143,90,59,.32);opacity:0;transition:opacity .28s var(--ease-soft),inset .28s var(--ease-soft);pointer-events:none}
+/* Кольцо вокруг иконки видно всегда: это и есть обводка, а не подсказка,
+   появляющаяся только под курсором. При наведении оно расходится и теплеет. */
+.appicon-img::after{content:'';position:absolute;inset:-8px;border-radius:30%;border:1.5px solid rgba(143,90,59,.3);transition:inset .28s var(--ease-soft),border-color .28s var(--ease-soft);pointer-events:none}
 .appicon:hover .appicon-img,.appicon:focus-visible .appicon-img{transform:translateY(-4px) scale(1.06);box-shadow:0 0 0 1px rgba(143,90,59,.35),0 16px 30px rgba(44,36,26,.3)}
-.appicon:hover .appicon-img::after,.appicon:focus-visible .appicon-img::after{opacity:1;inset:-11px}
+.appicon:hover .appicon-img::after,.appicon:focus-visible .appicon-img::after{inset:-12px;border-color:rgba(143,90,59,.55)}
 .appicon:active .appicon-img{transform:translateY(-1px) scale(.99)}
 
 /* Блик: светлая полоса проходит по иконке слева направо за полсекунды. */
