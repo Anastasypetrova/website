@@ -84,6 +84,15 @@ function axis(days: number, firstDay: string): string[] {
 const dayLabel = (iso: string) =>
   new Date(`${iso}T12:00:00`).toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' });
 
+/**
+ * Пустой источник — это не «неизвестно», а «пришли напрямую»: браузер не
+ * сообщает источник, когда адрес набрали руками, открыли из закладок или
+ * перешли из приложения вроде Telegram. Прочерк в этой строке только пугает.
+ */
+function named(rows: Named[] | undefined): Named[] {
+  return (rows ?? []).map((r) => (r.name === '—' ? { ...r, name: 'напрямую' } : r));
+}
+
 function sorted(map: Record<string, number> | undefined): Named[] {
   return Object.entries(map ?? {})
     .map(([name, visits]) => ({ name, visits }))
@@ -382,7 +391,7 @@ export default function Dashboard() {
             />
             <Rows
               title="Откуда пришли"
-              rows={data?.visits?.referers ?? []}
+              rows={named(data?.visits?.referers)}
               unit="визитов"
               empty="Переходов по ссылкам не было — все пришли напрямую."
               error={data?.visitsError}
