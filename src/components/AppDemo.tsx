@@ -69,16 +69,10 @@ export function AppDemo() {
             <Photo name="appicon" alt="Samadhi Club" />
           </span>
           <span className="appicon-name">SamadhiClubApp</span>
-        </button>
-        <div className="appcta-text">
-          <span className="appcta-t">
-            <T ru="Клуб живёт в приложении" en="The club lives in an app" />
+          <span className="appicon-link">
+            <T ru="посмотреть" en="take a look" />
           </span>
-          <button type="button" className="appcta-link" onClick={show}>
-            <T ru="Посмотреть, как оно устроено" en="See how it works" />
-            <span aria-hidden="true"> →</span>
-          </button>
-        </div>
+        </button>
       </div>
 
       {open && (

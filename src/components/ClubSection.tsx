@@ -70,13 +70,18 @@ export function ClubSection() {
             </div>
             {/* Клуб давно не просто канал, и об этом стоит сказать отдельно:
                 «приложение» — это и есть ответ на вопрос «а как я этим пользуюсь». */}
-            <div className="callout">
-              <p>
-                <T
-                  ru="Теперь это не только канал, а приложение. Поставили на рабочий стол, открыли и слушаете — ничего не теряется в чатах."
-                  en="It is no longer just a channel — it is an app. Put it on your home screen, open it and listen; nothing gets lost in chats."
-                />
-              </p>
+            {/* Иконка стоит рядом с фразой про приложение: слово и предмет
+                в одной строке объясняют друг друга без подписей. */}
+            <div className="callout-app">
+              <div className="callout">
+                <p>
+                  <T
+                    ru="Теперь это не только канал, а приложение. Поставили на рабочий стол, открыли и слушаете — ничего не теряется в чатах."
+                    en="It is no longer just a channel — it is an app. Put it on your home screen, open it and listen; nothing gets lost in chats."
+                  />
+                </p>
+              </div>
+              <AppDemo />
             </div>
             {/* Две плашки в ряд: мой голос и голоса участников. Отзывы раньше
                 висели кнопкой под ценой, где их никто не искал. */}
@@ -137,9 +142,6 @@ export function ClubSection() {
               ))}
             </div>
           </div>
-
-          {/* Прочитал, что входит, — нажал на иконку и увидел, как это выглядит. */}
-          <AppDemo />
 
           <div className="mm-card">
               <span className="klabel"><T ru="Стоимость подписки" en="Subscription pricing" /></span>
