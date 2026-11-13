@@ -50,6 +50,8 @@ interface Visits {
   referers: Named[];
   countries: Named[];
   devices: Named[];
+  /** Чего Cloudflare не отдал: не ошибка, но и не тишина. */
+  note?: string | null;
 }
 
 interface Stats {
@@ -110,12 +112,14 @@ function Bars({
   values,
   unit,
   error,
+  note,
 }: {
   title: string;
   days: string[];
   values: Record<string, number>;
   unit: string;
   error?: string | null;
+  note?: string | null;
 }) {
   const max = Math.max(1, ...days.map((d) => values[d] ?? 0));
   const peak = days.find((d) => (values[d] ?? 0) === max);
@@ -154,6 +158,7 @@ function Bars({
             <span>{dayLabel(days[0])}</span>
             <span>{dayLabel(days[days.length - 1])}</span>
           </div>
+          {note ? <p className="dash-err" style={{ marginTop: 10 }}>{note}</p> : null}
         </>
       )}
     </section>
@@ -357,6 +362,7 @@ export default function Dashboard() {
             values={columns.visitsByDay}
             unit="визитов"
             error={data?.visitsError}
+            note={data?.visits?.note}
           />
           <Bars
             title="Нажатия по дням"

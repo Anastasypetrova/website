@@ -84,18 +84,50 @@ async function graphql(token: string, query: string, variables: Record<string, u
   return body;
 }
 
-/** Номер аккаунта можно не вписывать руками: токен сам знает, к чему он выдан. */
+const why = (error: unknown) => (error instanceof Error ? error.message : String(error));
+
+/**
+ * Номер аккаунта можно не вписывать руками: токен сам знает, к чему он выдан.
+ *
+ * Два пути, потому что схема Cloudflare местами расходится с документацией, а
+ * проверять её можно только через её же ответы: если GraphQL отказал, тот же
+ * вопрос задаётся обычным REST. Неудача каждого пути сохраняется и попадает в
+ * сообщение целиком — чтобы один заход в настройки отвечал на вопрос «почему»,
+ * а не рождал следующий.
+ */
 async function accountTag(cfg: Config): Promise<string> {
   if (cfg.cfAccount) return cfg.cfAccount;
 
-  const body = await graphql(cfg.cfToken, '{ viewer { accounts(limit: 5) { accountTag } } }', {});
-  const list = body.data?.viewer?.accounts ?? [];
-  const tag = list.length === 1 ? (list[0] as { accountTag?: string }).accountTag : undefined;
-  if (tag) return tag;
-  if (list.length > 1) {
-    throw new Error('у токена несколько аккаунтов — впиши номер в CF_ACCOUNT_ID');
+  const tried: string[] = [];
+
+  try {
+    const body = await graphql(cfg.cfToken, '{ viewer { accounts { accountTag } } }', {});
+    const list = body.data?.viewer?.accounts ?? [];
+    if (list.length > 1) throw new Error('у токена несколько аккаунтов — впиши номер в CF_ACCOUNT_ID');
+    const tag = (list[0] as { accountTag?: string } | undefined)?.accountTag;
+    if (tag) return tag;
+    tried.push('GraphQL вернул пустой список аккаунтов');
+  } catch (error) {
+    tried.push(`GraphQL: ${why(error)}`);
   }
-  throw new Error('токен не видит ни одного аккаунта — проверь право Account Analytics: Read');
+
+  try {
+    const res = await fetch('https://api.cloudflare.com/client/v4/accounts?per_page=5', {
+      headers: { authorization: `Bearer ${cfg.cfToken}` },
+    });
+    const body = (await res.json().catch(() => ({}))) as {
+      result?: { id?: string }[];
+      errors?: { message?: string }[];
+    };
+    const list = body.result ?? [];
+    if (list.length > 1) throw new Error('у токена несколько аккаунтов — впиши номер в CF_ACCOUNT_ID');
+    if (list[0]?.id) return list[0].id as string;
+    tried.push(`REST: ${body.errors?.[0]?.message ?? `ответ ${res.status}`}`);
+  } catch (error) {
+    tried.push(`REST: ${why(error)}`);
+  }
+
+  throw new Error(`не удалось определить номер аккаунта (${tried.join('; ')}) — впиши его в CF_ACCOUNT_ID`);
 }
 
 /**
@@ -156,6 +188,36 @@ function pairs(groups: Group[] | undefined, key: string): { name: string; visits
     .filter((row) => row.visits > 0);
 }
 
+/**
+ * Запасной запрос: только дни, без разрезов и без сортировки.
+ *
+ * Схема аналитики Cloudflare местами отличается от написанного в документации,
+ * и одно незнакомое поле роняет весь запрос целиком. Пусть лучше дашборд
+ * покажет голые цифры по дням и скажет, чего не хватило, чем промолчит обо всём.
+ */
+const VISITS_MINIMAL = `
+query ($account: String!, $since: Time!, $until: Time!) {
+  viewer {
+    accounts(filter: { accountTag: $account }) {
+      byDay: rumPageloadEventsAdaptiveGroups(
+        limit: 400
+        filter: { datetime_geq: $since, datetime_leq: $until }
+      ) {
+        count
+        sum { visits }
+        dimensions { date }
+      }
+    }
+  }
+}`;
+
+interface Breakdowns {
+  byDay?: Group[];
+  byReferer?: Group[];
+  byCountry?: Group[];
+  byDevice?: Group[];
+}
+
 async function cloudflareVisits(cfg: Config, days: number): Promise<unknown> {
   if (!cfg.cfToken) throw new Error('нет токена Cloudflare');
 
@@ -164,15 +226,18 @@ async function cloudflareVisits(cfg: Config, days: number): Promise<unknown> {
   const since = new Date(until.getTime() - (days - 1) * 86400000);
   since.setUTCHours(0, 0, 0, 0);
 
-  const body = await graphql(cfg.cfToken, VISITS_QUERY, {
-    account,
-    since: since.toISOString(),
-    until: until.toISOString(),
-  });
+  const vars = { account, since: since.toISOString(), until: until.toISOString() };
 
-  const acc = (body.data?.viewer?.accounts ?? [])[0] as
-    | { byDay?: Group[]; byReferer?: Group[]; byCountry?: Group[]; byDevice?: Group[] }
-    | undefined;
+  let note: string | null = null;
+  let body: GqlAnswer;
+  try {
+    body = await graphql(cfg.cfToken, VISITS_QUERY, vars);
+  } catch (error) {
+    body = await graphql(cfg.cfToken, VISITS_MINIMAL, vars);
+    note = `разрезы не получились (${why(error)}) — показаны только визиты по дням`;
+  }
+
+  const acc = (body.data?.viewer?.accounts ?? [])[0] as Breakdowns | undefined;
   if (!acc) throw new Error('Cloudflare не вернул данных по аккаунту');
 
   const byDay = (acc.byDay ?? []).map((g) => ({
@@ -188,6 +253,7 @@ async function cloudflareVisits(cfg: Config, days: number): Promise<unknown> {
     referers: pairs(acc.byReferer, 'refererHost'),
     countries: pairs(acc.byCountry, 'countryName'),
     devices: pairs(acc.byDevice, 'deviceType'),
+    note,
   };
 }
 
