@@ -130,55 +130,17 @@ async function accountTag(cfg: Config): Promise<string> {
   throw new Error(`не удалось определить номер аккаунта (${tried.join('; ')}) — впиши его в CF_ACCOUNT_ID`);
 }
 
-/**
- * Один запрос, четыре разреза. Фильтр по сайту не ставим: в аккаунте один
- * сайт, а лишняя настройка — лишний повод для опечатки.
- */
-const VISITS_QUERY = `
-query ($account: String!, $since: Time!, $until: Time!) {
-  viewer {
-    accounts(filter: { accountTag: $account }) {
-      byDay: rumPageloadEventsAdaptiveGroups(
-        limit: 400
-        filter: { datetime_geq: $since, datetime_leq: $until }
-        orderBy: [date_ASC]
-      ) {
-        count
-        sum { visits }
-        dimensions { date }
-      }
-      byReferer: rumPageloadEventsAdaptiveGroups(
-        limit: 12
-        filter: { datetime_geq: $since, datetime_leq: $until }
-        orderBy: [sum_visits_DESC]
-      ) {
-        sum { visits }
-        dimensions { refererHost }
-      }
-      byCountry: rumPageloadEventsAdaptiveGroups(
-        limit: 12
-        filter: { datetime_geq: $since, datetime_leq: $until }
-        orderBy: [sum_visits_DESC]
-      ) {
-        sum { visits }
-        dimensions { countryName }
-      }
-      byDevice: rumPageloadEventsAdaptiveGroups(
-        limit: 6
-        filter: { datetime_geq: $since, datetime_leq: $until }
-        orderBy: [sum_visits_DESC]
-      ) {
-        sum { visits }
-        dimensions { deviceType }
-      }
-    }
-  }
-}`;
-
 interface Group {
   count?: number;
   sum?: { visits?: number };
   dimensions?: Record<string, string>;
+}
+
+interface Breakdowns {
+  byDay?: Group[];
+  byReferer?: Group[];
+  byCountry?: Group[];
+  byDevice?: Group[];
 }
 
 /** Группы Cloudflare — в простые пары «подпись → число». */
@@ -189,62 +151,162 @@ function pairs(groups: Group[] | undefined, key: string): { name: string; visits
 }
 
 /**
- * Запасной запрос: только дни, без разрезов и без сортировки.
+ * Запрос собирается, а не лежит готовым: от двух вещей зависит его форма.
  *
- * Схема аналитики Cloudflare местами отличается от написанного в документации,
- * и одно незнакомое поле роняет весь запрос целиком. Пусть лучше дашборд
- * покажет голые цифры по дням и скажет, чего не хватило, чем промолчит обо всём.
+ * `site` — фильтр по сайту. Без него запрос охватывает все сайты аккаунта,
+ * что выглядит разумно, пока аккаунт один; но пустой ответ без ошибки — ровно
+ * то, чем это оборачивается, если аналитика ждёт именно siteTag. Поэтому
+ * спрашиваем обоими способами и смотрим, какой ответил.
+ *
+ * `full` — разрезы по источникам, странам и устройствам. Схема аналитики
+ * местами расходится с документацией, и одно незнакомое поле роняет запрос
+ * целиком, так что короткая форма существует отдельно: лучше голые цифры по
+ * дням, чем пустота.
  */
-const VISITS_MINIMAL = `
-query ($account: String!, $since: Time!, $until: Time!) {
+function visitsQuery(site: boolean, full: boolean): string {
+  const vars = site
+    ? '($account: String!, $site: String!, $since: Time!, $until: Time!)'
+    : '($account: String!, $since: Time!, $until: Time!)';
+  const where = site
+    ? '{ siteTag: $site, datetime_geq: $since, datetime_leq: $until }'
+    : '{ datetime_geq: $since, datetime_leq: $until }';
+
+  const cut = (name: string, dimension: string, limit: number) => `
+      ${name}: rumPageloadEventsAdaptiveGroups(
+        limit: ${limit}
+        filter: ${where}
+        orderBy: [sum_visits_DESC]
+      ) {
+        sum { visits }
+        dimensions { ${dimension} }
+      }`;
+
+  return `
+query ${vars} {
   viewer {
     accounts(filter: { accountTag: $account }) {
       byDay: rumPageloadEventsAdaptiveGroups(
         limit: 400
-        filter: { datetime_geq: $since, datetime_leq: $until }
+        filter: ${where}
+        ${full ? 'orderBy: [date_ASC]' : ''}
       ) {
         count
         sum { visits }
         dimensions { date }
+      }${
+        full
+          ? cut('byReferer', 'refererHost', 12) + cut('byCountry', 'countryName', 12) + cut('byDevice', 'deviceType', 6)
+          : ''
       }
     }
   }
 }`;
-
-interface Breakdowns {
-  byDay?: Group[];
-  byReferer?: Group[];
-  byCountry?: Group[];
-  byDevice?: Group[];
 }
 
-async function cloudflareVisits(cfg: Config, days: number): Promise<unknown> {
-  if (!cfg.cfToken) throw new Error('нет токена Cloudflare');
+/** Сайты, которые видит токен: tag — то, чем аналитика их различает. */
+async function rumSites(cfg: Config, account: string): Promise<{ tag: string; hosts: string[] }[]> {
+  const res = await fetch(`https://api.cloudflare.com/client/v4/accounts/${account}/rum/site_info/list`, {
+    headers: { authorization: `Bearer ${cfg.cfToken}` },
+  });
+  const body = (await res.json().catch(() => ({}))) as {
+    result?: { site_tag?: string; rules?: { host?: string }[] }[];
+    errors?: { message?: string }[];
+  };
+  if (!res.ok) throw new Error(body.errors?.[0]?.message ?? `ответ ${res.status}`);
+  return (body.result ?? []).map((site) => ({
+    tag: site.site_tag ?? '',
+    hosts: (site.rules ?? []).map((rule) => rule.host ?? '').filter(Boolean),
+  }));
+}
 
+interface Shot {
+  site: string;
+  shape: 'полный' | 'короткий';
+  rows: number;
+  visits: number;
+  error: string | null;
+  data: Breakdowns | null;
+}
+
+/** Один заход: задать вопрос в заданной форме и записать, что получилось. */
+async function shoot(cfg: Config, vars: Record<string, string>, site: string, full: boolean): Promise<Shot> {
+  const shape: Shot['shape'] = full ? 'полный' : 'короткий';
+  try {
+    const body = await graphql(cfg.cfToken, visitsQuery(Boolean(site), full), vars);
+    const acc = (body.data?.viewer?.accounts ?? [])[0] as Breakdowns | undefined;
+    const rows = acc?.byDay ?? [];
+    return {
+      site,
+      shape,
+      rows: rows.length,
+      visits: rows.reduce((n, g) => n + (g.sum?.visits ?? 0), 0),
+      error: null,
+      data: acc ?? null,
+    };
+  } catch (error) {
+    return { site, shape, rows: 0, visits: 0, error: why(error), data: null };
+  }
+}
+
+/**
+ * Порядок проб: сначала самый вероятный ответ, потом всё менее вероятные.
+ * Берётся первая проба с непустым ответом; если все пусты — последняя удачная,
+ * и тогда в `note` написано, что именно пробовали.
+ */
+async function probeVisits(cfg: Config, days: number): Promise<{ account: string; shots: Shot[] }> {
   const account = await accountTag(cfg);
   const until = new Date();
   const since = new Date(until.getTime() - (days - 1) * 86400000);
   since.setUTCHours(0, 0, 0, 0);
 
-  const vars = { account, since: since.toISOString(), until: until.toISOString() };
+  const base = { account, since: since.toISOString(), until: until.toISOString() };
+  const withSite = { ...base, site: cfg.cfSiteTag };
 
-  let note: string | null = null;
-  let body: GqlAnswer;
-  try {
-    body = await graphql(cfg.cfToken, VISITS_QUERY, vars);
-  } catch (error) {
-    body = await graphql(cfg.cfToken, VISITS_MINIMAL, vars);
-    note = `разрезы не получились (${why(error)}) — показаны только визиты по дням`;
+  const shots: Shot[] = [];
+  const plan: [string, boolean][] = cfg.cfSiteTag
+    ? [
+        [cfg.cfSiteTag, true],
+        ['', true],
+        [cfg.cfSiteTag, false],
+        ['', false],
+      ]
+    : [
+        ['', true],
+        ['', false],
+      ];
+
+  for (const [site, full] of plan) {
+    const shot = await shoot(cfg, site ? withSite : base, site, full);
+    shots.push(shot);
+    if (shot.rows > 0) break;
   }
 
-  const acc = (body.data?.viewer?.accounts ?? [])[0] as Breakdowns | undefined;
-  if (!acc) throw new Error('Cloudflare не вернул данных по аккаунту');
+  return { account, shots };
+}
 
+async function cloudflareVisits(cfg: Config, days: number): Promise<unknown> {
+  if (!cfg.cfToken) throw new Error('нет токена Cloudflare');
+
+  const { shots } = await probeVisits(cfg, days);
+  const good = shots.find((s) => s.rows > 0) ?? shots.find((s) => !s.error);
+  if (!good) throw new Error(shots.map((s) => `${s.shape}: ${s.error}`).join('; '));
+
+  const acc = good.data ?? {};
   const byDay = (acc.byDay ?? []).map((g) => ({
     date: g.dimensions?.date ?? '',
     visits: g.sum?.visits ?? 0,
     views: g.count ?? 0,
   }));
+
+  const notes: string[] = [];
+  if (good.shape === 'короткий') notes.push('разрезы по источникам и странам не получились');
+  if (byDay.length === 0) {
+    notes.push(
+      `Cloudflare не вернул ни одной строки. Пробовали: ${shots
+        .map((s) => `${s.shape}${s.site ? ' с сайтом' : ' без сайта'} → ${s.error ?? 'пусто'}`)
+        .join('; ')}`,
+    );
+  }
 
   return {
     visits: byDay.reduce((n, d) => n + d.visits, 0),
@@ -253,7 +315,33 @@ async function cloudflareVisits(cfg: Config, days: number): Promise<unknown> {
     referers: pairs(acc.byReferer, 'refererHost'),
     countries: pairs(acc.byCountry, 'countryName'),
     devices: pairs(acc.byDevice, 'deviceType'),
-    note,
+    note: notes.length ? notes.join('. ') : null,
+  };
+}
+
+/** Режим осмотра: что видит токен. Включается `?probe=1`, за тем же ключом. */
+async function probeReport(cfg: Config, days: number): Promise<unknown> {
+  if (!cfg.cfToken) return { error: 'нет токена Cloudflare' };
+
+  const account = await attempt(() => accountTag(cfg));
+  if (!account.data) return { accountError: account.error };
+
+  const sites = await attempt(() => rumSites(cfg, account.data as string));
+  const runs = await attempt(() => probeVisits(cfg, days));
+
+  return {
+    account: account.data,
+    siteTagВНастройках: cfg.cfSiteTag || '(пусто)',
+    сайтыТокена: sites.data,
+    сайтыОшибка: sites.error,
+    пробы: (runs.data?.shots ?? []).map((s) => ({
+      сайт: s.site || '(без фильтра)',
+      форма: s.shape,
+      строк: s.rows,
+      визитов: s.visits,
+      ошибка: s.error,
+    })),
+    пробыОшибка: runs.error,
   };
 }
 
@@ -267,6 +355,10 @@ export async function handleStats(url: URL, cfg: Config): Promise<Response> {
 
   const asked = Number(url.searchParams.get('days') ?? '30');
   const days = Math.min(Math.max(Number.isFinite(asked) ? Math.trunc(asked) : 30, 1), 3650);
+
+  if (url.searchParams.get('probe')) {
+    return reply({ ok: true, probe: await probeReport(cfg, days) });
+  }
 
   // Два источника независимы: упавшая Cloudflare не должна прятать нажатия.
   const [clicks, visits] = await Promise.all([

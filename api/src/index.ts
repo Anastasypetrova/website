@@ -57,9 +57,11 @@ export interface Env {
   CF_API_TOKEN?: string;
   /** Номер аккаунта Cloudflare. Нужен только если у токена их несколько. */
   CF_ACCOUNT_ID?: string;
+  /** Метка сайта в Web Analytics. По умолчанию — та же, что в счётчике на странице. */
+  CF_SITE_TAG?: string;
 }
 
-export const VERSION = 8;
+export const VERSION = 9;
 
 const DEFAULTS = {
   ALLOWED_ORIGINS: 'https://anastasia-samadhi.club,https://www.anastasia-samadhi.club',
@@ -68,6 +70,9 @@ const DEFAULTS = {
   REPLY_TO: 'hello@metasouls.co',
   NOTIFY_TO: 'hello@metasouls.co',
   OPENAI_MODEL: 'gpt-4o-mini',
+  // Тот же токен, что стоит в счётчике на странице: он публичный — его видно
+  // в исходном коде сайта, — и для аналитики он же служит меткой сайта.
+  CF_SITE_TAG: '6468fc5178ba4e2eab22586da98549a6',
 } as const;
 
 export interface Config {
@@ -84,6 +89,7 @@ export interface Config {
   statsKey: string;
   cfToken: string;
   cfAccount: string;
+  cfSiteTag: string;
 }
 
 /**
@@ -107,6 +113,7 @@ function config(env: Env): Config {
     statsKey: clean(env.STATS_KEY),
     cfToken: clean(env.CF_API_TOKEN),
     cfAccount: clean(env.CF_ACCOUNT_ID),
+    cfSiteTag: clean(env.CF_SITE_TAG) || DEFAULTS.CF_SITE_TAG,
   };
 }
 
