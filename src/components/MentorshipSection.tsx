@@ -59,7 +59,6 @@ export function MentorshipSection() {
           <div className="prod-right">
             <div className="prod-photo">
               <Photo name="mentorship" alt="Индивидуальное менторство" />
-              <div className="pc-cap"><T ru="Создаём и творим вместе" en="Creating and building together" /></div>
             </div>
           </div>
         </div>

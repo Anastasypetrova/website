@@ -109,7 +109,6 @@ export function ClubSection() {
           <div className="prod-right">
             <div className="prod-photo">
               <Photo name="club" alt="Samadhi Club" />
-              <div className="pc-cap"><T ru="Перестать беспокоиться и начать творить" en="Stop worrying and start creating" /></div>
             </div>
           </div>
         </div>

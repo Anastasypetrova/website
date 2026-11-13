@@ -66,7 +66,6 @@ export function MastermindSection() {
           <div className="prod-right">
             <div className="prod-photo">
               <Photo name="mastermind" alt="Мастермайнд-группа" />
-              <div className="pc-cap"><T ru="Пространство синергии, где 5 + 1 = 10" en="A space of synergy, where 5 + 1 = 10" /></div>
             </div>
           </div>
         </div>
