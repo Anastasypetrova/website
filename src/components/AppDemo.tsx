@@ -63,17 +63,14 @@ export function AppDemo() {
 
   return (
     <>
-      <div className="appcta">
-        <button type="button" className="appicon" onClick={show}>
-          <span className="appicon-img">
-            <Photo name="appicon" alt="Samadhi Club" />
-          </span>
-          <span className="appicon-name">SamadhiClubApp</span>
-          <span className="appicon-link">
-            <T ru="посмотреть" en="take a look" />
-          </span>
-        </button>
-      </div>
+      <button type="button" className="appicon" onClick={show}>
+        <span className="appicon-img">
+          <Photo name="appicon" alt="Samadhi Club" />
+        </span>
+        <span className="appicon-link">
+          <T ru="посмотреть" en="take a look" />
+        </span>
+      </button>
 
       {open && (
         <div

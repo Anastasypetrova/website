@@ -318,20 +318,17 @@ em.accent{font-family:var(--font-script)!important;font-weight:400!important;fon
    бережёт шапку экрана, если скриншот окажется длиннее. */
 /* ---- приложение клуба: иконка-кнопка и окно с экранами ------------------ */
 
-/* Иконка стоит справа от плашки про приложение и тянется на её высоту. */
-.callout-app{display:flex;align-items:stretch;gap:18px}
-.callout-app .callout{flex:1 1 auto;min-width:0}
-.appcta{flex:none;display:flex;align-items:center}
-.appicon{display:flex;flex-direction:column;align-items:center;gap:7px;background:none;border:none;padding:0;cursor:pointer;width:92px}
+/* Иконка живёт внутри плашки про приложение — плашка остаётся одна. */
+.callout-app{display:flex;align-items:center;gap:22px}
+.callout-app p{flex:1 1 auto;min-width:0}
+.appicon{display:flex;flex-direction:column;align-items:center;gap:7px;background:none;border:none;padding:0;cursor:pointer;flex:none}
 /* Скругление как у иконки на телефоне: 22.5% стороны — пропорция iOS. */
-.appicon-img{position:relative;display:block;width:74px;height:74px;border-radius:22.5%;overflow:hidden;box-shadow:0 6px 18px rgba(44,36,26,.22);transition:transform .25s var(--ease-soft),box-shadow .25s var(--ease-soft)}
+.appicon-img{position:relative;display:block;width:72px;height:72px;border-radius:22.5%;overflow:hidden;box-shadow:0 5px 16px rgba(44,36,26,.2);transition:transform .25s var(--ease-soft),box-shadow .25s var(--ease-soft)}
 .appicon:hover .appicon-img,.appicon:focus-visible .appicon-img{transform:translateY(-3px) scale(1.04);box-shadow:0 12px 26px rgba(44,36,26,.28)}
-.appicon-name{font-size:10.5px;color:var(--taupe-500);letter-spacing:.01em;white-space:nowrap;line-height:1}
 .appicon-link{font-size:12.5px;color:var(--clay-d);line-height:1}
 .appicon:hover .appicon-link{text-decoration:underline;text-underline-offset:2px}
 @media(max-width:600px){
-  .callout-app{flex-direction:column;gap:14px}
-  .appcta{justify-content:center}
+  .callout-app{flex-direction:column;align-items:center;gap:16px;text-align:center}
 }
 
 .appmodal{position:fixed;inset:0;z-index:120;background:rgba(26,24,21,.82);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:20px}
