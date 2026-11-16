@@ -468,7 +468,7 @@ em.accent{font-family:var(--font-script)!important;font-weight:400!important;fon
 .fy-price-v{font-family:var(--font-grotesk);font-weight:200;font-size:34px;letter-spacing:-.02em;line-height:1;color:var(--ink)}
 .fy-price-per{margin-left:8px;font-family:var(--font-sans);font-weight:400;font-size:14px;letter-spacing:0;color:var(--taupe-600)}
 .fy-price .finep{margin-top:14px}
-.fy-honest{margin:0;align-self:flex-start;font-size:calc(14px*var(--ts,1));line-height:1.6;color:var(--taupe-600);max-width:72ch}
+.fy-honest{margin:14px 0 0;align-self:flex-start;font-size:calc(14px*var(--ts,1));line-height:1.6;color:var(--taupe-600);max-width:72ch}
 #mentorship .prod-grid{gap:0}
 #mentorship .prod-main{padding-right:32px;justify-content:flex-start}
 #mastermind .prod-main{gap:10px;padding-right:32px}

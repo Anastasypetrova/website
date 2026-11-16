@@ -86,6 +86,14 @@ export function ForeverYoungSection() {
                 en="But the best part is the community, sharing what keeps them young year after year."
               />
             </p>
+          {/* Своими словами о том, чего в подписке нет: честность здесь
+                продаёт лучше обещаний, да и дисклеймер сайта говорит то же. */}
+            <p className="fy-honest">
+              <T
+                ru="Я не врач и не косметолог. Но я выгляжу и чувствую себя намного лучше, чем десять лет назад, — и это может каждый. Делюсь только тем, что проверила на себе."
+                en="I am not a doctor or a cosmetologist. But I look and feel far better than I did ten years ago — and anyone can. I share only what I have tested on myself."
+              />
+            </p>
           </div>
 
           {/* Цена здесь — аргумент, а не формальность: она низкая именно сейчас,
@@ -106,14 +114,6 @@ export function ForeverYoungSection() {
             </p>
           </div>
 
-          {/* Своими словами о том, чего в подписке нет: честность здесь
-              продаёт лучше обещаний, да и дисклеймер сайта говорит то же. */}
-          <p className="fy-honest">
-            <T
-              ru="Я не врач и не косметолог. Но я выгляжу и чувствую себя намного лучше, чем десять лет назад, — и это может каждый. Делюсь только тем, что проверила на себе."
-              en="I am not a doctor or a cosmetologist. But I look and feel far better than I did ten years ago — and anyone can. I share only what I have tested on myself."
-            />
-          </p>
 
           <div className="mm-cta">
             <ConsentGate
