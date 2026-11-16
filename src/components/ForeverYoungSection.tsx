@@ -100,8 +100,8 @@ export function ForeverYoungSection() {
             </div>
             <p className="finep">
               <T
-                ru="Это почти донат. Канал только наполняется, и по мере того как он растёт, цена будет расти для новых участников. Оплата и продление — через Tribute, из любой страны; отменить продление можно в любой момент."
-                en="Almost a donation. The channel is only filling up, and as it grows the price will rise for new members. Payment and renewal run through Tribute, from any country; renewal can be cancelled at any time."
+                ru="Сейчас стоимость минимальна, цена будет расти каждый месяц для новых участников, по мере роста библиотеки знаний. Оплата и продление — через Tribute, из любой страны; отменить продление можно в любой момент."
+                en="The price is at its lowest right now; it will rise every month for new members as the library of knowledge grows. Payment and renewal run through Tribute, from any country; renewal can be cancelled at any time."
               />
             </p>
           </div>
