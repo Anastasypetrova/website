@@ -145,7 +145,7 @@ export function ClubSection() {
               <span className="klabel"><T ru="Стоимость подписки" en="Subscription pricing" /></span>
               <div className="pricetable" style={{ marginTop: 16 }}>
                 {clubPlans.map((plan) => (
-                  <div className={`prow${plan.months === 12 ? ' prow-best' : ''}`} key={plan.months}>
+                  <div className={`prow${plan.months === 1 ? ' prow-best' : ''}`} key={plan.months}>
                     <span className="prow-l">
                       <T ru={plan.label.ru} en={plan.label.en} />
                       {plan.months > 1 && (
