@@ -92,6 +92,22 @@ export function ForeverYoungSection() {
                 en="But the best part is the community, sharing what keeps them young year after year."
               />
             </p>
+            {/* Галочка и кнопки — в той же карточке, что цена: отдельными
+                строками под её краем они читались как мусор между блоками. */}
+            <div className="mm-cta">
+              <ConsentGate
+                href={links.foreverYoungJoin}
+                product="forever-young"
+                slugs={['oferta', 'disclaimer']}
+              secondary={
+                <a className="btn-outline" href={links.reviewsChannel} target="_blank" rel="noopener">
+                  <T ru="Отзывы" en="Reviews" />
+                </a>
+              }
+              >
+                <T ru="Присоединиться" en="Join" />
+              </ConsentGate>
+            </div>
           </div>
 
           {/* Цена здесь — аргумент, а не формальность: она низкая именно сейчас,
@@ -121,20 +137,7 @@ export function ForeverYoungSection() {
             />
           </p>
 
-          <div className="mm-cta">
-            <ConsentGate
-              href={links.foreverYoungJoin}
-              product="forever-young"
-              slugs={['oferta', 'disclaimer']}
-            secondary={
-              <a className="btn-outline" href={links.reviewsChannel} target="_blank" rel="noopener">
-                <T ru="Отзывы" en="Reviews" />
-              </a>
-            }
-            >
-              <T ru="Присоединиться" en="Join" />
-            </ConsentGate>
-          </div>
+
         </div>
       </div>
     </section>

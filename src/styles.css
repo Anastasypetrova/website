@@ -319,6 +319,9 @@ em.accent{font-family:var(--font-script)!important;font-weight:400!important;fon
 .mm-cta .consent{max-width:none}
 /* Кнопки по размеру своего текста: полоса во всю ширину выглядела тяжело
    и не оставляла места второй кнопке. */
+/* Согласие и кнопки внутри карточки с ценой отделены от мелкого текста
+   волоском, а не пустотой: так это продолжение карточки, а не обрывок. */
+.mm-card .mm-cta{margin-top:18px;padding-top:18px;border-top:1px solid rgba(44,44,44,.06)}
 .consent-actions{display:flex;flex-wrap:wrap;align-items:center;gap:12px}
 .consent-actions .btn-onsage{width:auto;padding-inline:46px}
 

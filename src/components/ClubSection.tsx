@@ -171,23 +171,23 @@ export function ClubSection() {
                   />
                 </p>
             </div>
-          </div>
-
-          {/* Внутри той же колонки, что карточки, и по её левому краю —
-              галочка и кнопка продолжают цену, а не висят отдельно по центру. */}
-          <div className="mm-cta cta-left">
-            <ConsentGate
-              href={links.clubJoin}
-              product="samadhi-club"
-              slugs={['oferta', 'club-terms', 'disclaimer']}
-              secondary={
-                <a className="btn-outline" href={links.reviewsChannel} target="_blank" rel="noopener">
-                  <T ru="Отзывы" en="Reviews" />
-                </a>
-              }
-            >
-              <T ru="Присоединиться" en="Join" />
-            </ConsentGate>
+            {/* Галочка и кнопки живут в той же карточке, что цена: двумя
+                абзацами серого текста по разные стороны от её края они
+                читались как мусор между блоками. */}
+            <div className="mm-cta cta-left">
+              <ConsentGate
+                href={links.clubJoin}
+                product="samadhi-club"
+                slugs={['oferta', 'club-terms', 'disclaimer']}
+                secondary={
+                  <a className="btn-outline" href={links.reviewsChannel} target="_blank" rel="noopener">
+                    <T ru="Отзывы" en="Reviews" />
+                  </a>
+                }
+              >
+                <T ru="Присоединиться" en="Join" />
+              </ConsentGate>
+            </div>
           </div>
         </div>
       </div>
