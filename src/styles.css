@@ -655,3 +655,21 @@ textarea.field{min-height:130px;resize:vertical;border-radius:20px}
 .subs-done{margin:0;font-size:15px;line-height:1.6;color:var(--cream)}
 .subs-error{margin:12px 0 0;font-size:13.5px;color:#E8A88C}
 .subs-error a{text-decoration:underline;color:inherit}
+
+/* Страница одного формата: шапка, хлебные крошки, раздел.
+   Раздел на своей странице начинается сразу под крошками — его обычный
+   верхний отступ в 112px нужен, чтобы отделить его от предыдущего раздела,
+   а здесь предыдущего нет. */
+.svc .sec:first-of-type{padding-top:24px}
+.crumbs{padding-top:104px;font-size:13px;color:var(--taupe-500)}
+.crumbs .wrap{display:flex;align-items:center;gap:9px}
+.crumbs a{color:var(--taupe-600)}
+.crumbs-sep{opacity:.45}
+.crumbs-here{color:var(--ink)}
+@media(max-width:700px){.crumbs{padding-top:86px}.svc .sec:first-of-type{padding-top:16px}}
+
+/* Переключатель языка — теперь ссылка (у версий разные адреса), а у ссылки
+   нет собственных отступов кнопки, пока она строчная. */
+.lang-btn{display:inline-block;line-height:1.1;text-decoration:none}
+a.lang-btn:hover{color:inherit;opacity:1}
+span.lang-btn{cursor:default}

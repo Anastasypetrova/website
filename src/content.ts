@@ -228,5 +228,5 @@ export const docs = [
   { slug: 'club-terms', file: '7_Usloviya_uchastiya_Samadhi_Club.pdf', label: { ru: 'Условия участия Samadhi Club', en: 'Samadhi Club terms' } },
 ];
 
-/** Hash route for a document's own page, e.g. `#/docs/privacy`. */
-export const docHref = (slug: string) => `#/docs/${slug}`;
+// Адрес страницы документа считает src/routes.ts: он зависит от того, с
+// какой страницы на неё ссылаются.

@@ -1,20 +1,60 @@
 import { useEffect, useState } from 'react';
-import { T, useLang, type Lang } from '../i18n';
+import { T, useLang } from '../i18n';
+import { useHere, useHomeAnchor, useHref } from '../router';
+import { HOME } from '../routes';
+import { trackClick } from '../api';
 import { BurgerIcon, CloseIcon } from './Icons';
 
-const navLinks: { href: string; ru: string; en: string }[] = [
-  { href: '#videos', ru: 'Видео', en: 'Videos' },
-  { href: '#reviews', ru: 'Отзывы', en: 'Reviews' },
-  { href: '#formats', ru: 'Форматы работы', en: 'Work formats' },
-  { href: '#about', ru: 'Обо мне', en: 'About me' },
+const navLinks: { id: string; ru: string; en: string }[] = [
+  { id: 'videos', ru: 'Видео', en: 'Videos' },
+  { id: 'reviews', ru: 'Отзывы', en: 'Reviews' },
+  { id: 'formats', ru: 'Форматы работы', en: 'Work formats' },
+  { id: 'about', ru: 'Обо мне', en: 'About me' },
 ];
 
-interface Props {
-  onSetLang: (lang: Lang) => void;
+/**
+ * Переключатель языка — ссылки, а не кнопки.
+ *
+ * У русской и английской версии теперь разные адреса, и переключение языка —
+ * это переход на другой адрес. Заодно поисковик видит английскую версию: по
+ * кнопке, меняющей состояние в браузере, он никуда не переходит, и половина
+ * написанного текста для него просто не существовала.
+ */
+export function LangSwitch({ className = 'langsw' }: { className?: string }) {
+  const lang = useLang();
+  const here = useHere();
+  const href = useHref();
+
+  return (
+    <div className={className}>
+      {(['ru', 'en'] as const).map((l) =>
+        l === lang ? (
+          <span className="lang-btn active" key={l} aria-current="page">
+            {l.toUpperCase()}
+          </span>
+        ) : (
+          <a
+            className="lang-btn"
+            key={l}
+            href={href(here.route, l)}
+            hrefLang={l}
+            onClick={() => trackClick(`lang-${l}`)}
+          >
+            {l.toUpperCase()}
+          </a>
+        ),
+      )}
+    </div>
+  );
 }
 
-export function Nav({ onSetLang }: Props) {
-  const lang = useLang();
+/**
+ * `solid` — страница без фотографии во весь экран. Прозрачная шапка там
+ * рисует белые буквы по кремовому фону, то есть ничего не рисует.
+ */
+export function Nav({ solid = false }: { solid?: boolean } = {}) {
+  const href = useHref();
+  const anchor = useHomeAnchor();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -27,20 +67,17 @@ export function Nav({ onSetLang }: Props) {
 
   return (
     <>
-      <nav className={`nav ${scrolled ? 'nav-scrolled' : 'nav-top'}`} id="nav">
+      <nav className={`nav ${solid || scrolled ? 'nav-scrolled' : 'nav-top'}`} id="nav">
         <div className="nav-in">
-          <a className="logo" href="#top">Анастасия Петрова</a>
+          <a className="logo" href={href(HOME)}>Анастасия Петрова</a>
           <div className="nlinks">
             {navLinks.map((l) => (
-              <a className="nlink" href={l.href} key={l.href}>
+              <a className="nlink" href={anchor(l.id)} key={l.id}>
                 <T ru={l.ru} en={l.en} />
               </a>
             ))}
-            <a className="npill" href="#contacts"><T ru="Контакты" en="Contacts" /></a>
-            <div className="langsw">
-              <button className={`lang-btn ${lang === 'ru' ? 'active' : ''}`} onClick={() => onSetLang('ru')}>RU</button>
-              <button className={`lang-btn ${lang === 'en' ? 'active' : ''}`} onClick={() => onSetLang('en')}>EN</button>
-            </div>
+            <a className="npill" href={anchor('contacts')}><T ru="Контакты" en="Contacts" /></a>
+            <LangSwitch />
           </div>
           <button className="burger" onClick={() => setMenuOpen(true)} aria-label="Меню">
             <BurgerIcon />
@@ -55,15 +92,12 @@ export function Nav({ onSetLang }: Props) {
           </button>
         </div>
         {navLinks.map((l) => (
-          <a className="mlink" href={l.href} key={l.href} onClick={() => setMenuOpen(false)}>
+          <a className="mlink" href={anchor(l.id)} key={l.id} onClick={() => setMenuOpen(false)}>
             <T ru={l.ru} en={l.en} />
           </a>
         ))}
-        <a className="mlink" href="#contacts" onClick={() => setMenuOpen(false)}><T ru="Контакты" en="Contacts" /></a>
-        <div className="mlang">
-          <button className={`lang-btn ${lang === 'ru' ? 'active' : ''}`} onClick={() => onSetLang('ru')}>RU</button>
-          <button className={`lang-btn ${lang === 'en' ? 'active' : ''}`} onClick={() => onSetLang('en')}>EN</button>
-        </div>
+        <a className="mlink" href={anchor('contacts')} onClick={() => setMenuOpen(false)}><T ru="Контакты" en="Contacts" /></a>
+        <LangSwitch className="mlang" />
       </div>
     </>
   );

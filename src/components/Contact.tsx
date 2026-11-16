@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react';
 import { T, useLang } from '../i18n';
-import { docHref, links } from '../content';
+import { useDocHref } from '../router';
+import { links } from '../content';
 import { Photo } from './Photo';
 import { photoUrl } from '../photos';
 import { apiConfigured, mailtoFallback, submitContact, type SubmitResult } from '../api';
@@ -14,6 +15,7 @@ type State =
 
 export function Contact() {
   const lang = useLang();
+  const docHref = useDocHref();
   const [state, setState] = useState<State>({ kind: 'idle' });
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {

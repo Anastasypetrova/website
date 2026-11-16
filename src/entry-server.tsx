@@ -1,12 +1,16 @@
 /**
- * Build-time render of the landing page. See scripts/prerender.mjs for why.
+ * Сборка страниц сайта в готовый HTML. Зачем — см. scripts/prerender.mjs.
  *
- * Not a server: this runs once during `npm run build` and its output is baked
- * into dist/index.html as static HTML.
+ * Не сервер: это выполняется один раз во время `npm run build`, а результат
+ * кладётся в dist как статические файлы.
  */
 import { renderToString } from 'react-dom/server';
-import App from './App';
+import { Site } from './App';
+import type { Here } from './routes';
 
-export function render(): string {
-  return renderToString(<App />);
+export function render(here: Here): string {
+  return renderToString(<Site here={here} />);
 }
+
+export { allPages, pathOf } from './routes';
+export { buildHead } from './seo';

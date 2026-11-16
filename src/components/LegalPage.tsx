@@ -1,5 +1,7 @@
 import { T, useLang, type Lang } from '../i18n';
-import { docs, docHref, links } from '../content';
+import { docs, links } from '../content';
+import { useAsset, useDocHref, useHref } from '../router';
+import { HOME } from '../routes';
 import type { LegalBlock, LegalDoc } from '../legal';
 
 /** Consecutive bullets become one list; everything else stays a standalone block. */
@@ -21,15 +23,18 @@ interface Props {
 
 export function LegalPage({ doc, onSetLang }: Props) {
   const lang = useLang();
+  const href = useHref();
+  const docHref = useDocHref();
+  const asset = useAsset();
   const label = docs.find((d) => d.slug === doc.slug)?.label;
 
   return (
     <>
       <header className="legal-top">
         <div className="legal-top-in">
-          <a className="logo" href="#top">Анастасия Петрова</a>
+          <a className="logo" href={href(HOME)}>Анастасия Петрова</a>
           <div className="legal-top-right">
-            <a className="legal-back" href="#top">
+            <a className="legal-back" href={href(HOME)}>
               <T ru="← На главную" en="← Back to the site" />
             </a>
             <div className="langsw">
@@ -69,7 +74,7 @@ export function LegalPage({ doc, onSetLang }: Props) {
           </div>
 
           <div className="legal-actions">
-            <a className="legal-pdf" href={`docs/${doc.file}`} target="_blank" rel="noopener">
+            <a className="legal-pdf" href={asset(`docs/${doc.file}`)} target="_blank" rel="noopener">
               <T ru="Скачать PDF" en="Download PDF" />
             </a>
             <a className="legal-mail" href={`mailto:${links.email}`}>{links.email}</a>
@@ -92,7 +97,7 @@ export function LegalPage({ doc, onSetLang }: Props) {
 
       <div className="legal-foot">
         <span><T ru="© 2026 Анастасия Петрова. Все права защищены." en="© 2026 Anastasia Petrova. All rights reserved." /></span>
-        <a href="#top"><T ru="Вернуться на сайт" en="Back to the site" /></a>
+        <a href={href(HOME)}><T ru="Вернуться на сайт" en="Back to the site" /></a>
       </div>
     </>
   );

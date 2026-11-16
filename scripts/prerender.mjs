@@ -1,25 +1,30 @@
 /**
- * Bakes the rendered landing page into dist/index.html.
+ * Печёт каждую страницу сайта в свой готовый HTML-файл.
  *
- * Without this the file a crawler downloads is an empty <div id="root"></div>:
- * every word of the site only exists after the JavaScript has run. Google does
- * render JavaScript, but it queues those pages and re-crawls them later, and
- * Yandex — which matters for a Russian-speaking audience — is far less reliable
- * at it. Baking the markup in means the text is simply there, for every crawler,
- * on the first fetch.
+ * Без этого файл, который скачивает поисковый робот, — пустой
+ * `<div id="root"></div>`: весь текст появляется только после того, как
+ * выполнится JavaScript. Google его выполняет, но ставит такие страницы в
+ * очередь и возвращается к ним позже, а Яндекс — который для русскоязычной
+ * аудитории и важен — справляется с этим куда хуже. Запечённая разметка
+ * означает, что текст просто есть, для любого робота, с первого запроса.
  *
- * React takes over on load and re-renders the same tree, so nothing is frozen:
- * the language toggle, the accordion and the consent checkboxes work as before.
- * The markup is a starting picture, not a hydration target.
+ * Страниц теперь много: главная, её английская версия, по странице на каждый
+ * формат (и тоже на двух языках) и по странице на каждый документ. Раньше
+ * адрес был один, и в выдаче у сайта было ровно одно место, за которое он мог
+ * бороться.
  *
- * Runs from `npm run build` after `vite build`.
+ * React на загрузке перерисовывает то же дерево, так что ничего не
+ * «замораживается»: переключатель языка, аккордеон и галочки согласия
+ * работают как раньше. Разметка — стартовая картинка, а не цель гидратации.
+ *
+ * Запускается из `npm run build` после `vite build`.
  */
 import { build } from 'vite';
-import { readFileSync, writeFileSync, rmSync } from 'node:fs';
+import { mkdirSync, readFileSync, writeFileSync, rmSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
-import { resolve } from 'node:path';
+import { dirname, resolve } from 'node:path';
 
-const OUT = 'dist/index.html';
+const TEMPLATE = 'dist/index.html';
 const SSR_DIR = 'node_modules/.tmp/ssr';
 
 await build({
@@ -33,32 +38,78 @@ await build({
   },
 });
 
-const { render } = await import(pathToFileURL(resolve(SSR_DIR, 'entry-server.js')).href);
-const html = readFileSync(OUT, 'utf8');
-const markup = render();
+const { render, allPages, pathOf, buildHead } = await import(
+  pathToFileURL(resolve(SSR_DIR, 'entry-server.js')).href
+);
 
-if (!html.includes('<div id="root"></div>')) {
-  throw new Error(`${OUT} no longer has an empty root div to fill`);
+const template = readFileSync(TEMPLATE, 'utf8');
+
+if (!template.includes('<div id="root"></div>')) {
+  throw new Error(`${TEMPLATE} no longer has an empty root div to fill`);
 }
-if (markup.length < 10_000) {
-  throw new Error(`prerendered markup is suspiciously short (${markup.length} bytes)`);
+if (!/<!--seo:start-->[\s\S]*?<!--seo:end-->/.test(template)) {
+  throw new Error(`${TEMPLATE} no longer has the <!--seo--> block to replace`);
 }
 
 /**
- * React emits a <link rel="preload"> for every image it renders. For the hero
- * that is exactly right; for the thirteen YouTube thumbnails below the fold it
- * is thirteen requests to another origin racing the fonts the first screen is
- * waiting on. Drop those, and make the hero's own preload relative so it still
- * resolves under the /website/ subpath.
+ * React выдаёт `<link rel="preload">` на каждую картинку, которую рисует. Для
+ * первого экрана это ровно то, что нужно; для тринадцати обложек YouTube ниже
+ * сгиба — тринадцать запросов к чужому домену наперегонки со шрифтами, которых
+ * ждёт первый экран. Их убираем.
  */
-const cleaned = markup
-  .replace(/<link rel="preload" as="image" href="https:\/\/img\.youtube\.com[^>]*>/g, '')
-  .replace(/(<link rel="preload"[^>]*href=")\/assets\//g, '$1assets/');
+function cleanMarkup(markup) {
+  return markup.replace(/<link rel="preload" as="image" href="https:\/\/img\.youtube\.com[^>]*>/g, '');
+}
 
-const dropped = (markup.match(/img\.youtube\.com/g) ?? []).length - (cleaned.match(/img\.youtube\.com/g) ?? []).length;
+/**
+ * Делает пути к файлам сайта относительными к странице, которая на них
+ * ссылается: `assets/x.js` с главной и `../assets/x.js` со страницы формата.
+ *
+ * Трогает только то, что написала сборка (ассеты, иконки): ссылки из самих
+ * компонентов уже посчитаны от своей страницы и начинаются с `../`.
+ */
+function rebase(html, prefix) {
+  if (!prefix) return html.replace(/(["'])\/assets\//g, `$1assets/`);
+  return html
+    .replace(/(["'])\.?\/?assets\//g, `$1${prefix}assets/`)
+    .replace(/(["'])(favicon\.svg|apple-touch-icon\.png)(["'])/g, `$1${prefix}$2$3`);
+}
 
-writeFileSync(OUT, html.replace('<div id="root"></div>', `<div id="root">${cleaned}</div>`));
-console.log(`убрано лишних предзагрузок: ${dropped}`);
+let total = 0;
+const written = [];
+
+for (const here of allPages()) {
+  const path = pathOf(here.route, here.lang);
+  const depth = path.split('/').filter(Boolean).length;
+  const markup = cleanMarkup(render(here));
+
+  // самый короткий документ — согласие на обработку данных, около 4 КБ
+  if (markup.length < 2_500) {
+    throw new Error(`разметка /${path} подозрительно короткая (${markup.length} байт)`);
+  }
+
+  const html = rebase(
+    template
+      .replace(
+        /<!--seo:start-->[\s\S]*?<!--seo:end-->/,
+        `<!--seo:start-->\n${buildHead(here)}\n    <!--seo:end-->`,
+      )
+      .replace(
+        '<html lang="ru" data-lang="ru">',
+        `<html lang="${here.lang}" data-lang="${here.lang}">`,
+      )
+      .replace('<div id="root"></div>', `<div id="root">${markup}</div>`),
+    '../'.repeat(depth),
+  );
+
+  const file = `dist/${path}index.html`;
+  mkdirSync(dirname(file), { recursive: true });
+  writeFileSync(file, html);
+  total += markup.length;
+  written.push(`/${path}`);
+}
+
 rmSync(SSR_DIR, { recursive: true, force: true });
 
-console.log(`prerendered ${(markup.length / 1024).toFixed(0)} KB of markup into ${OUT}`);
+console.log(`страниц собрано: ${written.length} (${(total / 1024).toFixed(0)} КБ разметки)`);
+console.log(written.join('  '));

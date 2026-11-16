@@ -21,14 +21,21 @@ const format: [string, string][] = [
 ];
 
 
-export function MentorshipSection() {
+/**
+ * `lead` — раздел открывает собственную страницу, а не идёт внутри главной:
+ * тогда его название становится заголовком первого уровня. Заголовок первого
+ * уровня на странице может быть только один, и это должно быть то, о чём
+ * страница, — иначе поисковику про неё нечего сказать.
+ */
+export function MentorshipSection({ lead = false }: { lead?: boolean } = {}) {
+  const H = lead ? 'h1' : 'h2';
   return (
     <section className="sec bg1" id="mentorship">
       <div className="wrap">
         <div className="prod-grid">
           <div className="prod-main">
             <span className="taglead"><T ru="Глубокая работа" en="Deep work" /></span>
-            <h2 className="dh dh2"><T ru="Индивидуальное менторство" en="Individual mentorship" /></h2>
+            <H className="dh dh2"><T ru="Индивидуальное менторство" en="Individual mentorship" /></H>
             <p className="lede">
               <T
                 ru="Я с вами своей энергией, полем, знаниями. Конкретно работаем над вашей ситуацией по темам в течение определённого периода времени."

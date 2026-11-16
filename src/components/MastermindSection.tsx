@@ -17,7 +17,14 @@ const format: [string, string][] = [
   ['Практики конкретно для членов группы по запросу', 'Practices tailored to the group by request'],
 ];
 
-export function MastermindSection() {
+/**
+ * `lead` — раздел открывает собственную страницу, а не идёт внутри главной:
+ * тогда его название становится заголовком первого уровня. Заголовок первого
+ * уровня на странице может быть только один, и это должно быть то, о чём
+ * страница, — иначе поисковику про неё нечего сказать.
+ */
+export function MastermindSection({ lead = false }: { lead?: boolean } = {}) {
+  const H = lead ? 'h1' : 'h2';
   const lang = useLang();
 
   return (
@@ -26,7 +33,7 @@ export function MastermindSection() {
         <div className="prod-grid">
           <div className="prod-main">
             <span className="taglead"><T ru="Групповой формат" en="Group format" /></span>
-            <h2 className="dh dh2"><T ru="Мастермайнд-группа" en="Mastermind" /></h2>
+            <H className="dh dh2"><T ru="Мастермайнд-группа" en="Mastermind" /></H>
             <p className="lede">
               <T
                 ru="Групповой онлайн-формат для тех, кто готов выйти за рамки привычного мышления и перейти в новое восприятие, решения и действия."

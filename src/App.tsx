@@ -1,7 +1,10 @@
 import { Suspense, lazy, useEffect, useRef, useState } from 'react';
 import { LangContext, type Lang } from './i18n';
 import { LegalPage } from './components/LegalPage';
-import { findLegalDoc } from './legal';
+import { ServicePage } from './components/ServicePage';
+import { findLegalDoc, legalDocs } from './legal';
+import { HereContext, previewMode } from './router';
+import { rootPrefix, routeFromPath, type Here } from './routes';
 import { Nav } from './components/Nav';
 import { Hero } from './components/Hero';
 import { IntroQuote } from './components/IntroQuote';
@@ -22,110 +25,17 @@ import { Faq } from './components/Faq';
 import { Contact } from './components/Contact';
 import { Footer } from './components/Footer';
 import { showMastermind } from './content';
-import { trackClick } from './api';
 import { T } from './i18n';
-
-const SITE_TITLE = 'Анастасия Петрова — трансформационный ментор';
 
 // Дашборд — не часть сайта, а служебная страница, и её код незачем раздавать
 // посетителям: lazy уводит его в отдельный файл, который скачивает только тот,
 // кто открыл #/stats.
 const Dashboard = lazy(() => import('./components/Dashboard'));
 
-function getInitialLang(): Lang {
-  if (typeof localStorage === 'undefined') return 'ru';
-  return (localStorage.getItem('ap_lang') as Lang) || 'ru';
-}
-
-function App() {
-  const [lang, setLang] = useState<Lang>(getInitialLang);
-  // guarded because this also renders on the server at build time, where the
-  // prerendered HTML is always the landing page
-  const [hash, setHash] = useState(() =>
-    typeof window === 'undefined' ? '' : window.location.hash,
-  );
-
-  useEffect(() => {
-    document.documentElement.setAttribute('data-lang', lang);
-    // lang is what a search engine and a screen reader read; data-lang only
-    // drives the stylesheet, and leaving lang at "ru" mislabels the English page
-    document.documentElement.lang = lang;
-  }, [lang]);
-
-  useEffect(() => {
-    const onHashChange = () => setHash(window.location.hash);
-    window.addEventListener('hashchange', onHashChange);
-    return () => window.removeEventListener('hashchange', onHashChange);
-  }, []);
-
-  // `#/docs/<slug>` swaps the landing page for that document's own page. Hash
-  // routing keeps every asset path relative, so the site still works both on
-  // the custom domain and under the /website/ project path on github.io.
-  const doc = findLegalDoc(hash);
-  const cameFromDoc = useRef(Boolean(doc));
-
-  useEffect(() => {
-    if (doc) {
-      window.scrollTo(0, 0);
-    } else if (cameFromDoc.current) {
-      // Leaving a document page: the target section only exists now that the
-      // landing page has rendered, so the browser's own jump has already missed it.
-      const target = hash.startsWith('#') && !hash.startsWith('#/')
-        ? document.getElementById(hash.slice(1))
-        : null;
-      if (target) target.scrollIntoView();
-      else window.scrollTo(0, 0);
-    }
-    cameFromDoc.current = Boolean(doc);
-  }, [hash, doc]);
-
-  useEffect(() => {
-    document.title = doc ? `${doc.title} — Анастасия Петрова` : SITE_TITLE;
-  }, [doc]);
-
-  // A cold load of a shared link like /#club lands at the top: the section does
-  // not exist yet when the browser tries to jump to it, and the photos loading
-  // afterwards move it anyway. Jump ourselves, then once more once they have.
-  useEffect(() => {
-    const id = window.location.hash.slice(1);
-    if (!id || window.location.hash.startsWith('#/')) return;
-    const jump = () => document.getElementById(id)?.scrollIntoView({ behavior: 'instant' });
-    jump();
-    window.addEventListener('load', jump);
-    return () => window.removeEventListener('load', jump);
-  }, []);
-
-  const handleSetLang = (l: Lang) => {
-    // Считаем только настоящее переключение: нажатие на уже активную кнопку
-    // языка ничего не меняет и статистику бы только засоряло.
-    if (l !== lang) trackClick(`lang-${l}`);
-    setLang(l);
-    try {
-      localStorage.setItem('ap_lang', l);
-    } catch {
-      // ignore storage errors (private browsing, etc.)
-    }
-  };
-
-  if (hash.startsWith('#/stats')) {
-    return (
-      <Suspense fallback={null}>
-        <Dashboard />
-      </Suspense>
-    );
-  }
-
-  if (doc) {
-    return (
-      <LangContext.Provider value={lang}>
-        <LegalPage doc={doc} onSetLang={handleSetLang} />
-      </LangContext.Provider>
-    );
-  }
-
+function Landing() {
   return (
-    <LangContext.Provider value={lang}>
-      <Nav onSetLang={handleSetLang} />
+    <>
+      <Nav />
       <Hero />
       <IntroQuote />
       <Stats />
@@ -152,8 +62,126 @@ function App() {
       <TelegramBand />
       <Contact />
       <Footer />
-    </LangContext.Provider>
+    </>
   );
+}
+
+/**
+ * Одна страница сайта — та, что названа в `here`.
+ *
+ * Отсюда же её строит сборка: scripts/prerender.mjs вызывает этот компонент
+ * для каждого адреса и кладёт результат в свой файл. Поэтому внутри не должно
+ * быть ничего, что требует браузера: ни window, ни localStorage.
+ */
+export function Site({ here, onSetLang }: { here: Here; onSetLang?: (lang: Lang) => void }) {
+  const route = here.route;
+  const doc = route.kind === 'doc' ? legalDocs.find((d) => d.slug === route.slug) : undefined;
+
+  return (
+    <HereContext.Provider value={here}>
+      <LangContext.Provider value={here.lang}>
+        {doc ? (
+          <LegalPage doc={doc} onSetLang={onSetLang ?? (() => {})} />
+        ) : route.kind === 'service' ? (
+          <ServicePage slug={route.slug} />
+        ) : (
+          <Landing />
+        )}
+      </LangContext.Provider>
+    </HereContext.Provider>
+  );
+}
+
+/**
+ * Какая страница открыта. На сайте это путь в адресе; в превью — весь сайт
+ * лежит одним файлом, и страницы в нём живут на «решётках» (`#/samadhi-club/`).
+ */
+function whereAreWe(): Here {
+  if (previewMode && window.location.hash.startsWith('#/')) {
+    return routeFromPath(window.location.hash.slice(2));
+  }
+  return routeFromPath(window.location.pathname);
+}
+
+function App() {
+  const [here, setHere] = useState<Here>(whereAreWe);
+  const [hash, setHash] = useState(() => window.location.hash);
+  // Язык страницы задаёт её адрес. Отдельная память нужна только документам:
+  // у них английского адреса нет, и язык интерфейса там переключается кнопкой.
+  const [docLang, setDocLang] = useState<Lang>(() => {
+    try {
+      return (localStorage.getItem('ap_lang') as Lang) || here.lang;
+    } catch {
+      return here.lang;
+    }
+  });
+
+  const lang = here.route.kind === 'doc' ? docLang : here.lang;
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-lang', lang);
+    // lang читают поисковик и экранный диктор; data-lang нужен только стилям,
+    // и оставить lang="ru" на английской странице — значит соврать обоим
+    document.documentElement.lang = lang;
+  }, [lang]);
+
+  useEffect(() => {
+    const onHashChange = () => {
+      setHash(window.location.hash);
+      if (previewMode) setHere(whereAreWe());
+    };
+    const onPopState = () => setHere(whereAreWe());
+    window.addEventListener('hashchange', onHashChange);
+    window.addEventListener('popstate', onPopState);
+    return () => {
+      window.removeEventListener('hashchange', onHashChange);
+      window.removeEventListener('popstate', onPopState);
+    };
+  }, []);
+
+  /**
+   * Старые ссылки вида `#/docs/oferta` разосланы и, может, уже где-то
+   * сохранены. Теперь у документа есть настоящий адрес — уводим туда, чтобы и
+   * человек, и поисковик оказались на странице с её собственным заголовком.
+   */
+  const redirected = useRef(false);
+  useEffect(() => {
+    const doc = findLegalDoc(hash);
+    if (!doc || redirected.current || previewMode) return;
+    redirected.current = true;
+    window.location.replace(rootPrefix(routeFromPath(window.location.pathname)) + `docs/${doc.slug}/`);
+  }, [hash]);
+
+  // Холодная загрузка ссылки вида /#club приземляется наверху: раздела ещё нет,
+  // когда браузер пытается к нему прыгнуть, а подгрузившиеся фотографии потом
+  // всё равно его сдвигают. Прыгаем сами, и ещё раз — когда всё загрузилось.
+  useEffect(() => {
+    const id = window.location.hash.slice(1);
+    if (!id || window.location.hash.startsWith('#/')) return;
+    const jump = () => document.getElementById(id)?.scrollIntoView({ behavior: 'instant' });
+    jump();
+    window.addEventListener('load', jump);
+    return () => window.removeEventListener('load', jump);
+  }, []);
+
+  const handleSetLang = (l: Lang) => {
+    setDocLang(l);
+    try {
+      localStorage.setItem('ap_lang', l);
+    } catch {
+      // ignore storage errors (private browsing, etc.)
+    }
+  };
+
+  if (hash.startsWith('#/stats')) {
+    return (
+      <Suspense fallback={null}>
+        <Dashboard />
+      </Suspense>
+    );
+  }
+
+  return <Site here={{ route: here.route, lang }} onSetLang={handleSetLang} />;
 }
 
 export default App;

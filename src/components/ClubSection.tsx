@@ -38,7 +38,14 @@ const chips: [string, string][] = [
  * Экраны приложения — сначала то, что внутри, и только потом рабочий стол:
  * иконка на экране телефона читается как итог, а не как вступление.
  */
-export function ClubSection() {
+/**
+ * `lead` — раздел открывает собственную страницу, а не идёт внутри главной:
+ * тогда его название становится заголовком первого уровня. Заголовок первого
+ * уровня на странице может быть только один, и это должно быть то, о чём
+ * страница, — иначе поисковику про неё нечего сказать.
+ */
+export function ClubSection({ lead = false }: { lead?: boolean } = {}) {
+  const H = lead ? 'h1' : 'h2';
   const lang = useLang();
 
   return (
@@ -47,7 +54,7 @@ export function ClubSection() {
         <div className="prod-grid">
           <div className="prod-main">
             <span className="taglead"><T ru="Клуб по подписке" en="Subscription club" /></span>
-            <h2 className="dh dh2">Samadhi Club</h2>
+            <H className="dh dh2">Samadhi Club</H>
             <p className="lede">
               <T
                 ru="Мой закрытый канал разборов с живыми эфирами, авторскими практиками и возможностью задать вопрос и получить ответ. Это место моего ежедневного присутствия."

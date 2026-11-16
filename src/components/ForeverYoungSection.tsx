@@ -24,14 +24,21 @@ const includes: [string, string][] = [
   ['Честные разборы', 'Honest reviews'],
 ];
 
-export function ForeverYoungSection() {
+/**
+ * `lead` — раздел открывает собственную страницу, а не идёт внутри главной:
+ * тогда его название становится заголовком первого уровня. Заголовок первого
+ * уровня на странице может быть только один, и это должно быть то, о чём
+ * страница, — иначе поисковику про неё нечего сказать.
+ */
+export function ForeverYoungSection({ lead = false }: { lead?: boolean } = {}) {
+  const H = lead ? 'h1' : 'h2';
   return (
     <section className="sec bg2" id="forever-young">
       <div className="wrap">
         <div className="prod-grid">
           <div className="prod-main">
             <span className="taglead"><T ru="Новый клуб по подписке" en="A new subscription club" /></span>
-            <h2 className="dh dh2">Forever Young</h2>
+            <H className="dh dh2">Forever Young</H>
             {/* Первая фраза — обещание, вторая — доказательство. Дальше можно
                 не читать и всё равно понять, о чём канал. */}
             <p className="lede">

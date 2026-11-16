@@ -157,7 +157,10 @@ const banner = `
 </script>
 `;
 
-page += banner;
+// Флаг превью: внутри одного файла папок нет, поэтому страницы сайта
+// открываются по «решётке» (`#/samadhi-club/`), а не по пути. Скрипт сайта
+// грузится как module, то есть после разбора страницы, — флаг успевает встать.
+page = '<script>window.__PREVIEW__=1</' + 'script>\n' + page + banner;
 
 mkdirSync(OUT_FILE.split('/').slice(0, -1).join('/') || '.', { recursive: true });
 writeFileSync(OUT_FILE, page);

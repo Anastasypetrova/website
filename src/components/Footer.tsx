@@ -1,27 +1,37 @@
 import { useState, type FormEvent } from 'react';
 import { T, useLang } from '../i18n';
-import { docs, docHref, links, showMastermind } from '../content';
+import { docs, links, showMastermind } from '../content';
+import { useDocHref, useHomeAnchor, useHref } from '../router';
+import { services } from '../routes';
 import { apiConfigured, submitNewsletter, trackClick } from '../api';
 import { InstagramIcon, TelegramIcon, YoutubeIcon } from './Icons';
 
-const sectionLinks: { href: string; ru: string; en: string }[] = [
-  { href: '#videos', ru: 'Видео', en: 'Videos' },
-  { href: '#reviews', ru: 'Отзывы', en: 'Reviews' },
-  { href: '#formats', ru: 'Форматы работы', en: 'Work formats' },
-  { href: '#about', ru: 'Обо мне', en: 'About me' },
-  { href: '#contacts', ru: 'Контакты', en: 'Contacts' },
+const sectionLinks: { id: string; ru: string; en: string }[] = [
+  { id: 'videos', ru: 'Видео', en: 'Videos' },
+  { id: 'reviews', ru: 'Отзывы', en: 'Reviews' },
+  { id: 'formats', ru: 'Форматы работы', en: 'Work formats' },
+  { id: 'about', ru: 'Обо мне', en: 'About me' },
+  { id: 'contacts', ru: 'Контакты', en: 'Contacts' },
 ];
 
-const formatLinks: { href: string; ru: string; en: string }[] = [
-  { href: '#club', ru: 'Samadhi Club', en: 'Samadhi Club' },
-  { href: '#personal-session', ru: 'Личная консультация', en: 'Personal consultation' },
-  { href: '#mentorship', ru: 'Менторство', en: 'Mentorship' },
-  ...(showMastermind ? [{ href: '#mastermind', ru: 'Мастермайнд-группа', en: 'Mastermind' }] : []),
-  { href: '#forever-young', ru: 'Forever Young', en: 'Forever Young' },
-];
+/**
+ * Форматы в подвале ведут на свои страницы, а не на разделы главной: это
+ * единственное место, откуда на них стоит ссылка с каждой страницы сайта, —
+ * и поисковик, и человек находят их отсюда.
+ */
+const formatLinks: { slug: string; ru: string; en: string }[] = [
+  { slug: 'samadhi-club', ru: 'Samadhi Club', en: 'Samadhi Club' },
+  { slug: 'consultation', ru: 'Личная консультация', en: 'Personal consultation' },
+  { slug: 'mentorship', ru: 'Менторство', en: 'Mentorship' },
+  ...(showMastermind ? [{ slug: 'mastermind', ru: 'Мастермайнд-группа', en: 'Mastermind' }] : []),
+  { slug: 'forever-young', ru: 'Forever Young', en: 'Forever Young' },
+].filter((l) => services.some((s) => s.slug === l.slug));
 
 export function Footer() {
   const lang = useLang();
+  const href = useHref();
+  const anchor = useHomeAnchor();
+  const docHref = useDocHref();
   const [state, setState] = useState<'idle' | 'sending' | 'sent' | 'failed'>('idle');
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -94,16 +104,18 @@ export function Footer() {
           <div className="foot-col">
             <span className="foot-col-h"><T ru="Разделы" en="Sections" /></span>
             {sectionLinks.map((l) => (
-              <a className="flink" href={l.href} key={l.href}><T ru={l.ru} en={l.en} /></a>
+              <a className="flink" href={anchor(l.id)} key={l.id}><T ru={l.ru} en={l.en} /></a>
             ))}
           </div>
           <div className="foot-col">
             <span className="foot-col-h"><T ru="Форматы" en="Formats" /></span>
             {formatLinks.map((l) => (
-              <a className="flink" href={l.href} key={l.href}><T ru={l.ru} en={l.en} /></a>
+              <a className="flink" href={href({ kind: 'service', slug: l.slug as never })} key={l.slug}>
+                <T ru={l.ru} en={l.en} />
+              </a>
             ))}
           </div>
-          <div className="foot-col">
+          <div className="foot-col" id="documents">
             <span className="foot-col-h"><T ru="Документы" en="Documents" /></span>
             {docs.map((d) => (
               <a className="flink" href={docHref(d.slug)} key={d.slug} onClick={() => trackClick(`doc:${d.slug}`)}>

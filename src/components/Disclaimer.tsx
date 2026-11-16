@@ -1,5 +1,5 @@
 import { T } from '../i18n';
-import { docHref } from '../content';
+import { useDocHref } from '../router';
 
 /**
  * Предупреждение о характере услуг.
@@ -14,6 +14,7 @@ import { docHref } from '../content';
  * чего-то боится.
  */
 export function Disclaimer() {
+  const docHref = useDocHref();
   return (
     <div className="disclaimer">
       <p className="disclaimer-main">

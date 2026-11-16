@@ -1,6 +1,7 @@
 import { useId, useState, type CSSProperties, type ReactNode } from 'react';
 import { T } from '../i18n';
-import { docHref, docs } from '../content';
+import { docs } from '../content';
+import { useDocHref } from '../router';
 import { trackClick } from '../api';
 import { legalDocs } from '../legal';
 
@@ -53,6 +54,7 @@ interface Props {
 
 /** A call-to-action that stays locked until the documents are accepted. */
 export function ConsentGate({ href, slugs, product, children, secondary, style, buttonStyle }: Props) {
+  const docHref = useDocHref();
   const [agreed, setAgreed] = useState(false);
   const [nudge, setNudge] = useState(false);
   const id = useId();

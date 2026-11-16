@@ -22,14 +22,21 @@ const items: [string, string][] = [
   ],
 ];
 
-export function PersonalSessionSection() {
+/**
+ * `lead` — раздел открывает собственную страницу, а не идёт внутри главной:
+ * тогда его название становится заголовком первого уровня. Заголовок первого
+ * уровня на странице может быть только один, и это должно быть то, о чём
+ * страница, — иначе поисковику про неё нечего сказать.
+ */
+export function PersonalSessionSection({ lead = false }: { lead?: boolean } = {}) {
+  const H = lead ? 'h1' : 'h2';
   return (
     <section className="sec bg2" id="personal-session">
       <div className="wrap">
         <div className="prod-grid">
           <div className="prod-main">
             <span className="taglead"><T ru="Личная работа - одна сессия" en="Personal work, one session" /></span>
-            <h2 className="dh dh2"><T ru="Личная консультация" en="Personal consultation" /></h2>
+            <H className="dh dh2"><T ru="Личная консультация" en="Personal consultation" /></H>
             <div className="block">
               <span className="klabel"><T ru="Что будет на консультации" en="What happens in the consultation" /></span>
               <div className="numlist">

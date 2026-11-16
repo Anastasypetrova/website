@@ -1,6 +1,7 @@
 import { defineConfig, type Plugin } from 'vite'
 import react from '@vitejs/plugin-react'
-import { buildSitemap, buildStructuredData } from './src/seo'
+import { buildHead, buildSitemap } from './src/seo'
+import { HOME } from './src/routes'
 import { buildAnalyticsTags } from './src/analytics'
 
 /**
@@ -47,12 +48,20 @@ function seo(): Plugin {
       // src/analytics.ts — ненастроенный счётчик не стоит и запроса.
       const counters = buildAnalyticsTags()
 
-      return html.replace(
-        '</head>',
-        `${preloads}\n  <script type="application/ld+json">${buildStructuredData()}</script>\n` +
-          (counters ? `    ${counters}\n` : '') +
-          `  </head>`,
-      )
+      // Голова главной. Остальные страницы собирает scripts/prerender.mjs —
+      // он берёт этот же файл и меняет в нём блок между метками, поэтому метки
+      // обязаны остаться на месте.
+      const head = buildHead({ route: HOME, lang: 'ru' })
+
+      return html
+        .replace(
+          /<!--seo:start-->[\s\S]*?<!--seo:end-->/,
+          `<!--seo:start-->\n${head}\n    <!--seo:end-->`,
+        )
+        .replace(
+          '</head>',
+          `${preloads}\n` + (counters ? `    ${counters}\n` : '') + `  </head>`,
+        )
     },
     generateBundle() {
       this.emitFile({
