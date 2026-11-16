@@ -180,7 +180,11 @@ export function ClubSection() {
               href={links.clubJoin}
               product="samadhi-club"
               slugs={['oferta', 'club-terms', 'disclaimer']}
-              buttonStyle={{ width: 'auto', padding: '16px 28px' }}
+              secondary={
+                <a className="btn-outline" href={links.reviewsChannel} target="_blank" rel="noopener">
+                  <T ru="Отзывы" en="Reviews" />
+                </a>
+              }
             >
               <T ru="Присоединиться" en="Join" />
             </ConsentGate>

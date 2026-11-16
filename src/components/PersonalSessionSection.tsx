@@ -54,13 +54,14 @@ export function PersonalSessionSection() {
                   href={links.consultBot}
                   product="personal-session"
                   slugs={['oferta', 'disclaimer']}
-                  buttonStyle={{ width: 'auto', padding: '16px 28px' }}
+                  secondary={
+                    <a className="btn-outline" href={links.reviewsChannel} target="_blank" rel="noopener">
+                      <T ru="Отзывы" en="Reviews" />
+                    </a>
+                  }
                 >
                   <T ru="Записаться" en="Book now" />
                 </ConsentGate>
-                <a className="btn-outline" href={links.reviewsChannel} target="_blank" rel="noopener">
-                  <T ru="Отзывы" en="Reviews" />
-                </a>
               </div>
             </div>
           </div>

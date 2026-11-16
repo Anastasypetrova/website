@@ -43,6 +43,8 @@ interface Props {
   /** Identifies the purchase in the consent record. */
   product: string;
   children: ReactNode;
+  /** Вторая кнопка рядом с главной — например «Отзывы». */
+  secondary?: ReactNode;
   /** Layout for the checkbox + button block as a whole. */
   style?: CSSProperties;
   /** Layout for the button alone. */
@@ -50,7 +52,7 @@ interface Props {
 }
 
 /** A call-to-action that stays locked until the documents are accepted. */
-export function ConsentGate({ href, slugs, product, children, style, buttonStyle }: Props) {
+export function ConsentGate({ href, slugs, product, children, secondary, style, buttonStyle }: Props) {
   const [agreed, setAgreed] = useState(false);
   const [nudge, setNudge] = useState(false);
   const id = useId();
@@ -84,27 +86,32 @@ export function ConsentGate({ href, slugs, product, children, style, buttonStyle
           <T ru={<>Я ознакомлен(а) и принимаю {link}</>} en={<>I have read and accept the {link}</>} />
         </span>
       </label>
-      <a
-        className={`btn-onsage ${agreed ? '' : 'is-locked'}`}
-        href={href}
-        target="_blank"
-        rel="noopener"
-        aria-disabled={!agreed}
-        style={buttonStyle}
-        onClick={(e) => {
-          if (!agreed) {
-            e.preventDefault();
-            setNudge(true);
-            return;
-          }
-          recordConsent(product, slugs);
-          // Считается только нажатие, которое действительно уводит на оплату:
-          // заблокированная кнопка выше по коду до сюда не доходит.
-          trackClick(product);
-        }}
-      >
-        {children}
-      </a>
+      {/* Кнопки в одной строке: главная и второстепенная стоят рядом, а не
+          одна под другой, и обе по размеру своего текста. */}
+      <div className="consent-actions">
+        <a
+          className={`btn-onsage ${agreed ? '' : 'is-locked'}`}
+          href={href}
+          target="_blank"
+          rel="noopener"
+          aria-disabled={!agreed}
+          style={buttonStyle}
+          onClick={(e) => {
+            if (!agreed) {
+              e.preventDefault();
+              setNudge(true);
+              return;
+            }
+            recordConsent(product, slugs);
+            // Считается только нажатие, которое действительно уводит на оплату:
+            // заблокированная кнопка выше по коду до сюда не доходит.
+            trackClick(product);
+          }}
+        >
+          {children}
+        </a>
+        {secondary}
+      </div>
     </div>
   );
 }

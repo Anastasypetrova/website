@@ -126,6 +126,11 @@ export function ForeverYoungSection() {
               href={links.foreverYoungJoin}
               product="forever-young"
               slugs={['oferta', 'disclaimer']}
+            secondary={
+              <a className="btn-outline" href={links.reviewsChannel} target="_blank" rel="noopener">
+                <T ru="Отзывы" en="Reviews" />
+              </a>
+            }
             >
               <T ru="Присоединиться" en="Join" />
             </ConsentGate>

@@ -107,10 +107,18 @@ export function MentorshipSection() {
         </div>
 
         <div className="mm-cta">
-          <ConsentGate href={links.consultBot} product="mentorship" slugs={['oferta', 'disclaimer']}>
+          <ConsentGate
+            href={links.consultBot}
+            product="mentorship"
+            slugs={['oferta', 'disclaimer']}
+            secondary={
+              <a className="btn-outline" href={links.reviewsChannel} target="_blank" rel="noopener">
+                <T ru="Отзывы" en="Reviews" />
+              </a>
+            }
+          >
             <T ru="Занять место" en="Take a spot" />
           </ConsentGate>
-          <a className="btn-outline" href={links.reviewsChannel} target="_blank" rel="noopener"><T ru="Отзывы" en="Reviews" /></a>
         </div>
       </div>
     </section>
