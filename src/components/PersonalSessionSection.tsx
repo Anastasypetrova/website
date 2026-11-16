@@ -49,20 +49,6 @@ export function PersonalSessionSection() {
                   <T ru={pricing.consultation.ru} en={pricing.consultation.en} />
                 </div>
               </div>
-              <div className="btns btns-consent" style={{ marginTop: 0 }}>
-                <ConsentGate
-                  href={links.consultBot}
-                  product="personal-session"
-                  slugs={['oferta', 'disclaimer']}
-                  secondary={
-                    <a className="btn-outline" href={links.reviewsChannel} target="_blank" rel="noopener">
-                      <T ru="Отзывы" en="Reviews" />
-                    </a>
-                  }
-                >
-                  <T ru="Записаться" en="Book now" />
-                </ConsentGate>
-              </div>
             </div>
           </div>
           <div className="prod-right">
@@ -70,6 +56,23 @@ export function PersonalSessionSection() {
               <Photo name="consultation" alt="Личная консультация" />
             </div>
           </div>
+        </div>
+
+        {/* Согласие и кнопки стоят внизу раздела, как в остальных блоках: в
+            колонке с ценой они оказывались зажаты между текстом и фотографией. */}
+        <div className="mm-cta">
+          <ConsentGate
+            href={links.consultBot}
+            product="personal-session"
+            slugs={['oferta', 'disclaimer']}
+            secondary={
+              <a className="btn-outline" href={links.reviewsChannel} target="_blank" rel="noopener">
+                <T ru="Отзывы" en="Reviews" />
+              </a>
+            }
+          >
+            <T ru="Записаться" en="Book now" />
+          </ConsentGate>
         </div>
       </div>
     </section>
