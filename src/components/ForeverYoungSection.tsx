@@ -82,16 +82,8 @@ export function ForeverYoungSection() {
             </div>
             <p className="card-note card-note-lead">
               <T
-                ru="Но самое крутое — сообщество, которое делится своими лайфхаками о том, как долгие годы оставаться молодым."
-                en="But the best part is the community, sharing what keeps them young year after year."
-              />
-            </p>
-          {/* Своими словами о том, чего в подписке нет: честность здесь
-                продаёт лучше обещаний, да и дисклеймер сайта говорит то же. */}
-            <p className="fy-honest">
-              <T
-                ru="Я не врач и не косметолог. Но я выгляжу и чувствую себя намного лучше, чем десять лет назад, — и это может каждый. Делюсь только тем, что проверила на себе."
-                en="I am not a doctor or a cosmetologist. But I look and feel far better than I did ten years ago — and anyone can. I share only what I have tested on myself."
+                ru="Но самое крутое — сообщество, которое делится своими лайфхаками о том, как долгие годы оставаться молодым. Я не врач и не косметолог. Но я выгляжу и чувствую себя намного лучше, чем десять лет назад, — и это может каждый. Делюсь только тем, что проверила на себе."
+                en="But the best part is the community, sharing what keeps them young year after year. I am not a doctor or a cosmetologist. But I look and feel far better than I did ten years ago — and anyone can. I share only what I have tested on myself."
               />
             </p>
           </div>
