@@ -306,7 +306,7 @@ em.accent{font-family:var(--font-script)!important;font-weight:400!important;fon
 .btns{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
 .btn-outline{display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--border-default);color:var(--ink);background:none;border-radius:999px;padding:16px 26px;font-family:var(--font-sans);font-weight:600;font-size:14px;text-decoration:none;transition:background .2s,border-color .2s;cursor:pointer}
 .btn-outline:hover{background:var(--cream-2);border-color:var(--border-strong);color:var(--ink)}
-.btn-onsage{display:inline-flex;align-items:center;justify-content:center;width:100%;background:var(--sage);color:#fff;border-radius:999px;padding:16px 24px;font-family:var(--font-sans);font-weight:600;font-size:15px;letter-spacing:.01em;transition:background .25s,border-color .25s,color .25s,transform .2s;border:1.5px solid transparent;cursor:pointer}
+.btn-onsage{display:inline-flex;align-items:center;justify-content:center;width:100%;background:var(--sage);color:#fff;border-radius:999px;padding:16px 24px;font-family:var(--font-sans);font-weight:600;font-size:15px;letter-spacing:.01em;transition:background .2s,transform .2s;border:none;cursor:pointer}
 .btn-onsage:hover{background:var(--accent-hover);color:#fff;transform:translateY(-2px)}
 .mm-cta{display:flex;justify-content:flex-start;gap:12px;margin-top:36px}
 /* Согласие тянется на всю строку: в узкой колонке его текст переносился
@@ -454,7 +454,7 @@ em.accent{font-family:var(--font-script)!important;font-weight:400!important;fon
 .fy-price-v{font-family:var(--font-grotesk);font-weight:200;font-size:34px;letter-spacing:-.02em;line-height:1;color:var(--ink)}
 .fy-price-per{margin-left:8px;font-family:var(--font-sans);font-weight:400;font-size:14px;letter-spacing:0;color:var(--taupe-600)}
 .fy-price .finep{margin-top:14px}
-.fy-honest{margin:14px 0 0;padding-top:14px;border-top:1px solid var(--border-subtle);align-self:flex-start;font-size:calc(14px*var(--ts,1));line-height:1.6;color:var(--taupe-600);max-width:72ch}
+.fy-honest{margin:0;align-self:flex-start;font-size:calc(14px*var(--ts,1));line-height:1.6;color:var(--taupe-600);max-width:72ch}
 #mentorship .prod-grid{gap:0}
 #mentorship .prod-main{padding-right:32px;justify-content:flex-start}
 #mastermind .prod-main{gap:10px;padding-right:32px}
@@ -612,11 +612,8 @@ textarea.field{min-height:130px;resize:vertical;border-radius:20px}
 .consent-nudge .consent-text{color:var(--danger)}
 .consent-nudge .consent-text a{color:var(--danger)}
 .consent-nudge input{outline:2px solid var(--danger);outline-offset:2px}
-/* До согласия кнопка — контур: обещание, которое заполнится цветом, когда
-   галочка поставлена. Серая плита во всю ширину читалась как сломанная
-   кнопка, хотя всё работает. */
-.btn-onsage.is-locked{background:none;border:1.5px solid rgba(101,118,88,.55);color:var(--sage);cursor:pointer}
-.btn-onsage.is-locked:hover{background:rgba(101,118,88,.08);border-color:var(--sage);color:var(--sage);transform:none}
+.btn-onsage.is-locked{background:var(--taupe-500);cursor:not-allowed}
+.btn-onsage.is-locked:hover{background:var(--taupe-500);transform:none}
 @media(prefers-reduced-motion:no-preference){
   .consent-nudge{animation:consent-shake .32s var(--ease-soft)}
   @keyframes consent-shake{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
