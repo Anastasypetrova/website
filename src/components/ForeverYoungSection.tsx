@@ -48,8 +48,8 @@ export function ForeverYoungSection() {
             </p>
             <p className="p">
               <T
-                ru="Это мой личный опыт — тренировки, питание, биохакинг, красота, уход за телом и лицом. Всё, что помогает мне выглядеть на 10–15 лет моложе."
-                en="This is my own experience — training, nutrition, biohacking, beauty, caring for the body and the face. Everything that helps me look 10 to 15 years younger."
+                ru="Это мой личный опыт — тренировки, питание, биохакинг, красота, уход за телом и лицом. Всё, что помогает мне выглядеть на 10–15 лет моложе. Мне 38, и мой возраст мне не даёт никто."
+                en="This is my own experience — training, nutrition, biohacking, beauty, caring for the body and the face. Everything that helps me look 10 to 15 years younger. I am 38, and nobody ever guesses it."
               />
             </p>
             <p className="p">
