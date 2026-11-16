@@ -42,8 +42,8 @@ export function ForeverYoungSection() {
                 не читать и всё равно понять, о чём канал. */}
             <p className="lede">
               <T
-                ru="Этот канал о том, как обмануть время. О теле и заботе о нём, о том, как через осознанный подход и присутствие в настоящем оставаться молодым."
-                en="This channel is about outwitting time. About the body and caring for it — about staying young through a conscious approach and presence in the now."
+                ru="Этот канал о том, как обмануть время. О теле и заботе о нём."
+                en="This channel is about outwitting time. About the body and caring for it."
               />
             </p>
             <p className="p">
@@ -54,8 +54,8 @@ export function ForeverYoungSection() {
             </p>
             <p className="p">
               <T
-                ru="Здесь я буду говорить об уходе за телом и о его исцелении. Тело умеет восстанавливаться само, и это нормально: кожа обновляется, ткани заживают, и часто ему не нужны ни таблетки, ни добавки. Наша задача — не мешать и дать то, что нужно: сон, движение, тепло, дыхание, спокойствие, любовь."
-                en="Here I will talk about caring for the body and about healing it. The body knows how to recover on its own, and that is normal: skin renews itself, tissue heals, and often it needs neither pills nor supplements. Our job is to stay out of its way and give it what it needs — sleep, movement, warmth, breath, calm, love."
+                ru="Здесь я буду говорить об уходе за телом и о его исцелении. Тело умеет восстанавливаться само, и это нормально: кожа обновляется, ткани заживают, и часто ему не нужны ни таблетки, ни добавки. Наша задача — не мешать."
+                en="Here I will talk about caring for the body and about healing it. The body knows how to recover on its own, and that is normal: skin renews itself, tissue heals, and often it needs neither pills nor supplements. Our job is to stay out of its way."
               />
             </p>
             {/* Плашкой — вывод, которым раздел закрывается. */}
