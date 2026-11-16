@@ -448,6 +448,12 @@ em.accent{font-family:var(--font-script)!important;font-weight:400!important;fon
    чертой и набрана крупнее примечаний. */
 .card-note-lead{margin-top:18px;padding-top:16px;border-top:1px solid var(--border-subtle);font-style:normal;font-size:calc(14.5px*var(--ts,1));color:var(--taupe-700)}
 /* Оговорка «я не врач» — голосом автора, вполголоса. */
+/* Цена одной строкой: подпись слева, число справа — как в таблице клуба,
+   только строка там одна. */
+.fy-price-row{display:flex;align-items:baseline;justify-content:space-between;gap:20px;padding-bottom:14px;border-bottom:1px solid var(--border-subtle)}
+.fy-price-v{font-family:var(--font-grotesk);font-weight:200;font-size:34px;letter-spacing:-.02em;line-height:1;color:var(--ink)}
+.fy-price-per{margin-left:8px;font-family:var(--font-sans);font-weight:400;font-size:14px;letter-spacing:0;color:var(--taupe-600)}
+.fy-price .finep{margin-top:14px}
 .fy-honest{margin:0;align-self:flex-start;font-size:calc(14px*var(--ts,1));line-height:1.6;color:var(--taupe-600);max-width:72ch}
 #mentorship .prod-grid{gap:0}
 #mentorship .prod-main{padding-right:32px;justify-content:flex-start}

@@ -211,6 +211,13 @@ export const pricing = {
   mastermind: { ru: '1200 евро', en: '1200 euros' },
 };
 
+/**
+ * Forever Young: канал только наполняется, поэтому вход стоит почти ничего.
+ * Цифра живёт здесь, а не в вёрстке: её же читает разметка для поисковиков,
+ * и менять её придётся в одном месте, а не в трёх.
+ */
+export const foreverYoungPrice = { eur: 5, ru: '5 € в месяц', en: '€5 a month' };
+
 export const docs = [
   { slug: 'oferta', file: '1_Dogovor_publichnoy_oferty.pdf', label: { ru: 'Договор оферты', en: 'Public offer agreement' } },
   { slug: 'privacy', file: '2_Politika_konfidentsialnosti.pdf', label: { ru: 'Политика конфиденциальности', en: 'Privacy policy' } },

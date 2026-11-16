@@ -1,5 +1,5 @@
 import { T } from '../i18n';
-import { links } from '../content';
+import { foreverYoungPrice, links } from '../content';
 import { Photo } from './Photo';
 import { ConsentGate } from './ConsentGate';
 
@@ -90,6 +90,24 @@ export function ForeverYoungSection() {
               <T
                 ru="Но самое крутое — сообщество, которое делится своими лайфхаками о том, как долгие годы оставаться молодым."
                 en="But the best part is the community, sharing what keeps them young year after year."
+              />
+            </p>
+          </div>
+
+          {/* Цена здесь — аргумент, а не формальность: она низкая именно сейчас,
+              и об этом сказано прямо, без «успейте» и прочего понукания. */}
+          <div className="mm-card fy-price">
+            <div className="fy-price-row">
+              <span className="klabel"><T ru="Стоимость подписки" en="Subscription" /></span>
+              <span className="fy-price-v">
+                {foreverYoungPrice.eur} €
+                <span className="fy-price-per"><T ru="в месяц" en="a month" /></span>
+              </span>
+            </div>
+            <p className="finep">
+              <T
+                ru="Это почти донат. Канал только наполняется, и по мере того как он растёт, цена будет расти для новых участников. Оплата и продление — через Tribute, из любой страны; отменить продление можно в любой момент."
+                en="Almost a donation. The channel is only filling up, and as it grows the price will rise for new members. Payment and renewal run through Tribute, from any country; renewal can be cancelled at any time."
               />
             </p>
           </div>
