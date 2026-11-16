@@ -1,9 +1,14 @@
 :root{
   --sand-50:#FAF8F5;--sand-100:#F7F5F2;--sand-200:#EFEAE2;
-  --taupe-900:#2C2C2C;--taupe-800:#8B9B82;--taupe-700:#5B5B55;--taupe-600:#6E6E67;--taupe-500:#8A897F;
-  --mist-100:#EEF1EA;--mist-200:#DDE4D4;--accent:#8B9B82;--accent-hover:#7A8B71;
-  --sage:#8B9B82;--sage-deep:#3F443B;--cream:#FAF8F5;--cream-2:#F7F5F2;--ink:#2C2C2C;
-  --clay:#C79A78;--clay-d:#8F5A3B;--danger:#C16A4A;
+  --taupe-900:#2C2C2C;--taupe-800:#8B9B82;--taupe-700:#5B5B55;--taupe-600:#6E6E67;--taupe-500:#73726A;
+  /* Зелёный углублён: на прежнем #8B9B82 белый текст кнопки давал контраст
+   2.95 при норме 4.5 — на ярком экране и на солнце надпись выцветала.
+   Оттенок тот же, темнее на три ступени; теперь 4.9. */
+  --mist-100:#EEF1EA;--mist-200:#DDE4D4;--accent:#657658;--accent-hover:#56684B;
+  --sage:#657658;--sage-deep:#3F443B;--cream:#FAF8F5;--cream-2:#F7F5F2;--ink:#2C2C2C;
+  --clay:#C79A78;--clay-d:#8F5A3B;
+  /* Терракота для мелких подписей: прежняя #C16A4A давала 3.65 при норме 4.5. */
+  --danger:#AD5733;
   --font-display:'Playfair Display',Georgia,'Times New Roman',serif;
   --font-head:'Onest',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;
   --font-script:'Great Vibes','Script Fallback',cursive;
@@ -180,7 +185,9 @@ em.accent{font-family:var(--font-script)!important;font-weight:400!important;fon
 .mq{font-family:var(--font-head);font-weight:500;font-size:calc(19px*var(--ts,1));letter-spacing:-.01em;line-height:1.3;color:var(--ink)}
 .mbody{font-size:calc(14.5px*var(--ts,1));line-height:1.62;color:var(--taupe-700);margin-top:14px}
 .msign{margin-top:20px;padding-top:16px;border-top:1px solid var(--border-subtle);font-size:13px;color:var(--taupe-600);display:flex;align-items:center;justify-content:space-between;gap:14px}
-.mmore{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-sans);font-weight:600;font-size:12.5px;letter-spacing:.02em;color:var(--sage);white-space:nowrap;transition:gap .2s,color .2s}
+/* Ссылка на отзыв: высота строки 15px, попасть пальцем трудно. Отступ
+   добавлен внутрь и тут же снят отрицательным полем, чтобы вёрстка не поехала. */
+.mmore{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-sans);font-weight:600;font-size:12.5px;letter-spacing:.02em;color:var(--sage);white-space:nowrap;transition:gap .2s,color .2s;padding-block:6px;margin-block:-6px}
 .mmore:hover{color:var(--accent-hover);gap:9px}
 .mmore svg{width:14px;height:14px}
 
@@ -522,9 +529,14 @@ textarea.field{min-height:130px;resize:vertical;border-radius:20px}
 .foot-brand{max-width:280px}
 .foot-name{font-family:var(--font-display);font-size:20px;color:var(--cream)}
 .foot-tag{font-size:13.5px;line-height:1.6;margin-top:12px}
-.foot-col{display:flex;flex-direction:column;gap:12px}
-.foot-col-h{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--clay);margin-bottom:4px}
-.flink{font-size:14px;color:rgba(250,248,245,.78);transition:color .2s}
+/* Ссылки в подвале стоят списком, а не внутри фразы, поэтому им положено
+   24 пикселя высоты: строка в 17 пикселей — это промах пальцем через раз.
+   Отступ внутрь, gap уменьшен на столько же — на вид ничего не сдвинулось. */
+.foot-col{display:flex;flex-direction:column;gap:4px}
+/* Подзаголовки подвала светлее основной терракоты: на тёмно-зелёном фоне
+   #C79A78 давал 3.2 — для 12px заглавными этого мало. */
+.foot-col-h{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#E3C3AB;margin-bottom:4px}
+.flink{font-size:14px;color:rgba(250,248,245,.78);transition:color .2s;padding-block:5px}
 .flink:hover{color:var(--cream)}
 .foot-bottom{max-width:var(--wrap);margin-inline:auto;padding:22px 32px 40px;font-size:12.5px;color:rgba(250,248,245,.5);display:flex;flex-wrap:wrap;gap:8px 24px;justify-content:space-between}
 
@@ -581,7 +593,7 @@ textarea.field{min-height:130px;resize:vertical;border-radius:20px}
    documents are accepted. */
 .consent-wrap{display:flex;flex-direction:column;gap:12px}
 .consent{display:flex;align-items:flex-start;gap:10px;max-width:46ch;cursor:pointer;border-radius:12px;padding:8px 10px;margin:-8px -10px;transition:background .25s}
-.consent input{flex:none;width:17px;height:17px;margin:1px 0 0;accent-color:var(--sage);cursor:pointer}
+.consent input{flex:none;width:19px;height:19px;margin:1px 0 0;accent-color:var(--sage);cursor:pointer}
 .consent-text{font-size:13px;line-height:1.5;color:var(--taupe-700)}
 .consent-text a{text-decoration:underline;text-underline-offset:2px;color:var(--taupe-700)}
 .consent-text a:hover{color:var(--accent-hover)}
