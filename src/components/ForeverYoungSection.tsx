@@ -16,18 +16,12 @@ import { ConsentGate } from './ConsentGate';
 const includes: [string, string][] = [
   ['Живые эфиры с ответами на вопросы', 'Live sessions answering your questions'],
   ['Ритуалы ухода', 'Care rituals'],
-  ['Телесные практики и практики исцеления тела', 'Body practices and healing practices'],
-  ['Биохакинг, который работает', 'Biohacking that actually works'],
-  ['Мои любимые тренировки', 'My favourite workouts'],
-  [
-    'Средства красоты, проверенные годами, и новые открытия',
-    'Beauty products proven over years, and new finds',
-  ],
+  ['Телесные практики исцеления тела', 'Body practices for healing'],
+  ['Биохакинг', 'Biohacking'],
+  ['Мои тренировки', 'My workouts'],
+  ['Средства красоты', 'Beauty products'],
   ['Масла, массаж, баня и восстановление', 'Oils, massage, sauna and recovery'],
-  [
-    'Честные разборы: что работает, а что просто красиво упаковано',
-    'Honest reviews: what works and what is merely well packaged',
-  ],
+  ['Честные разборы', 'Honest reviews'],
 ];
 
 export function ForeverYoungSection() {
