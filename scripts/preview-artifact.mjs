@@ -67,9 +67,17 @@ await build({ logLevel: 'warn', build: { outDir: OUT_DIR, emptyOutDir: true } })
 const files = walk(OUT_DIR);
 const html = readFileSync(join(OUT_DIR, 'index.html'), 'utf8');
 
-const cssPath = files.find((f) => f.endsWith('.css'));
-const jsPath = files.find((f) => f.endsWith('.js'));
-if (!cssPath || !jsPath) throw new Error('в сборке нет css или js — менялась конфигурация?');
+// Берём ровно то, на что ссылается страница, а не первый попавшийся файл:
+// рядом лежат куски отложенных страниц (дашборд), и раньше упаковщик хватал
+// их — превью собиралось пустым и молчало об этом.
+const asset = (re, what) => {
+  const name = html.match(re)?.[1]?.split('/').pop();
+  const path = name && files.find((f) => f.endsWith(name));
+  if (!path) throw new Error(`в сборке не найден ${what} — менялась конфигурация?`);
+  return path;
+};
+const cssPath = asset(/<link rel="stylesheet"[^>]*href="([^"]+)"/, 'главный css');
+const jsPath = asset(/<script type="module"[^>]*src="([^"]+)"/, 'главный js');
 
 // The stylesheet's font references are relative to the stylesheet itself
 // (url(./name.woff2)); everything else is referenced as assets/name.
