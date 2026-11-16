@@ -5,21 +5,29 @@ import { ConsentGate } from './ConsentGate';
 
 /**
  * Пятый формат. Текст — целиком авторский, слово в слово; правлены только
- * опечатка и тире. Цены и ссылка на оплату ещё не заведены: блок сознательно
- * обходится без них, вместо того чтобы показывать выдуманные.
+ * тире и заглавные, которыми в переписке выделяют голосом, а на странице
+ * выделяет вёрстка. Цена и срок ещё не объявлены: блок сознательно обходится
+ * без них, вместо того чтобы показывать выдуманные.
+ *
+ * Порядок как в клубе: сверху — о чём канал и доказательство, ниже во всю
+ * ширину — что входит в подписку, и только потом кнопка. Сначала человек
+ * понимает, потом платит.
  */
 const includes: [string, string][] = [
+  ['Живые эфиры с ответами на вопросы', 'Live sessions answering your questions'],
+  ['Ритуалы ухода', 'Care rituals'],
+  ['Телесные практики и практики исцеления тела', 'Body practices and healing practices'],
+  ['Биохакинг, который работает', 'Biohacking that actually works'],
+  ['Мои любимые тренировки', 'My favourite workouts'],
   [
-    'Живые эфиры с ответами на вопросы — питание, красота, спорт, нестарение',
-    'Live sessions answering your questions on nutrition, beauty, training and staying young',
+    'Средства красоты, проверенные годами, и новые открытия',
+    'Beauty products proven over years, and new finds',
   ],
-  ['Чат единомышленников', 'A chat of like-minded people'],
+  ['Масла, массаж, баня и восстановление', 'Oils, massage, sauna and recovery'],
   [
-    'Обмен уникальной информацией об осознанном отношении к телу',
-    'Sharing rare knowledge on a conscious relationship with the body',
+    'Честные разборы: что работает, а что просто красиво упаковано',
+    'Honest reviews: what works and what is merely well packaged',
   ],
-  ['Тренировки и практики', 'Workouts and practices'],
-  ['Инструкции по красоте и здоровью', 'Beauty and health guides'],
 ];
 
 export function ForeverYoungSection() {
@@ -30,12 +38,24 @@ export function ForeverYoungSection() {
           <div className="prod-main">
             <span className="taglead"><T ru="Новый клуб по подписке" en="A new subscription club" /></span>
             <h2 className="dh dh2">Forever Young</h2>
-            {/* Одним абзацем: обещание обмануть время и личное доказательство
-                стоят в нём подряд, без паузы между ними. */}
+            {/* Первая фраза — обещание, вторая — доказательство. Дальше можно
+                не читать и всё равно понять, о чём канал. */}
             <p className="lede">
               <T
-                ru="Мой второй закрытый канал — о теле и заботе о нём, ведь это наш храм души. Уникальная информация о том, как через осознанный подход и присутствие в настоящем оставаться молодым — о том, как буквально обмануть время. Это мой личный опыт — тренировки, питание, биохакинг, красота, уход за телом и лицом. Всё, что помогает мне выглядеть на 10–15 лет моложе. Мне 38."
-                en="My second private channel — about the body and caring for it, since it is the temple of the soul. Rare knowledge on staying young through a conscious approach and presence in the now: on how to genuinely outwit time. This is my own experience — training, nutrition, biohacking, beauty, caring for the body and the face. Everything that helps me look 10 to 15 years younger. I am 38."
+                ru="Этот канал о том, как обмануть время. О теле и заботе о нём, о том, как через осознанный подход и присутствие в настоящем оставаться молодым."
+                en="This channel is about outwitting time. About the body and caring for it — about staying young through a conscious approach and presence in the now."
+              />
+            </p>
+            <p className="p">
+              <T
+                ru="Это мой личный опыт — тренировки, питание, биохакинг, красота, уход за телом и лицом. Всё, что помогает мне выглядеть на 10–15 лет моложе."
+                en="This is my own experience — training, nutrition, biohacking, beauty, caring for the body and the face. Everything that helps me look 10 to 15 years younger."
+              />
+            </p>
+            <p className="p">
+              <T
+                ru="Здесь я буду говорить об уходе за телом и о его исцелении. Тело умеет восстанавливаться само, и это нормально: кожа обновляется, ткани заживают, и часто ему не нужны ни таблетки, ни добавки. Наша задача — не мешать и дать то, что нужно: сон, движение, тепло, дыхание, спокойствие, любовь."
+                en="Here I will talk about caring for the body and about healing it. The body knows how to recover on its own, and that is normal: skin renews itself, tissue heals, and often it needs neither pills nor supplements. Our job is to stay out of its way and give it what it needs — sleep, movement, warmth, breath, calm, love."
               />
             </p>
             {/* Плашкой — вывод, которым раздел закрывается. */}
@@ -47,17 +67,6 @@ export function ForeverYoungSection() {
                 />
               </p>
             </div>
-            <div className="block">
-              <span className="klabel"><T ru="Что включено в подписку" en="What the subscription includes" /></span>
-              <div className="list" style={{ marginTop: 4 }}>
-                {includes.map(([ru, en]) => (
-                  <div className="li" key={ru}>
-                    <span className="li-mk"></span>
-                    <span><T ru={ru} en={en} /></span>
-                  </div>
-                ))}
-              </div>
-            </div>
           </div>
           <div className="prod-right">
             <div className="prod-photo">
@@ -66,15 +75,43 @@ export function ForeverYoungSection() {
           </div>
         </div>
 
-        <div className="mm-cta">
-          <ConsentGate
-            href={links.foreverYoungJoin}
-            product="forever-young"
-            slugs={['oferta', 'disclaimer']}
-            buttonStyle={{ width: 'auto', padding: '16px 28px' }}
-          >
-            <T ru="Присоединиться" en="Join" />
-          </ConsentGate>
+        <div className="club-stack">
+          <div className="mm-card">
+            <span className="klabel"><T ru="Что включено в подписку" en="What the subscription includes" /></span>
+            <div className="list list-2col" style={{ marginTop: 16 }}>
+              {includes.map(([ru, en]) => (
+                <div className="li" key={ru}>
+                  <span className="li-mk"></span>
+                  <span><T ru={ru} en={en} /></span>
+                </div>
+              ))}
+            </div>
+            <p className="card-note card-note-lead">
+              <T
+                ru="Но самое крутое — сообщество, которое делится своими лайфхаками о том, как долгие годы оставаться молодым."
+                en="But the best part is the community, sharing what keeps them young year after year."
+              />
+            </p>
+          </div>
+
+          {/* Своими словами о том, чего в подписке нет: честность здесь
+              продаёт лучше обещаний, да и дисклеймер сайта говорит то же. */}
+          <p className="fy-honest">
+            <T
+              ru="Я не врач и не косметолог. Но я выгляжу и чувствую себя намного лучше, чем десять лет назад, — и это может каждый. Делюсь только тем, что проверила на себе."
+              en="I am not a doctor or a cosmetologist. But I look and feel far better than I did ten years ago — and anyone can. I share only what I have tested on myself."
+            />
+          </p>
+
+          <div className="mm-cta">
+            <ConsentGate
+              href={links.foreverYoungJoin}
+              product="forever-young"
+              slugs={['oferta', 'disclaimer']}
+            >
+              <T ru="Присоединиться" en="Join" />
+            </ConsentGate>
+          </div>
         </div>
       </div>
     </section>

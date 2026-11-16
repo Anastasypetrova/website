@@ -444,6 +444,11 @@ em.accent{font-family:var(--font-script)!important;font-weight:400!important;fon
    её холодный серо-голубой полутон (#c7cfd5), разбавленный до оттенка
    страницы. На тёплом кремовом фоне читается отчётливо голубым. */
 #forever-young .prod-main .callout{background:rgba(199,207,213,.6)}
+/* Фраза про сообщество — вывод из списка, а не ещё один его пункт: отделена
+   чертой и набрана крупнее примечаний. */
+.card-note-lead{margin-top:18px;padding-top:16px;border-top:1px solid var(--border-subtle);font-style:normal;font-size:calc(14.5px*var(--ts,1));color:var(--taupe-700)}
+/* Оговорка «я не врач» — голосом автора, вполголоса. */
+.fy-honest{margin:0;align-self:flex-start;font-size:calc(14px*var(--ts,1));line-height:1.6;color:var(--taupe-600);max-width:72ch}
 #mentorship .prod-grid{gap:0}
 #mentorship .prod-main{padding-right:32px;justify-content:flex-start}
 #mastermind .prod-main{gap:10px;padding-right:32px}
