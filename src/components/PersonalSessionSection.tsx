@@ -60,7 +60,7 @@ export function PersonalSessionSection({ lead = false }: { lead?: boolean } = {}
           </div>
           <div className="prod-right">
             <div className="prod-photo">
-              <Photo name="consultation" alt="Личная консультация" />
+              <Photo name="consultation" alt={{ ru: 'Личная консультация: Анастасия Петрова и клиентка разговаривают в креслах у окна', en: 'A personal consultation: Anastasia Petrova and a client talking in armchairs by a window' }} />
             </div>
           </div>
         </div>

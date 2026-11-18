@@ -111,7 +111,7 @@ export function ClubSection({ lead = false }: { lead?: boolean } = {}) {
           </div>
           <div className="prod-right">
             <div className="prod-photo">
-              <Photo name="club" alt="Samadhi Club" />
+              <Photo name="club" alt={{ ru: 'Анастасия Петрова ведёт эфир Samadhi Club: ноутбук с участниками на веранде', en: 'Anastasia Petrova hosting a Samadhi Club live session: a laptop full of participants on a veranda' }} />
             </div>
           </div>
         </div>

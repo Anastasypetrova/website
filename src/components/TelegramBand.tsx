@@ -8,7 +8,7 @@ export function TelegramBand() {
   return (
     <section className="sec pullphoto" id="tg-subscribe">
       <div className="pullphoto-bg">
-        <Photo name="telegram" alt="Анастасия Петрова" objectPosition="center 15%" />
+        <Photo name="telegram" alt={{ ru: 'Анастасия Петрова с белыми цветами у лица', en: 'Anastasia Petrova with white flowers at her face' }} objectPosition="center 15%" />
       </div>
       <div className="pullphoto-sc"></div>
       <div className="wrap-n pull">

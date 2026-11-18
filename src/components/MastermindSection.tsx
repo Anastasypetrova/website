@@ -72,7 +72,7 @@ export function MastermindSection({ lead = false }: { lead?: boolean } = {}) {
           </div>
           <div className="prod-right">
             <div className="prod-photo">
-              <Photo name="mastermind" alt="Мастермайнд-группа" />
+              <Photo name="mastermind" alt={{ ru: 'Участники мастермайнд-группы на онлайн-встрече', en: 'Members of the mastermind group on an online call' }} />
             </div>
           </div>
         </div>

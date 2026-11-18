@@ -71,7 +71,7 @@ export function ForeverYoungSection({ lead = false }: { lead?: boolean } = {}) {
           </div>
           <div className="prod-right">
             <div className="prod-photo">
-              <Photo name="foreveryoung" alt="Forever Young" />
+              <Photo name="foreveryoung" alt={{ ru: 'Анастасия Петрова улыбается, руки за головой — чёрно-белый кадр', en: 'Anastasia Petrova smiling, hands behind her head — a black and white shot' }} />
             </div>
           </div>
         </div>

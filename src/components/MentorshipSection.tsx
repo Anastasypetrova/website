@@ -65,7 +65,7 @@ export function MentorshipSection({ lead = false }: { lead?: boolean } = {}) {
           </div>
           <div className="prod-right">
             <div className="prod-photo">
-              <Photo name="mentorship" alt="Индивидуальное менторство" />
+              <Photo name="mentorship" alt={{ ru: 'Анастасия Петрова обнимает участницу индивидуального менторства', en: 'Anastasia Petrova hugging a mentorship participant' }} />
             </div>
           </div>
         </div>

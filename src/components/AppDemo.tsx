@@ -71,7 +71,7 @@ export function AppDemo() {
         aria-label={lang === 'en' ? 'See the app screens' : 'Посмотреть экраны приложения'}
       >
         <span className="appicon-img">
-          <Photo name="appicon" alt="Samadhi Club" />
+          <Photo name="appicon" alt={{ ru: 'Иконка приложения Samadhi Club на рабочем столе', en: 'The Samadhi Club app icon on a home screen' }} />
           {/* Блик пробегает по иконке при наведении — так ведут себя стеклянные
               поверхности, и рука тянется проверить. */}
           <span className="appicon-gloss" aria-hidden="true" />

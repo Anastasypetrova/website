@@ -1,4 +1,8 @@
 User-agent: *
 Allow: /
 
+# Метки источника (?from=youtube, utm-метки) не меняют страницу: для Яндекса
+# это указание считать такие адреса одной страницей, а не копиями.
+Clean-param: from&utm_source&utm_medium&utm_campaign&utm_content&utm_term&fbclid&yclid
+
 Sitemap: https://anastasia-samadhi.club/sitemap.xml

@@ -7,7 +7,7 @@ export function Hero() {
   return (
     <section className="hero" id="top">
       <div className="hero-bg">
-        <Photo name="hero" alt="Анастасия Петрова" objectPosition="center 34%" priority />
+        <Photo name="hero" alt={{ ru: 'Анастасия Петрова в белой рубашке, лицо подставлено солнцу', en: 'Anastasia Petrova in a white shirt, face turned to the sun' }} objectPosition="center 34%" priority />
       </div>
       <div className="hero-scrim"></div>
       <div className="hero-in">

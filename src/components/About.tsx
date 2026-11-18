@@ -11,7 +11,7 @@ export function About() {
             <T ru={<><em className="accent">Обо</em> мне</>} en={<><em className="accent">About</em> me</>} />
           </h2>
           <div className="arch" style={{ borderRadius: 0 }}>
-            <Photo name="about" alt="Анастасия Петрова" />
+            <Photo name="about" alt={{ ru: 'Анастасия Петрова, чёрно-белый портрет: руки сложены, взгляд в сторону', en: 'Anastasia Petrova, black and white portrait: hands clasped, looking aside' }} />
           </div>
         </div>
         <div className="about-body">
