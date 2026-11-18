@@ -63,8 +63,8 @@ export function ForeverYoungSection({ lead = false }: { lead?: boolean } = {}) {
             <div className="callout">
               <p>
                 <T
-                  ru="Потому что физическое и ментальное не могут существовать друг без друга, как две стороны одной медали."
-                  en="Because the physical and the mental cannot exist without each other — two sides of one coin."
+                  ru="Потому что физическое и ментальное не могут существовать друг без друга, как две стороны одной медали. Это холистический подход к красоте и здоровью."
+                  en="Because the physical and the mental cannot exist without each other — two sides of one coin. This is a holistic approach to beauty and health."
                 />
               </p>
             </div>

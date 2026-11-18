@@ -118,8 +118,8 @@ const allServices: ServiceDef[] = [
       en: 'Forever Young — a club about the body | Anastasia Petrova',
     },
     description: {
-      ru: 'Клуб по подписке о теле и заботе о нём: тренировки, питание, биохакинг, уход, масла и восстановление. Мой личный опыт. 5 € в месяц.',
-      en: 'A subscription club about the body and caring for it: training, nutrition, biohacking, beauty, oils and recovery. My own experience. €5 a month.',
+      ru: 'Холистический подход к красоте и здоровью: тренировки, питание, биохакинг, уход за телом и лицом, масла и восстановление. Мой личный опыт. 5 € в месяц.',
+      en: 'A holistic approach to beauty and health: training, nutrition, biohacking, caring for the body and face, oils and recovery. My own experience. €5 a month.',
     },
   },
 ];
