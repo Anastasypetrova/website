@@ -365,3 +365,13 @@ button{font:inherit;color:inherit}
    element right before the caption keeps it hidden when a label sits in
    between, as it does on the before/after pair. */
 .ph:has(img) figcaption{display:none}
+
+/* ---------- the mark on its own ---------- */
+/* The header carries the mark alone: the name is set at full size on the
+   first screen, and spelling it out again two lines above is a repetition.
+   The footer keeps the full lockup, where the brand should be named. */
+.logo-mark{gap:0}
+.logo-mark svg{width:46px;height:46px;transition:opacity .2s}
+.logo-mark:hover svg{opacity:.75}
+@media(max-width:1180px){.logo-mark svg{width:42px;height:42px}}
+@media(max-width:560px){.logo-mark svg{width:38px;height:38px}}
