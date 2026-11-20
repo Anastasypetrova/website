@@ -140,10 +140,18 @@ button{font:inherit;color:inherit}
 .hero-cta{display:flex;flex-wrap:wrap;gap:16px}
 
 /* ---------- areas strip ("where we build") ---------- */
-.strip{border-bottom:1px solid var(--line);padding-block:40px 48px}
-.strip .eyebrow{margin-bottom:28px}
-.strip-row{display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px 40px;font-family:var(--display);font-weight:600;text-transform:uppercase;letter-spacing:.08em;font-size:clamp(13px,1.2vw,16px);color:var(--ink-2)}
-@media(max-width:900px){.strip-row{justify-content:flex-start;font-size:22px}}
+/* The specification row from the brochure's product pages: a quiet label
+   over the value it names, columns divided by a hairline. Four facts spread
+   edge to edge read as stray words; in this frame they read as a spec. */
+.strip{border-bottom:1px solid var(--line);padding-block:clamp(28px,3vw,44px)}
+.specs{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(18px,2.4vw,40px)}
+.spec{display:flex;flex-direction:column;gap:9px;padding-left:clamp(18px,2.4vw,40px);border-left:1px solid var(--line)}
+.spec:first-child{padding-left:0;border-left:0}
+.spec-k{font-family:var(--display);font-weight:600;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.spec-v{font-family:var(--display);font-weight:700;font-size:clamp(16px,1.4vw,20px);line-height:1.25;letter-spacing:-.015em;color:var(--ink)}
+/* Two up, then one: whichever item starts a row drops the divider. */
+@media(max-width:860px){.specs{grid-template-columns:1fr 1fr;gap:26px 22px}.spec:nth-child(3){padding-left:0;border-left:0}}
+@media(max-width:460px){.specs{grid-template-columns:1fr;gap:0}.spec{padding:16px 0 0;border-left:0;border-top:1px solid var(--line);margin-top:16px}.spec:first-child{border-top:0;margin-top:0;padding-top:0}}
 
 /* ---------- photo placeholders ---------- */
 .ph{position:relative;margin:0;overflow:hidden;background:linear-gradient(160deg,var(--wood) 0%,var(--wood-d) 100%)}
