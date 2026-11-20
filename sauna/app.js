@@ -3,16 +3,15 @@
    Edit CONFIG below — everything else picks it up.
    ------------------------------------------------------------------ */
 const CONFIG = {
-  brand: 'NORDA',
+  brand: 'Anywhere Sauna',
   // WhatsApp number in international format, digits only (no +, spaces or dashes).
-  whatsapp: '971500000000',
-  whatsappDisplay: '+971 50 000 0000',
-  email: 'hello@example.com',
-  instagram: 'norda.sauna',
+  whatsapp: '971543258890',
+  whatsappDisplay: '+971 54 325 8890',
+  instagram: 'anywhere_sauna',
   // Text that opens in WhatsApp when someone taps a "Chat" button.
   waGreeting: {
-    en: 'Hi! I’m interested in a custom sauna. Could you tell me more?',
-    ru: 'Здравствуйте! Интересует сауна на заказ. Расскажите подробнее?',
+    en: 'Hi! I’m interested in a sauna. Could you tell me more?',
+    ru: 'Здравствуйте! Интересует сауна. Расскажите подробнее?',
   },
 };
 
@@ -24,8 +23,7 @@ const CONFIG = {
   /* ---------- brand + contacts from CONFIG ---------- */
   $$('[data-brand]').forEach((el) => { el.textContent = CONFIG.brand; });
   $$('[data-phone-display]').forEach((el) => { el.textContent = CONFIG.whatsappDisplay; });
-  $$('[data-email]').forEach((el) => { el.href = 'mailto:' + CONFIG.email; });
-  $$('[data-email-display]').forEach((el) => { el.textContent = CONFIG.email; });
+  $$('[data-tel]').forEach((el) => { el.href = 'tel:+' + CONFIG.whatsapp; });
   $$('[data-ig]').forEach((el) => { el.href = 'https://instagram.com/' + CONFIG.instagram; });
   $$('[data-ig-display]').forEach((el) => { el.textContent = '@' + CONFIG.instagram; });
 
@@ -60,7 +58,7 @@ const CONFIG = {
     html.dataset.lang = lang;
     html.lang = lang;
     $$('[data-lang-toggle]').forEach((b) => { b.textContent = lang === 'ru' ? 'EN' : 'RU'; });
-    try { localStorage.setItem('norda-lang', lang); } catch (_) {}
+    try { localStorage.setItem('anywhere-lang', lang); } catch (_) {}
     setWaLinks();
   }
 
@@ -68,7 +66,7 @@ const CONFIG = {
     b.addEventListener('click', () => setLang(html.dataset.lang === 'ru' ? 'en' : 'ru')));
 
   let saved = null;
-  try { saved = localStorage.getItem('norda-lang'); } catch (_) {}
+  try { saved = localStorage.getItem('anywhere-lang'); } catch (_) {}
   if (!saved && /^ru\b/i.test(navigator.language || '')) saved = 'ru';
   setLang(saved === 'ru' ? 'ru' : 'en');
 
