@@ -176,6 +176,9 @@
             <div class="spec"><span class="spec-k" data-i="m1_k3">Heater</span><span class="spec-v" data-i="m1_v3">Harvia 4.5 kW</span></div>
           </div>
           <div class="model-foot rv">
+            <button class="btn btn-video" type="button" data-video="DanhCAOuNV8">
+              <span class="play" aria-hidden="true"></span><span data-i="m_video">Watch video</span>
+            </button>
             <a class="btn btn-clay" data-wa href="#"><span data-i="m_cta">Ask about this sauna</span> <span class="arr">→</span></a>
             <p class="p-s" data-i="m_note">100% crafted in the UAE. Built to last.</p>
           </div>
@@ -203,6 +206,9 @@
             <div class="spec"><span class="spec-k" data-i="m2_k3">Heater</span><span class="spec-v" data-i="m2_v3">Harvia 6.0 kW</span></div>
           </div>
           <div class="model-foot rv">
+            <button class="btn btn-video" type="button" data-video="DfnKi26K2aM">
+              <span class="play" aria-hidden="true"></span><span data-i="m_video">Watch video</span>
+            </button>
             <a class="btn btn-clay" data-wa href="#"><span data-i="m_cta">Ask about this sauna</span> <span class="arr">→</span></a>
             <p class="p-s" data-i="m_note">100% crafted in the UAE. Built to last.</p>
           </div>
@@ -227,6 +233,9 @@
             <div class="spec"><span class="spec-k" data-i="m3_k3">Quotation</span><span class="spec-v" data-i="m3_v3">After a site visit</span></div>
           </div>
           <div class="model-foot rv">
+            <button class="btn btn-video" type="button" data-video="DcqgzuDCxE1">
+              <span class="play" aria-hidden="true"></span><span data-i="m_video">Watch video</span>
+            </button>
             <a class="btn btn-clay" data-wa href="#"><span data-i="m_cta">Ask about this sauna</span> <span class="arr">→</span></a>
             <p class="p-s" data-i="m_note">100% crafted in the UAE. Built to last.</p>
           </div>
@@ -615,6 +624,21 @@
     <a class="wa-float" data-wa href="#" aria-label="Chat on WhatsApp">
       <svg viewBox="0 0 32 32" fill="currentColor" aria-hidden="true"><path d="M16 3C9 3 3.3 8.7 3.3 15.7c0 2.5.7 4.9 2 7L3 29l6.5-2.2a12.6 12.6 0 0 0 6.5 1.8c7 0 12.7-5.7 12.7-12.7S23 3 16 3zm0 23.2c-2 0-4-.6-5.7-1.6l-.4-.2-3.9 1.3 1.3-3.8-.3-.4a10.4 10.4 0 0 1-1.7-5.8C5.3 9.9 10.1 5.2 16 5.2s10.7 4.7 10.7 10.5S21.9 26.2 16 26.2zm5.8-7.8c-.3-.2-1.9-.9-2.2-1-.3-.1-.5-.2-.7.2l-1 1.2c-.2.2-.4.2-.7.1-.3-.2-1.3-.5-2.5-1.6-.9-.8-1.6-1.8-1.8-2.1-.2-.3 0-.5.1-.6l.5-.6.3-.5c.1-.2 0-.4 0-.6l-1-2.4c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1.1-1.1 2.7s1.2 3.1 1.3 3.3c.2.2 2.3 3.5 5.6 4.9 2.8 1.2 3.3 1 3.9.9.6-.1 1.9-.8 2.1-1.5.3-.7.3-1.4.2-1.5-.1-.2-.3-.3-.6-.4z"/></svg>
     </a>
+
+
+    <!-- The reel plays here. Its src is only set on open, so nothing is
+         requested from Instagram until someone asks for the video, and
+         clearing it on close stops playback. -->
+    <div class="vmodal" data-vmodal hidden>
+      <div class="vmodal-scrim" data-vclose></div>
+      <div class="vmodal-box" role="dialog" aria-modal="true" aria-label="Video">
+        <button class="vmodal-close" type="button" data-vclose aria-label="Close video">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 4l12 12M16 4L4 16"/></svg>
+        </button>
+        <div class="vmodal-frame"><iframe data-vframe title="Video" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+        <a class="vmodal-link" data-vlink href="#" target="_blank" rel="noopener"><span data-i="v_open">Open on Instagram</span> <span class="arr">→</span></a>
+      </div>
+    </div>
 
     <script src="ru.js"></script>
     <script src="app.js"></script>

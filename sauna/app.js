@@ -77,7 +77,7 @@ const CONFIG = {
   $$('[data-menu-open]').forEach((b) => b.addEventListener('click', openMenu));
   $$('[data-menu-close]').forEach((b) => b.addEventListener('click', closeMenu));
   $$('a', sheet).forEach((a) => a.addEventListener('click', closeMenu));
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenu(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { closeMenu(); closeVideo(); } });
 
   /* ---------- contact form → WhatsApp ---------- */
   const form = $('[data-form]');
@@ -106,6 +106,29 @@ const CONFIG = {
       window.open(waLink(lines.filter(Boolean).join('\n')), '_blank', 'noopener');
     });
   }
+
+  /* ---------- video ---------- */
+  /* Each sauna's "Watch video" opens its reel in one shared player. The
+     iframe gets a src only on open: nothing reaches Instagram until someone
+     asks for a video, and clearing the src on close stops the sound. */
+  const vmodal = $('[data-vmodal]');
+  const vframe = $('[data-vframe]');
+  const vlink = $('[data-vlink]');
+  const openVideo = (id) => {
+    if (!vmodal) return;
+    vframe.src = 'https://www.instagram.com/reel/' + id + '/embed/';
+    vlink.href = 'https://www.instagram.com/reel/' + id + '/';
+    vmodal.hidden = false;
+    document.body.style.overflow = 'hidden';
+  };
+  const closeVideo = () => {
+    if (!vmodal || vmodal.hidden) return;
+    vmodal.hidden = true;
+    vframe.src = '';
+    document.body.style.overflow = '';
+  };
+  $$('[data-video]').forEach((b) => b.addEventListener('click', () => openVideo(b.dataset.video)));
+  $$('[data-vclose]').forEach((b) => b.addEventListener('click', closeVideo));
 
   /* ---------- reveal on scroll ---------- */
   const rv = $$('.rv');
