@@ -42,6 +42,41 @@ const CONFIG = {
   $$('[data-menu-open]').forEach((b) => b.addEventListener('click', openMenu));
   $$('[data-menu-close]').forEach((b) => b.addEventListener('click', closeMenu));
   $$('a', sheet).forEach((a) => a.addEventListener('click', closeMenu));
+  /* ---------- the full-screen clip ---------- */
+  /* "Watch video" plays the file we host, in one shared player. It used to
+     embed an Instagram reel, which regularly failed to load; nothing here
+     leaves the site. The source is attached on open and detached on close,
+     so nothing downloads until someone asks and the sound stops when they
+     are done. */
+  const vmodal = $('[data-vmodal]');
+  const vplayer = $('[data-vplayer]');
+
+  function openVideo(src) {
+    if (!vmodal || !vplayer) return;
+    vplayer.src = src;
+    vmodal.hidden = false;
+    document.body.style.overflow = 'hidden';
+    vplayer.play().catch(() => {});
+  }
+
+  function closeVideo() {
+    if (!vmodal || vmodal.hidden) return;
+    vplayer.pause();
+    vplayer.removeAttribute('src');
+    vplayer.load();
+    vmodal.hidden = true;
+    document.body.style.overflow = '';
+  }
+
+  $$('[data-video]').forEach((b) => b.addEventListener('click', () => openVideo(b.dataset.video)));
+  $$('[data-vclose]').forEach((b) => b.addEventListener('click', closeVideo));
+  /* A clip that will not play is a dead button, so it takes itself away. */
+  if (vplayer) vplayer.addEventListener('error', () => {
+    const src = vplayer.currentSrc || vplayer.getAttribute('src');
+    closeVideo();
+    if (src) $$('[data-video]').forEach((b) => { if (src.endsWith(b.dataset.video)) b.remove(); });
+  });
+
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { closeMenu(); closeVideo(); } });
 
   /* ---------- contact form → WhatsApp ---------- */
@@ -62,28 +97,6 @@ const CONFIG = {
     });
   }
 
-  /* ---------- video ---------- */
-  /* Each sauna's "Watch video" opens its reel in one shared player. The
-     iframe gets a src only on open: nothing reaches Instagram until someone
-     asks for a video, and clearing the src on close stops the sound. */
-  const vmodal = $('[data-vmodal]');
-  const vframe = $('[data-vframe]');
-  const vlink = $('[data-vlink]');
-  const openVideo = (id) => {
-    if (!vmodal) return;
-    vframe.src = 'https://www.instagram.com/reel/' + id + '/embed/';
-    vlink.href = 'https://www.instagram.com/reel/' + id + '/';
-    vmodal.hidden = false;
-    document.body.style.overflow = 'hidden';
-  };
-  const closeVideo = () => {
-    if (!vmodal || vmodal.hidden) return;
-    vmodal.hidden = true;
-    vframe.src = '';
-    document.body.style.overflow = '';
-  };
-  $$('[data-video]').forEach((b) => b.addEventListener('click', () => openVideo(b.dataset.video)));
-  $$('[data-vclose]').forEach((b) => b.addEventListener('click', closeVideo));
 
   /* ---------- clips that play as you scroll ---------- */
   /* Each spread's main picture is the poster of a short clip. The clip plays

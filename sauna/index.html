@@ -242,7 +242,11 @@
             <figure class="ph"><img src="images/two-terrace.jpg" width="896" height="1200" alt="Two-person outdoor sauna on a villa terrace in Dubai" onerror="this.remove()" loading="lazy" decoding="async" /><figcaption>images/two-terrace.jpg</figcaption></figure>
             <figure class="ph"><img src="images/two-pool.jpg" width="896" height="1200" alt="Two-person sauna standing beside a swimming pool" onerror="this.remove()" loading="lazy" decoding="async" /><figcaption>images/two-pool.jpg</figcaption></figure>
             <figure class="ph"><img src="images/two-interior.jpg" width="1050" height="1400" alt="Inside the two-person sauna: Harvia heater and infrared panels" onerror="this.remove()" loading="lazy" decoding="async" /><figcaption>images/two-interior.jpg</figcaption></figure>
-            <figure class="ph ph-tall"><img src="images/two-inside.jpg" width="900" height="1600" alt="Someone sitting inside the lit sauna at night" onerror="this.remove()" loading="lazy" decoding="async" /><figcaption>images/two-inside.jpg</figcaption></figure>
+            <figure class="ph model-clip ph-tall">
+              <video class="reel" data-reel src="videos/two-interior.mp4" poster="images/two-interior-poster.jpg" muted loop playsinline preload="metadata"></video>
+              <button class="sound-btn" type="button" data-sound hidden aria-label="Turn sound on"><span class="sound-off" aria-hidden="true"></span></button>
+              <figcaption>videos/two-interior.mp4<br/>9:16</figcaption>
+            </figure>
             <figure class="ph ph-tall"><img src="images/two-rooftop.jpg" width="920" height="1600" alt="Two-person sauna installed on a roof terrace in Dubai" onerror="this.remove()" loading="lazy" decoding="async" /><figcaption>images/two-rooftop.jpg</figcaption></figure>
             <figure class="ph ph-tall"><img src="images/two-dusk.jpg" width="1200" height="1530" alt="The sauna lit on a lawn under a pink evening sky" onerror="this.remove()" loading="lazy" decoding="async" /><figcaption>images/two-dusk.jpg</figcaption></figure>
             <figure class="ph model-clip ph-tall">
@@ -262,7 +266,7 @@
             <div class="spec"><span class="spec-k">Heater</span><span class="spec-v">Harvia 4.5 kW</span></div>
           </div>
           <div class="model-foot rv">
-            <button class="btn btn-video" type="button" data-video="DanhCAOuNV8">
+            <button class="btn btn-video" type="button" data-video="videos/two-person.mp4">
               <span class="play" aria-hidden="true"></span><span>Watch video</span>
             </button>
             <a class="btn btn-clay" data-wa href="#"><span>Ask about this sauna</span> <span class="arr">→</span></a>
@@ -297,7 +301,7 @@
             <div class="spec"><span class="spec-k">Heater</span><span class="spec-v">Harvia 6.0 kW</span></div>
           </div>
           <div class="model-foot rv">
-            <button class="btn btn-video" type="button" data-video="DfnKi26K2aM">
+            <button class="btn btn-video" type="button" data-video="videos/four-person.mp4">
               <span class="play" aria-hidden="true"></span><span>Watch video</span>
             </button>
             <a class="btn btn-clay" data-wa href="#"><span>Ask about this sauna</span> <span class="arr">→</span></a>
@@ -329,9 +333,6 @@
             <div class="spec"><span class="spec-k">Quotation</span><span class="spec-v">After a site visit</span></div>
           </div>
           <div class="model-foot rv">
-            <button class="btn btn-video" type="button" data-video="DcqgzuDCxE1">
-              <span class="play" aria-hidden="true"></span><span>Watch video</span>
-            </button>
             <a class="btn btn-clay" data-wa href="#"><span>Ask about this sauna</span> <span class="arr">→</span></a>
             <p class="p-s">100% crafted in the UAE. Built to last.</p>
           </div>
@@ -703,14 +704,15 @@
     <!-- The reel plays here. Its src is only set on open, so nothing is
          requested from Instagram until someone asks for the video, and
          clearing it on close stops playback. -->
+    <!-- One shared player for the clips. The file is attached only when the
+         button is pressed, and detached on close so the sound stops. -->
     <div class="vmodal" data-vmodal hidden>
       <div class="vmodal-scrim" data-vclose></div>
       <div class="vmodal-box" role="dialog" aria-modal="true" aria-label="Video">
         <button class="vmodal-close" type="button" data-vclose aria-label="Close video">
-          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 4l12 12M16 4L4 16"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
         </button>
-        <div class="vmodal-frame"><iframe data-vframe title="Video" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
-        <a class="vmodal-link" data-vlink href="#" target="_blank" rel="noopener"><span>Open on Instagram</span> <span class="arr">→</span></a>
+        <div class="vmodal-frame"><video data-vplayer controls playsinline preload="none"></video></div>
       </div>
     </div>
 
