@@ -105,11 +105,13 @@ button{font:inherit;color:inherit}
 .mark{width:52px;height:52px;display:block;color:var(--ink)}
 .logo-name{font-family:var(--display);font-weight:800;font-size:23px;letter-spacing:-.02em;line-height:1}
 .logo-sub{font-family:var(--label);font-weight:600;font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-top:5px;display:block}
-.nav-links{display:flex;align-items:center;gap:clamp(20px,2.4vw,44px)}
-.nav-links a{font-size:14px;letter-spacing:.02em;color:var(--ink-2);transition:color .2s}
+.nav-links{display:flex;align-items:center;gap:clamp(18px,2.2vw,38px)}
+/* Small caps, widely tracked: the header reads as a label strip rather than
+   as a row of sentences, and the words line up with the eyebrows below. */
+.nav-links a{font-size:12px;font-weight:500;letter-spacing:.17em;text-transform:uppercase;color:var(--ink-2);transition:color .2s}
 .nav-links a:hover{color:var(--ink)}
 .nav-right{display:flex;align-items:center;gap:16px}
-.nav-cta{padding:12px 24px;font-size:14px;border-radius:999px;border:1px solid var(--gold);color:var(--gold);transition:background .25s,color .25s,border-color .25s}
+.nav-cta{padding:12px 24px;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;border-radius:999px;border:1px solid var(--gold);color:var(--gold);transition:background .25s,color .25s,border-color .25s}
 .nav-cta:hover{background:var(--gold);color:#0D0B09;border-color:var(--gold)}
 .burger{display:none;width:46px;height:46px;border-radius:50%;border:1px solid var(--line-strong);background:transparent;align-items:center;justify-content:center;cursor:pointer}
 .burger svg{width:20px;height:20px}
