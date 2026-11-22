@@ -3,21 +3,16 @@
    Design tokens live here. Change a colour once, it changes everywhere.
    ------------------------------------------------------------------ */
 
-/* Self-hosted Inter (latin + cyrillic), the brochure's typeface. 800 sets
+/* Self-hosted Inter (latin), the brochure's typeface. 800 sets
    the display headings, 700 the labels, 400/500 the running copy. Nothing
    is fetched from Google at runtime. */
-@font-face{font-family:'Inter';font-style:normal;font-weight:400;font-display:swap;src:url('./fonts/inter-400-cyrillic.woff2') format('woff2');unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
 @font-face{font-family:'Inter';font-style:normal;font-weight:400;font-display:swap;src:url('./fonts/inter-400-latin.woff2') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
-@font-face{font-family:'Inter';font-style:normal;font-weight:500;font-display:swap;src:url('./fonts/inter-500-cyrillic.woff2') format('woff2');unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
 @font-face{font-family:'Inter';font-style:normal;font-weight:500;font-display:swap;src:url('./fonts/inter-500-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
 @font-face{font-family:'Inter';font-style:normal;font-weight:500;font-display:swap;src:url('./fonts/inter-500-latin.woff2') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
-@font-face{font-family:'Inter';font-style:normal;font-weight:600;font-display:swap;src:url('./fonts/inter-600-cyrillic.woff2') format('woff2');unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
 @font-face{font-family:'Inter';font-style:normal;font-weight:600;font-display:swap;src:url('./fonts/inter-600-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
 @font-face{font-family:'Inter';font-style:normal;font-weight:600;font-display:swap;src:url('./fonts/inter-600-latin.woff2') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
-@font-face{font-family:'Inter';font-style:normal;font-weight:700;font-display:swap;src:url('./fonts/inter-700-cyrillic.woff2') format('woff2');unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
 @font-face{font-family:'Inter';font-style:normal;font-weight:700;font-display:swap;src:url('./fonts/inter-700-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
 @font-face{font-family:'Inter';font-style:normal;font-weight:700;font-display:swap;src:url('./fonts/inter-700-latin.woff2') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
-@font-face{font-family:'Inter';font-style:normal;font-weight:800;font-display:swap;src:url('./fonts/inter-800-cyrillic.woff2') format('woff2');unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
 @font-face{font-family:'Inter';font-style:normal;font-weight:800;font-display:swap;src:url('./fonts/inter-800-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
 @font-face{font-family:'Inter';font-style:normal;font-weight:800;font-display:swap;src:url('./fonts/inter-800-latin.woff2') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
 
@@ -111,8 +106,6 @@ button{font:inherit;color:inherit}
 .nav-links a{font-size:17px;color:var(--ink-2);transition:color .2s}
 .nav-links a:hover{color:var(--ink)}
 .nav-right{display:flex;align-items:center;gap:16px}
-.lang{width:56px;height:44px;border-radius:999px;border:1px solid var(--line-strong);background:transparent;font-family:var(--label);font-weight:600;font-size:13px;letter-spacing:.06em;cursor:pointer;color:var(--ink-2);transition:background .2s,color .2s,border-color .2s}
-.lang:hover{background:var(--ink);color:#0D0B09;border-color:var(--ink)}
 .nav-cta{padding:26px 42px;font-size:19px;border-radius:999px;border:1px solid var(--line-strong);transition:background .25s,color .25s,border-color .25s}
 .nav-cta:hover{background:var(--gold);color:#0D0B09;border-color:var(--gold)}
 .burger{display:none;width:46px;height:46px;border-radius:50%;border:1px solid var(--line-strong);background:transparent;align-items:center;justify-content:center;cursor:pointer}
@@ -131,8 +124,10 @@ button{font:inherit;color:inherit}
   radial-gradient(80% 70% at 10% 90%,rgba(62,44,30,.9),transparent 70%),
   linear-gradient(180deg,#3A2C21 0%,#5A4231 55%,#2B2119 100%)}
 .hero-bg::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(180deg,rgba(255,255,255,.035) 0 3px,transparent 3px 46px);mix-blend-mode:overlay}
-.hero-bg img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.hero-scrim{position:absolute;inset:0;background:linear-gradient(180deg,rgba(13,11,9,.72) 0%,rgba(13,11,9,.3) 38%,rgba(13,11,9,.88) 100%)}
+.hero-bg img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover}
+/* The sky is the best thing in the cover photograph, so the scrim stays thin
+   over it and only thickens low down, where the words are. */
+.hero-scrim{position:absolute;inset:0;background:linear-gradient(180deg,rgba(13,11,9,.4) 0%,rgba(13,11,9,.22) 34%,rgba(13,11,9,.66) 72%,rgba(13,11,9,.9) 100%)}
 .hero-in{position:relative;width:100%;max-width:var(--wrap);margin-inline:auto;padding:120px var(--gutter) 72px}
 .hero .eyebrow{color:var(--gold);margin-bottom:24px}
 .hero .h1{color:var(--ink);max-width:11em}
@@ -349,7 +344,6 @@ button{font:inherit;color:inherit}
   .logo svg{width:36px;height:36px}
   .logo-name{font-size:17px}
   .logo-sub{font-size:8px;letter-spacing:.2em;margin-top:4px}
-  .lang{width:48px;height:40px}
   .burger{width:40px;height:40px}
 }
 
@@ -373,7 +367,7 @@ button{font:inherit;color:inherit}
 
 /* ---------- the wordmark on the first screen ---------- */
 /* The brochure opens on the name, at the largest size on the page. */
-.hero-name{font-size:clamp(50px,8.6vw,126px);line-height:.92;letter-spacing:-.045em;max-width:8em;margin:0}
+.hero-name{font-size:clamp(50px,8.6vw,126px);line-height:.9;letter-spacing:-.045em;max-width:5.2em;margin:0}
 
 /* The slot name is a hint for whoever is filling the folder, so it goes away
    as soon as a photograph loads. Matching on the figure rather than on the
@@ -510,3 +504,25 @@ section[id]{scroll-margin-top:calc(var(--nav-h) + 12px)}
 .social{width:44px;height:44px;border-radius:50%;border:1px solid rgba(243,235,223,.4);display:grid;place-items:center;color:var(--ink);transition:background .2s,border-color .2s,color .2s}
 .social:hover{background:var(--gold);border-color:var(--gold);color:#0D0B09}
 .social svg{width:21px;height:21px}
+
+/* ---------- cover framing ---------- */
+/* The cabin stands in the middle of the photograph and stays there. The name
+   is set in two lines down the left so it ends well before the cabin starts,
+   which keeps it at full size without covering the thing being sold. */
+@media (min-width:900px){
+  .hero-in{padding-top:88px;padding-right:52%}
+  .hero .lead{max-width:19em}
+}
+
+/* On a phone the photograph cannot be both full and clear of the words, so
+   it stops being a backdrop: the picture takes the top of the screen whole,
+   the sauna unobstructed, and the words sit below it on the dark. */
+@media (max-width:760px){
+  .hero{display:block;min-height:0;max-height:none;--hero-img:clamp(300px,52svh,440px)}
+  .hero-bg{position:relative;inset:auto;height:var(--hero-img)}
+  .hero-bg img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 46%}
+  .hero-scrim{inset:0 0 auto 0;height:var(--hero-img);background:linear-gradient(180deg,rgba(13,11,9,.3) 0%,rgba(13,11,9,.05) 42%,rgba(13,11,9,.55) 100%)}
+  .hero-in{padding:34px var(--gutter) 52px}
+  .hero .eyebrow{margin-bottom:16px}
+  .hero .lead{margin:20px 0 32px}
+}
