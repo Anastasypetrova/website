@@ -8,6 +8,9 @@ const CONFIG = {
   whatsapp: '971543258890',
   whatsappDisplay: '+971 54 325 8890',
   instagram: 'anywhere_sauna',
+  // TODO: the real TikTok handle. Until it is set the icon points at the
+  // same name as Instagram, which may not exist.
+  tiktok: 'anywhere_sauna',
   // Text that opens in WhatsApp when someone taps a "Chat" button.
   waGreeting: {
     en: 'Hi! I’m interested in a sauna. Could you tell me more?',
@@ -25,6 +28,7 @@ const CONFIG = {
   $$('[data-phone-display]').forEach((el) => { el.textContent = CONFIG.whatsappDisplay; });
   $$('[data-tel]').forEach((el) => { el.href = 'tel:+' + CONFIG.whatsapp; });
   $$('[data-ig]').forEach((el) => { el.href = 'https://instagram.com/' + CONFIG.instagram; });
+  $$('[data-tt]').forEach((el) => { el.href = 'https://www.tiktok.com/@' + CONFIG.tiktok; });
   $$('[data-ig-display]').forEach((el) => { el.textContent = '@' + CONFIG.instagram; });
 
   const waLink = (text) =>
