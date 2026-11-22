@@ -394,14 +394,14 @@ section[id]{scroll-margin-top:calc(var(--nav-h) + 12px)}
 /* Laid out like the brochure's product pages: one tall photograph with two
    stacked beside it, then the name against the price, the specification row,
    and the way to ask about it. */
-.model-shots{display:grid;grid-template-columns:1.62fr 1fr;gap:4px}
-/* The main picture takes its height from its width; the stacked pair then
-   fills that height, so the block never sizes itself off the text column. */
-.model-main{aspect-ratio:4/5}
-.model-side{display:grid;grid-template-rows:1fr 1fr;gap:4px;min-height:0}
-.model-side .ph{min-height:0;height:100%}
-.model-shots-ba{grid-template-columns:1fr 1fr}
-.model-shots-ba .ph{aspect-ratio:3/4}
+/* Four tiles of equal width: three photographs and the clip. Every tile is
+   3:4, which is the shape the photographs already are, so none of them is
+   cropped to fit its frame. */
+.model-shots{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
+.model-shots .ph{aspect-ratio:3/4}
+/* The pair that used to stack is now two tiles of the same row. */
+.model-side{display:contents}
+.model-shots-ba{grid-template-columns:repeat(3,1fr)}
 
 .model-head{display:flex;justify-content:space-between;align-items:flex-end;gap:32px;margin-top:clamp(30px,3.6vw,52px);padding-bottom:clamp(18px,2.2vw,30px);border-bottom:1px solid var(--line)}
 .model-head .h2{margin:0}
@@ -413,10 +413,6 @@ section[id]{scroll-margin-top:calc(var(--nav-h) + 12px)}
 .model-foot{display:flex;flex-wrap:wrap;align-items:center;gap:18px 28px;margin-top:clamp(26px,3.2vw,42px)}
 
 @media(max-width:860px){
-  .model-shots{grid-template-columns:1fr;gap:4px}
-  .model-main{aspect-ratio:3/4}
-  .model-side{grid-template-rows:none;grid-template-columns:1fr 1fr}
-  .model-side .ph{aspect-ratio:3/4;height:auto}
   .model-head{flex-direction:column;align-items:flex-start;gap:14px}
   .model-price{align-items:flex-start}
   .model-specs{grid-template-columns:1fr 1fr}
@@ -475,22 +471,13 @@ section[id]{scroll-margin-top:calc(var(--nav-h) + 12px)}
 .sci-ph{aspect-ratio:3/4;margin-bottom:clamp(20px,2.4vw,30px)}
 .sci .num{margin-bottom:14px}
 
-/* ---------- the clip takes a tile of its own ---------- */
-/* Three photographs and the video, all visible at once. The brochure's
-   collage keeps its proportions; the clip stands at full height beside it,
-   which suits a 9:16 reel better than any crop of it would. */
-.model-shots{grid-template-columns:1.3fr .82fr .82fr}
-.model-clip{min-height:0}
+/* ---------- the clip's tile ---------- */
+/* A 9:16 reel in a 3:4 frame loses a little from each side, which is the
+   same trade every photograph on the page already makes. */
 .model-clip .reel{z-index:2}
-.model-shots-ba{grid-template-columns:1fr 1fr .82fr}
-.model-shots-ba .model-clip{aspect-ratio:auto}
 
+/* Two up on a tablet and a phone: four tiles become two rows, three become
+   two and one. */
 @media(max-width:860px){
-  .model-shots{grid-template-columns:1fr 1fr}
-  .model-main{grid-column:1 / -1}
-  .model-side{grid-column:1 / 2;grid-template-rows:none;grid-template-columns:1fr;gap:4px}
-  .model-side .ph{aspect-ratio:3/4;height:auto}
-  .model-clip{grid-column:2 / 3;aspect-ratio:auto}
-  .model-shots-ba{grid-template-columns:1fr 1fr}
-  .model-shots-ba .model-clip{grid-column:1 / -1;aspect-ratio:9/16;max-height:70vh;justify-self:center;width:min(100%,380px)}
+  .model-shots,.model-shots-ba{grid-template-columns:1fr 1fr}
 }
