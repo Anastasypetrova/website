@@ -481,3 +481,11 @@ section[id]{scroll-margin-top:calc(var(--nav-h) + 12px)}
 @media(max-width:860px){
   .model-shots,.model-shots-ba{grid-template-columns:1fr 1fr}
 }
+
+/* ---------- a row of phone frames ---------- */
+/* Three of the two-person pictures are 9:16, straight off a phone, and the
+   clip is the same shape. Cropping them into the 3:4 the other tiles use
+   would take a quarter off the top and bottom of each, so they get a row
+   framed to what they are. */
+.ph-tall{aspect-ratio:9/16}
+.model-shots .ph-tall{aspect-ratio:9/16}
