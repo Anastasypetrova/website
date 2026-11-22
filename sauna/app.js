@@ -23,6 +23,9 @@ const CONFIG = {
     ga4: '',        // Google Analytics: Admin → Data streams → "G-XXXXXXXXXX"
     metaPixel: '',  // Meta Events Manager: the numeric Pixel ID
     tiktokPixel: '',// TikTok Events Manager: the Pixel ID
+    // Cloudflare Web Analytics: free, sets no cookie, needs no consent
+    // banner, and answers one question well — how many people came.
+    cloudflare: '', // the token from the Cloudflare dashboard
   },
 };
 
@@ -53,6 +56,14 @@ const CONFIG = {
     script('https://connect.facebook.net/en_US/fbevents.js');
     window.fbq('init', A.metaPixel);
     window.fbq('track', 'PageView');
+  }
+
+  if (A.cloudflare) {
+    const s = document.createElement('script');
+    s.defer = true;
+    s.src = 'https://static.cloudflareinsights.com/beacon.min.js';
+    s.setAttribute('data-cf-beacon', JSON.stringify({ token: A.cloudflare }));
+    document.head.appendChild(s);
   }
 
   if (A.tiktokPixel) {
@@ -184,6 +195,7 @@ const CONFIG = {
 
     if (btn) {
       btn.addEventListener('click', () => {
+        attach(v);
         v.muted = !v.muted;
         if (!v.muted) { muteOthers(v); v.play().catch(() => {}); }
         syncSound(v);
@@ -191,11 +203,31 @@ const CONFIG = {
     }
   });
 
+  /* The file is attached the first time the clip comes near the screen, not
+     when the page loads. Four clips on the tag cost ten megabytes before
+     anyone had scrolled; this way nothing is fetched until it is wanted. */
+  function attach(v) {
+    if (v.src || !v.dataset.src) return;
+    v.src = v.dataset.src;
+  }
+
+  if (reels.length && 'IntersectionObserver' in window && !quiet) {
+    /* A wide margin so the file has a head start on the clip being seen. */
+    const near = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        if (en.isIntersecting) { attach(en.target); near.unobserve(en.target); }
+      });
+    }, { rootMargin: '300px 0px' });
+    reels.forEach((v) => near.observe(v));
+  } else {
+    reels.forEach(attach);
+  }
+
   if (reels.length && 'IntersectionObserver' in window && !quiet) {
     const vio = new IntersectionObserver((entries) => {
       entries.forEach((en) => {
         const v = en.target;
-        if (en.isIntersecting) { v.play().catch(() => {}); }
+        if (en.isIntersecting) { attach(v); v.play().catch(() => {}); }
         else { v.pause(); v.muted = true; syncSound(v); }
       });
     }, { threshold: 0.45 });

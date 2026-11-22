@@ -1,0 +1,40 @@
+# GitHub Pages, for a separate repository holding only this site.
+#
+# Copy this file to that repository as .github/workflows/deploy.yml, with the
+# site's files at the repository root. Nothing is built: the folder is the
+# site, so the whole thing is uploaded as it stands.
+#
+# Switch Pages on once by hand, in that repository:
+#   Settings → Pages → Build and deployment → Source: GitHub Actions
+# The workflow token cannot create the Pages site itself.
+
+name: Deploy site
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+      - id: deployment
+        uses: actions/deploy-pages@v4
