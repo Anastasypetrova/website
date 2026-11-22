@@ -474,3 +474,23 @@ section[id]{scroll-margin-top:calc(var(--nav-h) + 12px)}
 .sci-lead{max-width:30em;margin-bottom:clamp(44px,5vw,76px)}
 .sci-ph{aspect-ratio:3/4;margin-bottom:clamp(20px,2.4vw,30px)}
 .sci .num{margin-bottom:14px}
+
+/* ---------- the clip takes a tile of its own ---------- */
+/* Three photographs and the video, all visible at once. The brochure's
+   collage keeps its proportions; the clip stands at full height beside it,
+   which suits a 9:16 reel better than any crop of it would. */
+.model-shots{grid-template-columns:1.3fr .82fr .82fr}
+.model-clip{min-height:0}
+.model-clip .reel{z-index:2}
+.model-shots-ba{grid-template-columns:1fr 1fr .82fr}
+.model-shots-ba .model-clip{aspect-ratio:auto}
+
+@media(max-width:860px){
+  .model-shots{grid-template-columns:1fr 1fr}
+  .model-main{grid-column:1 / -1}
+  .model-side{grid-column:1 / 2;grid-template-rows:none;grid-template-columns:1fr;gap:4px}
+  .model-side .ph{aspect-ratio:3/4;height:auto}
+  .model-clip{grid-column:2 / 3;aspect-ratio:auto}
+  .model-shots-ba{grid-template-columns:1fr 1fr}
+  .model-shots-ba .model-clip{grid-column:1 / -1;aspect-ratio:9/16;max-height:70vh;justify-self:center;width:min(100%,380px)}
+}
