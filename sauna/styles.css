@@ -578,3 +578,13 @@ section[id]{scroll-margin-top:calc(var(--nav-h) + 12px)}
 .link-u{display:inline-block;padding-block:8px}
 .footer .f-col li a,.footer .f-col li span{display:inline-block;padding-block:7px}
 .g-foot nav a{display:inline-block;padding-block:7px}
+
+/* ---------- a clip the browser will not start ---------- */
+/* With reduced motion set, or a phone in low power mode, the browser refuses
+   to autoplay. Without this the visitor gets a photograph that looks like a
+   video and never moves. The button appears only in that case. */
+.clip-play{position:absolute;inset:0;margin:0;border:0;padding:0;background:transparent;display:none;place-items:center;cursor:pointer;z-index:3}
+.model-clip.needs-play .clip-play{display:grid}
+.clip-play::before{content:'';width:68px;height:68px;border-radius:50%;background:rgba(13,11,9,.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border:1px solid rgba(243,235,223,.45);transition:background .2s,transform .2s}
+.clip-play::after{content:'';position:absolute;width:0;height:0;border-left:19px solid var(--ink);border-top:12px solid transparent;border-bottom:12px solid transparent;margin-left:5px}
+.clip-play:hover::before{background:rgba(13,11,9,.75);transform:scale(1.06)}

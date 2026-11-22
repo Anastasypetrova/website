@@ -187,6 +187,16 @@ const CONFIG = {
     const fig = v.parentElement;
     const btn = fig && fig.querySelector('[data-sound]');
 
+    /* Some browsers will not start a clip on their own: reduced motion is
+       set, the phone is in low power mode, or the play call is refused. They
+       get a button rather than a picture that never moves. */
+    const play = document.createElement('button');
+    play.type = 'button';
+    play.className = 'clip-play';
+    play.setAttribute('aria-label', 'Play clip');
+    fig.appendChild(play);
+    play.addEventListener('click', () => { attach(v); v.play().catch(() => {}); });
+    v.addEventListener('playing', () => fig.classList.remove('needs-play'));
     v.addEventListener('error', () => { v.remove(); if (btn) btn.remove(); });
     v.addEventListener('loadeddata', () => {
       fig.classList.add('has-video');
@@ -220,14 +230,18 @@ const CONFIG = {
     }, { rootMargin: '300px 0px' });
     reels.forEach((v) => near.observe(v));
   } else {
-    reels.forEach(attach);
+    reels.forEach((v) => { attach(v); v.parentElement.classList.add('needs-play'); });
   }
 
   if (reels.length && 'IntersectionObserver' in window && !quiet) {
     const vio = new IntersectionObserver((entries) => {
       entries.forEach((en) => {
         const v = en.target;
-        if (en.isIntersecting) { attach(v); v.play().catch(() => {}); }
+        if (en.isIntersecting) {
+          attach(v);
+          const r = v.play();
+          if (r) r.catch(() => v.parentElement.classList.add('needs-play'));
+        }
         else { v.pause(); v.muted = true; syncSound(v); }
       });
     }, { threshold: 0.45 });
