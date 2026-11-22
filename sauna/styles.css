@@ -151,7 +151,10 @@ button{font:inherit;color:inherit}
 .strip .spec-v{font-size:clamp(17px,1.5vw,21px);color:var(--ink)}
 .strip .spec-k{margin-top:9px}
 .spec{display:flex;flex-direction:column;gap:9px;padding-left:clamp(18px,2.4vw,40px);border-left:1px solid var(--line)}
-.spec:first-child{padding-left:0;border-left:0}
+/* Only the specification row inside a sauna spread drops its first rule and
+   indent; the strip under the claim is a card grid and keeps both. Left
+   unscoped, this flattened the strip's first card against the frame. */
+.model-specs .spec:first-child{padding-left:0;border-left:0}
 .spec-k{font-family:var(--display);font-weight:600;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
 .spec-v{font-family:var(--display);font-weight:700;font-size:clamp(16px,1.4vw,20px);line-height:1.25;letter-spacing:-.015em;color:var(--ink)}
 /* Two up, then one: whichever item starts a row drops the divider. */
