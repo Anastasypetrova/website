@@ -567,3 +567,12 @@ section[id]{scroll-margin-top:calc(var(--nav-h) + 12px)}
 .vmodal-close:hover{background:rgba(243,235,223,.12)}
 .vmodal-close svg{width:18px;height:18px}
 @media(max-width:560px){.vmodal-close{top:-44px;right:0}}
+
+/* ---------- things you tap ---------- */
+/* Text links sit at their line height, which on a phone is around twenty
+   pixels — under what a thumb reliably hits, and what Google measures. The
+   padding only grows the hit area; nothing moves on the page. */
+.nav-links a{padding-block:10px}
+.link-u{display:inline-block;padding-block:8px}
+.footer .f-col li a,.footer .f-col li span{display:inline-block;padding-block:7px}
+.g-foot nav a{display:inline-block;padding-block:7px}
