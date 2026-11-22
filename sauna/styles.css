@@ -197,32 +197,25 @@ button{font:inherit;color:inherit}
 @media(max-width:600px){.steps{grid-template-columns:1fr}}
 
 /* ---------- design, build, install ---------- */
-/* No photograph in this one. Every finished sauna already has its own
-   spread, and the picture that stood here was a second showing of one of
-   them. The claim carries itself; the emirates underneath are the detail,
-   set in the same label-over-value the specification rows use. */
+/* One statement, held in the middle of the band, with the reach underneath.
+   No photograph: every finished sauna already has its own spread, and the
+   picture that stood here was a second showing of one of them. */
 .deliver-band{background:var(--bg-2)}
-.deliver-head{display:grid;grid-template-columns:5fr 6fr;gap:clamp(26px,5vw,80px);align-items:start}
-.deliver-head .h2{margin:0;max-width:11em}
-.deliver-copy{padding-top:clamp(4px,1vw,12px)}
-.deliver-copy .p + .p{margin-top:20px}
-.deliver-copy .p strong{color:var(--ink);font-weight:600}
-.areas{margin-top:clamp(44px,5.5vw,80px);display:grid;grid-template-columns:repeat(3,1fr)}
-.area{display:flex;flex-direction:column;gap:9px;padding:24px clamp(18px,2.4vw,36px);border-top:1px solid var(--line);border-left:1px solid var(--line)}
-.area:nth-child(3n+1){border-left:0;padding-left:0}
-.area-k{font-family:var(--display);font-weight:700;font-size:clamp(17px,1.5vw,21px);line-height:1.2;letter-spacing:-.02em;color:var(--ink)}
-.area-v{font-family:var(--display);font-weight:500;font-size:15px;line-height:1.45;color:var(--muted)}
-/* Dubai is the one that costs nothing extra, so it is the one in gold. */
-.area-home .area-v{color:var(--gold);font-weight:600}
+.dcentre{text-align:center}
+.dcentre .h2{max-width:15em;margin:22px auto 0}
+.dcentre .lead{max-width:40em;margin:28px auto 0;color:var(--ink-2)}
+/* Six emirates across, divided by hairlines, Dubai in gold because it is the
+   one that costs nothing extra. */
+.dstrip{margin-top:clamp(44px,5vw,72px);display:grid;grid-template-columns:repeat(6,1fr);border-top:1px solid var(--line)}
+.dcell{padding:22px 10px;border-left:1px solid var(--line)}
+.dcell:first-child{border-left:0}
+.dcell b{display:block;font-family:var(--display);font-weight:700;font-size:15px;line-height:1.3;letter-spacing:-.01em;color:var(--ink);margin-bottom:7px}
+.dcell span{font-family:var(--display);font-weight:500;font-size:13px;color:var(--muted)}
+.dcell.on span{color:var(--gold);font-weight:600}
 @media(max-width:900px){
-  .deliver-head{grid-template-columns:1fr;gap:24px}
-  .areas{grid-template-columns:1fr 1fr}
-  .area:nth-child(3n+1){border-left:1px solid var(--line);padding-left:clamp(18px,2.4vw,36px)}
-  .area:nth-child(2n+1){border-left:0;padding-left:0}
-}
-@media(max-width:560px){
-  .areas{grid-template-columns:1fr}
-  .area,.area:nth-child(3n+1),.area:nth-child(2n+1){border-left:0;padding-left:0}
+  .dstrip{grid-template-columns:1fr 1fr}
+  .dcell{border-left:0;border-top:1px solid var(--line)}
+  .dstrip .dcell:first-child,.dstrip .dcell:nth-child(2){border-top:0}
 }
 
 /* ---------- science ---------- */
