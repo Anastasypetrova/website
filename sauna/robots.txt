@@ -3,4 +3,4 @@ User-agent: *
 Allow: /
 
 # Change the domain here too if the site moves.
-Sitemap: https://anywheresauna.ae/sitemap.xml
+Sitemap: https://anywheresauna.shop/sitemap.xml

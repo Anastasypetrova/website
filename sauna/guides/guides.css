@@ -1,0 +1,74 @@
+/* Article pages. The tokens, the typeface and the buttons come from the main
+   stylesheet; this file only sets long-form reading: one column, generous
+   line height, and enough room between paragraphs to find your place again. */
+
+.g-nav{position:sticky;top:0;z-index:60;background:rgba(13,11,9,.88);backdrop-filter:saturate(140%) blur(14px);border-bottom:1px solid var(--line)}
+.g-nav-in{max-width:var(--wrap);margin-inline:auto;padding-inline:var(--gutter);height:var(--nav-h);display:flex;align-items:center;justify-content:space-between;gap:24px}
+.g-nav .logo{display:flex;align-items:center;gap:10px;color:var(--ink);text-decoration:none}
+.g-nav .logo svg{width:34px;height:34px}
+.g-nav .logo b{font-family:var(--display);font-weight:800;font-size:17px;letter-spacing:-.02em}
+.g-nav .btn{padding:11px 20px;font-size:14px}
+
+.g-wrap{max-width:800px;margin-inline:auto;padding:0 var(--gutter)}
+.g-head{padding:clamp(48px,7vw,96px) 0 clamp(28px,4vw,48px);border-bottom:1px solid var(--line)}
+.crumb{font-family:var(--label);font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin:0 0 20px}
+.crumb a{color:var(--gold);text-decoration:none}
+.crumb a:hover{text-decoration:underline}
+.g-title{font-family:var(--display);font-weight:800;font-size:clamp(32px,4.6vw,54px);line-height:1.04;letter-spacing:-.03em;margin:0;color:var(--ink);text-wrap:balance}
+.g-standfirst{font-size:clamp(17px,1.5vw,21px);line-height:1.55;color:var(--ink-2);margin:24px 0 0;max-width:34em}
+.g-meta{font-family:var(--label);font-size:12px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin:28px 0 0}
+
+.g-body{padding:clamp(32px,4vw,56px) 0 clamp(40px,5vw,72px);font-size:17px;line-height:1.72;color:var(--ink-2)}
+.g-body h2{font-family:var(--display);font-weight:800;font-size:clamp(24px,2.6vw,32px);line-height:1.18;letter-spacing:-.02em;color:var(--ink);margin:clamp(40px,4vw,56px) 0 18px}
+.g-body h3{font-family:var(--display);font-weight:700;font-size:clamp(19px,1.9vw,22px);line-height:1.3;color:var(--ink);margin:36px 0 12px}
+.g-body p{margin:0 0 20px}
+.g-body a{color:var(--gold-2);text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px}
+.g-body a:hover{color:var(--ink)}
+.g-body strong{color:var(--ink);font-weight:600}
+.g-body ul,.g-body ol{margin:0 0 22px;padding-left:22px}
+.g-body li{margin:0 0 10px}
+.g-body li::marker{color:var(--gold)}
+
+/* A fact worth stopping on. */
+.g-note{border-left:2px solid var(--gold);background:var(--surface);padding:20px 24px;margin:28px 0;border-radius:0 10px 10px 0}
+.g-note p:last-child{margin:0}
+
+/* Prices and specifications read better as a table than as a paragraph. */
+.g-table-wrap{overflow-x:auto;margin:26px 0}
+.g-table{width:100%;border-collapse:collapse;font-size:15px;min-width:460px}
+.g-table th,.g-table td{text-align:left;padding:13px 16px;border-bottom:1px solid var(--line)}
+.g-table th{font-family:var(--label);font-size:12px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.g-table td strong{color:var(--gold)}
+.g-table tr:last-child td{border-bottom:0}
+
+.g-figure{margin:32px 0}
+.g-figure img{width:100%;height:auto;display:block;border-radius:12px}
+.g-figure figcaption{font-family:var(--label);font-size:12px;letter-spacing:.05em;color:var(--muted);margin-top:10px}
+
+/* The call to action at the end of every article. */
+.g-cta{border:1px solid var(--line-strong);border-radius:16px;padding:clamp(26px,3.4vw,40px);margin:clamp(40px,5vw,64px) 0 0;background:var(--bg-2)}
+.g-cta h2{margin-top:0}
+.g-cta .g-cta-btns{display:flex;flex-wrap:wrap;gap:14px;margin-top:26px}
+
+/* Where to go next. Google follows these; so do the few readers who get here. */
+.g-related{border-top:1px solid var(--line);padding:clamp(40px,5vw,64px) 0}
+.g-related h2{font-family:var(--display);font-weight:800;font-size:22px;color:var(--ink);margin:0 0 24px}
+.g-related ul{list-style:none;margin:0;padding:0;display:grid;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.g-related li{background:var(--bg)}
+.g-related a{display:block;padding:20px 24px;text-decoration:none;color:var(--ink);transition:background .2s}
+.g-related a:hover{background:var(--surface)}
+.g-related a span{display:block;font-size:14px;color:var(--muted);margin-top:6px;line-height:1.5}
+
+/* The index of guides. */
+.g-list{list-style:none;margin:0;padding:0;display:grid;gap:1px;background:var(--line);border-block:1px solid var(--line)}
+.g-list li{background:var(--bg)}
+.g-list a{display:block;padding:clamp(22px,2.6vw,30px) 0;text-decoration:none;color:var(--ink)}
+.g-list a:hover h2{color:var(--gold-2)}
+.g-list h2{font-family:var(--display);font-weight:700;font-size:clamp(19px,2vw,24px);line-height:1.25;margin:0;transition:color .2s}
+.g-list p{color:var(--ink-2);font-size:15px;line-height:1.6;margin:10px 0 0;max-width:46em}
+
+.g-foot{border-top:1px solid var(--line);background:var(--footer-bg);padding:48px 0;margin-top:clamp(40px,5vw,72px)}
+.g-foot-in{max-width:800px;margin-inline:auto;padding-inline:var(--gutter);display:flex;flex-wrap:wrap;gap:16px 32px;align-items:center;justify-content:space-between;font-size:14px;color:var(--muted)}
+.g-foot a{color:var(--ink-2);text-decoration:none}
+.g-foot a:hover{color:var(--gold-2)}
+.g-foot nav{display:flex;flex-wrap:wrap;gap:20px}
