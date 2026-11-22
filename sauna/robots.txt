@@ -1,0 +1,6 @@
+# Anywhere Sauna — everything here is meant to be found.
+User-agent: *
+Allow: /
+
+# Change the domain here too if the site moves.
+Sitemap: https://anywheresauna.ae/sitemap.xml
