@@ -525,3 +525,21 @@ section[id]{scroll-margin-top:calc(var(--nav-h) + 12px)}
   .hero .eyebrow{margin-bottom:16px}
   .hero .lead{margin:20px 0 32px}
 }
+
+/* ---------- the claim ---------- */
+/* Directly under the cover, before anything else is said: what the company
+   is for. The three figures are what stops it being a slogan. */
+.usp{background:var(--bg-2);border-bottom:1px solid var(--line);padding:clamp(48px,6vw,88px) 0}
+.usp .eyebrow{color:var(--gold);margin-bottom:22px}
+.usp-line{font-family:var(--display);font-weight:800;font-size:clamp(28px,4vw,56px);line-height:1.04;letter-spacing:-.035em;color:var(--ink);margin:0;max-width:16em;text-wrap:balance}
+.usp-line em{font-style:normal;color:var(--gold)}
+.usp-sub{font-size:clamp(16px,1.4vw,19px);line-height:1.6;color:var(--ink-2);margin:26px 0 0;max-width:40em}
+.usp-figs{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin:clamp(32px,4vw,52px) 0 0}
+.usp-fig{background:var(--bg);padding:clamp(22px,2.6vw,32px)}
+.usp-v{display:block;font-family:var(--display);font-weight:800;font-size:clamp(24px,2.6vw,34px);letter-spacing:-.03em;color:var(--gold);line-height:1}
+.usp-k{display:block;font-size:14px;line-height:1.5;color:var(--ink-2);margin-top:12px}
+/* The competitor column is stated, not shouted: it is a fact, not a jab. */
+.usp-fig-them{background:var(--bg-2)}
+.usp-fig-them .usp-v{color:var(--muted)}
+.usp-note{font-size:13px;line-height:1.55;color:var(--muted);margin:18px 0 0;max-width:46em}
+@media(max-width:860px){.usp-figs{grid-template-columns:1fr}}
