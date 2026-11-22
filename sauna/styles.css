@@ -196,17 +196,34 @@ button{font:inherit;color:inherit}
 @media(max-width:1000px){.steps{grid-template-columns:1fr 1fr}}
 @media(max-width:600px){.steps{grid-template-columns:1fr}}
 
-/* ---------- delivery / service area ---------- */
-.deliver{display:grid;grid-template-columns:1fr 1fr;gap:clamp(32px,5vw,80px);align-items:start}
-.deliver .ph{aspect-ratio:4/5;position:sticky;top:calc(var(--nav-h) + 24px)}
-.deliver-txt{padding-top:clamp(0px,2vw,24px)}
-.deliver-txt .h2{margin-bottom:32px}
-.deliver-txt .p{margin-bottom:24px}
-.deliver-txt .p strong{color:var(--ink);font-weight:500}
-.areas{margin-top:48px;border-top:1px solid var(--line);padding-top:8px;display:grid;grid-template-columns:1fr 1fr;column-gap:48px}
-.area{padding:26px 0 22px;border-bottom:1px dashed var(--line-strong)}
-.area .h4{margin-bottom:8px}
-@media(max-width:900px){.deliver{grid-template-columns:1fr}.deliver .ph{position:relative;top:auto;aspect-ratio:4/3}.areas{grid-template-columns:1fr}}
+/* ---------- design, build, install ---------- */
+/* No photograph in this one. Every finished sauna already has its own
+   spread, and the picture that stood here was a second showing of one of
+   them. The claim carries itself; the emirates underneath are the detail,
+   set in the same label-over-value the specification rows use. */
+.deliver-band{background:var(--bg-2)}
+.deliver-head{display:grid;grid-template-columns:5fr 6fr;gap:clamp(26px,5vw,80px);align-items:start}
+.deliver-head .h2{margin:0;max-width:11em}
+.deliver-copy{padding-top:clamp(4px,1vw,12px)}
+.deliver-copy .p + .p{margin-top:20px}
+.deliver-copy .p strong{color:var(--ink);font-weight:600}
+.areas{margin-top:clamp(44px,5.5vw,80px);display:grid;grid-template-columns:repeat(3,1fr)}
+.area{display:flex;flex-direction:column;gap:9px;padding:24px clamp(18px,2.4vw,36px);border-top:1px solid var(--line);border-left:1px solid var(--line)}
+.area:nth-child(3n+1){border-left:0;padding-left:0}
+.area-k{font-family:var(--display);font-weight:700;font-size:clamp(17px,1.5vw,21px);line-height:1.2;letter-spacing:-.02em;color:var(--ink)}
+.area-v{font-family:var(--display);font-weight:500;font-size:15px;line-height:1.45;color:var(--muted)}
+/* Dubai is the one that costs nothing extra, so it is the one in gold. */
+.area-home .area-v{color:var(--gold);font-weight:600}
+@media(max-width:900px){
+  .deliver-head{grid-template-columns:1fr;gap:24px}
+  .areas{grid-template-columns:1fr 1fr}
+  .area:nth-child(3n+1){border-left:1px solid var(--line);padding-left:clamp(18px,2.4vw,36px)}
+  .area:nth-child(2n+1){border-left:0;padding-left:0}
+}
+@media(max-width:560px){
+  .areas{grid-template-columns:1fr}
+  .area,.area:nth-child(3n+1),.area:nth-child(2n+1){border-left:0;padding-left:0}
+}
 
 /* ---------- science ---------- */
 .science{background:var(--surface)}
@@ -215,14 +232,6 @@ button{font:inherit;color:inherit}
 .science .grid-3{margin-top:clamp(56px,7vw,96px)}
 .sci .num{font-family:var(--display);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.18em;color:var(--gold);display:block;margin-bottom:20px}
 .sci .h4{margin-bottom:12px}
-
-/* ---------- gallery ---------- */
-.gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(12px,1.5vw,24px)}
-.gallery .g1{grid-column:span 2}
-.gallery .ph{aspect-ratio:4/3}
-.gallery .g1.ph{aspect-ratio:auto;height:100%}
-.gal-cap{margin-top:12px}
-@media(max-width:900px){.gallery{grid-template-columns:1fr 1fr}.gallery .g1{grid-column:span 2}.gallery .g1.ph{aspect-ratio:16/9;height:auto}}
 
 /* ---------- testimonials ---------- */
 .quotes{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(20px,3vw,48px)}
@@ -311,15 +320,19 @@ button{font:inherit;color:inherit}
 .rv.in{opacity:1;transform:none}
 @media(prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}html{scroll-behavior:auto}}
 
-/* ---------- options table ---------- */
-/* The brochure's "Make it yours" page: a label on the left, a price or a
-   sentence on the right, separated by the same hairline the FAQ uses. */
-.opt-row{display:grid;grid-template-columns:minmax(220px,1fr) 1.4fr;gap:24px 40px;align-items:baseline;padding:22px 0;border-bottom:1px solid var(--line)}
-.opt-k{font-family:var(--display);font-weight:700;font-size:clamp(16px,1.3vw,19px);letter-spacing:-.01em;color:var(--ink)}
-.opt-v{font-family:var(--display);font-weight:600;font-size:clamp(16px,1.3vw,19px);color:var(--gold);text-align:right}
-/* A sentence instead of a price reads as body copy, left-aligned. */
-.opt-v.opt-note{font-weight:400;font-size:16px;line-height:1.6;color:var(--ink-2);text-align:left}
-@media(max-width:700px){.opt-row{grid-template-columns:1fr;gap:8px}.opt-v{text-align:left}}
+/* ---------- options ---------- */
+/* Six across the full width, divided by hairlines: the gap is the line
+   colour showing through, so the grid needs no borders of its own. */
+.opts{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
+.opt{background:var(--bg);padding:clamp(26px,2.8vw,40px);display:flex;flex-direction:column;gap:16px}
+.opt-ico{color:var(--gold);line-height:0}
+.opt-ico svg{width:30px;height:30px}
+.opt-k{font-family:var(--display);font-weight:700;font-size:clamp(16px,1.35vw,19px);line-height:1.25;letter-spacing:-.02em;color:var(--ink);margin:0}
+.opt-v{font-family:var(--display);font-weight:700;font-size:clamp(20px,1.7vw,25px);line-height:1.1;letter-spacing:-.025em;color:var(--gold);margin:0;margin-top:auto}
+/* Where the answer is a sentence rather than a price it reads as copy. */
+.opt-v.opt-note{font-weight:400;font-size:15px;line-height:1.6;letter-spacing:0;color:var(--ink-2)}
+@media(max-width:900px){.opts{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.opts{grid-template-columns:1fr}.opt-v{margin-top:0}}
 
 /* The wordmark is two words now, so on a narrow phone the header has to give
    it less room, or the row pushes past the viewport and the page scrolls
@@ -341,10 +354,6 @@ button{font:inherit;color:inherit}
 .card .ph{aspect-ratio:3/4}
 .note .ph{aspect-ratio:3/4}
 .about .ph{aspect-ratio:3/4}
-.deliver .ph{aspect-ratio:3/4;position:relative;top:auto}
-.gallery{grid-template-columns:repeat(4,1fr)}
-.gallery .ph{aspect-ratio:3/4}
-@media(max-width:1000px){.gallery{grid-template-columns:1fr 1fr}}
 
 /* ---------- before / after ---------- */
 .ba{display:grid;grid-template-columns:1fr 1fr;gap:3px;align-items:start;align-self:center}
