@@ -145,7 +145,8 @@ button{font:inherit;color:inherit}
 /* Same card system as the claim above: hairline grid, one rounded frame.
    The value leads, the label sits under it, and a line icon gives the row
    something to look at. */
-.specs{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.specs{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(18px,2.4vw,40px)}
+.strip .specs{gap:1px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden}
 .strip .spec{background:var(--bg-2);padding:clamp(22px,2.6vw,30px);gap:0;padding-left:clamp(22px,2.6vw,30px);border-left:0}
 .spec-i{width:30px;height:30px;color:var(--gold);display:block;margin-bottom:clamp(18px,2vw,26px)}
 .strip .spec-v{font-size:clamp(17px,1.5vw,21px);color:var(--ink)}
@@ -158,8 +159,8 @@ button{font:inherit;color:inherit}
 .spec-k{font-family:var(--display);font-weight:600;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
 .spec-v{font-family:var(--display);font-weight:700;font-size:clamp(16px,1.4vw,20px);line-height:1.25;letter-spacing:-.015em;color:var(--ink)}
 /* Two up, then one: whichever item starts a row drops the divider. */
-@media(max-width:860px){.specs{grid-template-columns:1fr 1fr}}
-@media(max-width:460px){.specs{grid-template-columns:1fr}.spec-i{width:26px;height:26px;margin-bottom:14px}}
+@media(max-width:860px){.strip .specs{grid-template-columns:1fr 1fr}}
+@media(max-width:460px){.strip .specs{grid-template-columns:1fr}.spec-i{width:26px;height:26px;margin-bottom:14px}}
 
 /* ---------- photo placeholders ---------- */
 .ph{position:relative;margin:0;overflow:hidden;background:linear-gradient(160deg,var(--wood) 0%,var(--wood-d) 100%)}
@@ -436,7 +437,8 @@ section[id]{scroll-margin-top:calc(var(--nav-h) + 12px)}
   .model-price{align-items:flex-start}
   .model-specs{grid-template-columns:1fr 1fr}
 }
-@media(max-width:460px){.model-specs{grid-template-columns:1fr}}
+/* Stacked, the dividing rule is a stray tick to the left of each line. */
+@media(max-width:460px){.model-specs{grid-template-columns:1fr;gap:18px}.model-specs .spec{padding-left:0;border-left:0}}
 
 /* ---------- watch video ---------- */
 /* The brochure's own button: gold outline, gold text, a solid play triangle. */
