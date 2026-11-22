@@ -141,15 +141,22 @@ button{font:inherit;color:inherit}
 /* The specification row from the brochure's product pages: a quiet label
    over the value it names, columns divided by a hairline. Four facts spread
    edge to edge read as stray words; in this frame they read as a spec. */
-.strip{border-bottom:1px solid var(--line);padding-block:clamp(28px,3vw,44px)}
-.specs{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(18px,2.4vw,40px)}
+.strip{border-bottom:1px solid var(--line);padding-block:clamp(36px,4.4vw,64px)}
+/* Same card system as the claim above: hairline grid, one rounded frame.
+   The value leads, the label sits under it, and a line icon gives the row
+   something to look at. */
+.specs{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.strip .spec{background:var(--bg-2);padding:clamp(22px,2.6vw,30px);gap:0;padding-left:clamp(22px,2.6vw,30px);border-left:0}
+.spec-i{width:30px;height:30px;color:var(--gold);display:block;margin-bottom:clamp(18px,2vw,26px)}
+.strip .spec-v{font-size:clamp(17px,1.5vw,21px);color:var(--ink)}
+.strip .spec-k{margin-top:9px}
 .spec{display:flex;flex-direction:column;gap:9px;padding-left:clamp(18px,2.4vw,40px);border-left:1px solid var(--line)}
 .spec:first-child{padding-left:0;border-left:0}
 .spec-k{font-family:var(--display);font-weight:600;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
 .spec-v{font-family:var(--display);font-weight:700;font-size:clamp(16px,1.4vw,20px);line-height:1.25;letter-spacing:-.015em;color:var(--ink)}
 /* Two up, then one: whichever item starts a row drops the divider. */
-@media(max-width:860px){.specs{grid-template-columns:1fr 1fr;gap:26px 22px}.spec:nth-child(3){padding-left:0;border-left:0}}
-@media(max-width:460px){.specs{grid-template-columns:1fr;gap:0}.spec{padding:16px 0 0;border-left:0;border-top:1px solid var(--line);margin-top:16px}.spec:first-child{border-top:0;margin-top:0;padding-top:0}}
+@media(max-width:860px){.specs{grid-template-columns:1fr 1fr}}
+@media(max-width:460px){.specs{grid-template-columns:1fr}.spec-i{width:26px;height:26px;margin-bottom:14px}}
 
 /* ---------- photo placeholders ---------- */
 .ph{position:relative;margin:0;overflow:hidden;background:linear-gradient(160deg,var(--wood) 0%,var(--wood-d) 100%)}
@@ -188,7 +195,11 @@ button{font:inherit;color:inherit}
 
 /* ---------- process ---------- */
 .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(24px,3vw,48px);border-top:1px solid var(--line);padding-top:40px}
-.step .num{font-family:var(--display);font-weight:800;font-size:30px;letter-spacing:-.03em;color:var(--gold);margin-bottom:16px;display:block}
+/* The step number and a line icon of what happens at that step, side by side:
+   the number keeps the order, the drawing gives the row something to read. */
+.step{display:flex;flex-direction:column;align-items:flex-start}
+.step-i{width:30px;height:30px;color:var(--gold);display:block;margin-bottom:18px}
+.step .num{font-family:var(--display);font-weight:700;font-size:12px;letter-spacing:.18em;color:var(--muted);margin-bottom:12px;display:block}
 .step .h4{margin-bottom:14px}
 .timeline{margin-top:56px;padding-top:28px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:16px 48px;align-items:baseline}
 @media(max-width:1000px){.steps{grid-template-columns:1fr 1fr}}
