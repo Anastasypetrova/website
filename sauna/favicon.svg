@@ -1,7 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <circle cx="32" cy="32" r="32" fill="#1C1B19"/>
-  <g fill="none" stroke="#E8C79A" stroke-width="2.4" stroke-linecap="round">
-    <path d="M32 13c-3 8-11 12-11 22a11 11 0 0 0 22 0c0-6-4-9-5-14-2 4-6 6-6 10"/>
-    <path d="M20 51h24" opacity=".6"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- The badge, without its lettering: at 16px the words are a smudge, the
+       cabin is still a cabin. -->
+  <rect width="100" height="100" rx="20" fill="#0D0B09"/>
+  <g fill="none" stroke="#F3EBDF" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="50" cy="50" r="40" stroke-width="3.5" opacity=".55"/>
+    <path d="M30 46 50 31l20 15" stroke-width="5"/>
+    <path d="M34 46h32v24H34z" stroke-width="5"/>
+    <path d="M42 54h16v16H42z" stroke-width="3.5"/>
+    <path d="M42 60h16M42 65h16" stroke-width="3"/>
   </g>
 </svg>

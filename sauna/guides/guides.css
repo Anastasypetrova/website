@@ -5,8 +5,7 @@
 .g-nav{position:sticky;top:0;z-index:60;background:rgba(13,11,9,.88);backdrop-filter:saturate(140%) blur(14px);border-bottom:1px solid var(--line)}
 .g-nav-in{max-width:var(--wrap);margin-inline:auto;padding-inline:var(--gutter);height:var(--nav-h);display:flex;align-items:center;justify-content:space-between;gap:24px}
 .g-nav .logo{display:flex;align-items:center;gap:10px;color:var(--ink);text-decoration:none}
-.g-nav .logo svg{width:34px;height:34px}
-.g-nav .logo b{font-family:var(--display);font-weight:800;font-size:17px;letter-spacing:-.02em}
+.g-nav .mark{width:46px;height:46px;display:block;color:var(--ink)}
 .g-nav .btn{padding:11px 20px;font-size:14px}
 
 .g-wrap{max-width:800px;margin-inline:auto;padding:0 var(--gutter)}

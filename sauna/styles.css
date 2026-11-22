@@ -41,7 +41,7 @@
 
   --wrap:1440px;
   --gutter:clamp(16px,2.2vw,32px);
-  --nav-h:96px;
+  --nav-h:72px;
   --ease:cubic-bezier(.22,.61,.36,1);
 }
 
@@ -96,21 +96,24 @@ button{font:inherit;color:inherit}
 .btn:hover .arr{transform:translateX(3px)}
 
 /* ---------- nav ---------- */
-.nav{position:sticky;top:0;z-index:60;background:rgba(13,11,9,.88);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.nav{position:sticky;top:0;z-index:60;background:rgba(13,11,9,.8);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
 .nav-in{max-width:var(--wrap);margin-inline:auto;padding-inline:var(--gutter);height:var(--nav-h);display:flex;align-items:center;justify-content:space-between;gap:24px}
 .logo{display:flex;align-items:center;gap:14px;white-space:nowrap}
-.logo svg{width:52px;height:52px;flex:none}
+/* The badge is the whole mark — it carries the name itself, so nothing is set
+   beside it. Drawn in line, in one colour, to sit on the dark bar. */
+.logo{text-decoration:none;display:inline-flex}
+.mark{width:52px;height:52px;display:block;color:var(--ink)}
 .logo-name{font-family:var(--display);font-weight:800;font-size:23px;letter-spacing:-.02em;line-height:1}
 .logo-sub{font-family:var(--label);font-weight:600;font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-top:5px;display:block}
 .nav-links{display:flex;align-items:center;gap:clamp(20px,2.4vw,44px)}
-.nav-links a{font-size:17px;color:var(--ink-2);transition:color .2s}
+.nav-links a{font-size:14px;letter-spacing:.02em;color:var(--ink-2);transition:color .2s}
 .nav-links a:hover{color:var(--ink)}
 .nav-right{display:flex;align-items:center;gap:16px}
-.nav-cta{padding:26px 42px;font-size:19px;border-radius:999px;border:1px solid var(--line-strong);transition:background .25s,color .25s,border-color .25s}
+.nav-cta{padding:12px 24px;font-size:14px;border-radius:999px;border:1px solid var(--gold);color:var(--gold);transition:background .25s,color .25s,border-color .25s}
 .nav-cta:hover{background:var(--gold);color:#0D0B09;border-color:var(--gold)}
 .burger{display:none;width:46px;height:46px;border-radius:50%;border:1px solid var(--line-strong);background:transparent;align-items:center;justify-content:center;cursor:pointer}
 .burger svg{width:20px;height:20px}
-@media(max-width:1180px){.nav-links{display:none}.burger{display:inline-flex}.nav-cta{display:none}:root{--nav-h:80px}.logo svg{width:44px;height:44px}.logo-name{font-size:24px}}
+@media(max-width:1180px){.nav-links{display:none}.burger{display:inline-flex}.nav-cta{display:none}:root{--nav-h:68px}}
 .msheet{position:fixed;inset:0;z-index:70;background:var(--bg);display:flex;flex-direction:column;padding:22px var(--gutter) 40px;transform:translateY(-100%);opacity:0;pointer-events:none;transition:transform .4s var(--ease),opacity .4s var(--ease);overflow:auto}
 .msheet.on{transform:none;opacity:1;pointer-events:auto}
 .msheet-top{display:flex;justify-content:space-between;align-items:center;height:var(--nav-h);margin-top:-22px}
@@ -335,15 +338,12 @@ button{font:inherit;color:inherit}
 @media(max-width:900px){.opts{grid-template-columns:1fr 1fr}}
 @media(max-width:560px){.opts{grid-template-columns:1fr}.opt-v{margin-top:0}}
 
-/* The wordmark is two words now, so on a narrow phone the header has to give
-   it less room, or the row pushes past the viewport and the page scrolls
-   sideways. */
+/* The wordmark is two words, so on a narrow phone the header gives it less
+   room, or the row pushes past the viewport and the page scrolls sideways. */
 @media(max-width:560px){
   .nav-in{gap:12px}
-  .logo{gap:9px;min-width:0}
-  .logo svg{width:36px;height:36px}
-  .logo-name{font-size:17px}
-  .logo-sub{font-size:8px;letter-spacing:.2em;margin-top:4px}
+  .logo{min-width:0}
+  .mark{width:42px;height:42px}
   .burger{width:40px;height:40px}
 }
 
@@ -383,7 +383,6 @@ button{font:inherit;color:inherit}
 .logo-mark svg{width:46px;height:46px;transition:opacity .2s}
 .logo-mark:hover svg{opacity:.75}
 @media(max-width:1180px){.logo-mark svg{width:42px;height:42px}}
-@media(max-width:560px){.logo-mark svg{width:38px;height:38px}}
 
 /* ---------- anchors clear the sticky header ---------- */
 section[id]{scroll-margin-top:calc(var(--nav-h) + 12px)}
