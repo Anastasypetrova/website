@@ -130,6 +130,53 @@ const CONFIG = {
   $$('[data-video]').forEach((b) => b.addEventListener('click', () => openVideo(b.dataset.video)));
   $$('[data-vclose]').forEach((b) => b.addEventListener('click', closeVideo));
 
+  /* ---------- clips that play as you scroll ---------- */
+  /* Each spread's main picture is the poster of a short clip. The clip plays
+     muted when it comes into view and pauses when it leaves, so nothing is
+     downloaded or decoded for a sauna nobody has scrolled to. If the file is
+     missing or the browser cannot play it, the video element goes and the
+     photograph underneath stays — which is what a visitor saw before. */
+  const reels = $$('[data-reel]');
+  const quiet = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const muteOthers = (keep) => reels.forEach((v) => { if (v !== keep) { v.muted = true; syncSound(v); } });
+  function syncSound(v) {
+    const b = v.parentElement && v.parentElement.querySelector('[data-sound]');
+    if (!b) return;
+    b.classList.toggle('on', !v.muted);
+    b.setAttribute('aria-label', v.muted ? 'Turn sound on' : 'Turn sound off');
+  }
+
+  reels.forEach((v) => {
+    const fig = v.parentElement;
+    const btn = fig && fig.querySelector('[data-sound]');
+
+    v.addEventListener('error', () => { v.remove(); if (btn) btn.remove(); });
+    v.addEventListener('loadeddata', () => {
+      fig.classList.add('has-video');
+      if (btn) btn.hidden = false;
+    });
+
+    if (btn) {
+      btn.addEventListener('click', () => {
+        v.muted = !v.muted;
+        if (!v.muted) { muteOthers(v); v.play().catch(() => {}); }
+        syncSound(v);
+      });
+    }
+  });
+
+  if (reels.length && 'IntersectionObserver' in window && !quiet) {
+    const vio = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        const v = en.target;
+        if (en.isIntersecting) { v.play().catch(() => {}); }
+        else { v.pause(); v.muted = true; syncSound(v); }
+      });
+    }, { threshold: 0.45 });
+    reels.forEach((v) => vio.observe(v));
+  }
+
   /* ---------- reveal on scroll ---------- */
   const rv = $$('.rv');
   if ('IntersectionObserver' in window) {

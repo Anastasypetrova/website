@@ -35,7 +35,6 @@
           <a href="#custom" data-i="nav_custom">Your space</a>
           <a href="#options" data-i="nav_options">Options</a>
           <a href="#process" data-i="nav_process">Process</a>
-          <a href="#cold" data-i="nav_cold">Cold plunge</a>
           <a href="#science" data-i="nav_science">Science</a>
           <a href="#projects" data-i="nav_projects">Projects</a>
           <a href="#faq" data-i="nav_faq">FAQ</a>
@@ -69,7 +68,6 @@
       <a class="mlink" href="#custom" data-i="nav_custom">Your space</a>
       <a class="mlink" href="#options" data-i="nav_options">Options</a>
       <a class="mlink" href="#process" data-i="nav_process">Process</a>
-      <a class="mlink" href="#cold" data-i="nav_cold">Cold plunge</a>
       <a class="mlink" href="#science" data-i="nav_science">Science</a>
       <a class="mlink" href="#projects" data-i="nav_projects">Projects</a>
       <a class="mlink" href="#notes" data-i="f_notes">Notes</a>
@@ -159,7 +157,7 @@
       <section class="model sec" id="two">
         <div class="wrap">
           <div class="model-shots rv">
-            <figure class="ph model-main"><img src="images/two-terrace.jpg" alt="Two-person sauna on a terrace" onerror="this.remove()" /><figcaption>images/two-terrace.jpg</figcaption></figure>
+            <figure class="ph model-main"><video class="reel" data-reel src="videos/two-person.mp4" poster="images/two-terrace.jpg" muted loop playsinline preload="metadata"></video><img src="images/two-terrace.jpg" alt="Two-person sauna on a terrace" onerror="this.remove()" /><button class="sound-btn" type="button" data-sound hidden aria-label="Turn sound on"><span class="sound-off" aria-hidden="true"></span></button><figcaption>images/two-terrace.jpg</figcaption></figure>
             <div class="model-side">
               <figure class="ph"><img src="images/two-pool.jpg" alt="The same sauna beside a pool at dusk" onerror="this.remove()" /><figcaption>images/two-pool.jpg</figcaption></figure>
               <figure class="ph"><img src="images/two-interior.jpg" alt="Interior, heater and infrared panels" onerror="this.remove()" /><figcaption>images/two-interior.jpg</figcaption></figure>
@@ -189,7 +187,7 @@
       <section class="model sec" id="four">
         <div class="wrap">
           <div class="model-shots rv">
-            <figure class="ph model-main"><img src="images/four-elevation.jpg" alt="Four-person sauna, wide elevation" onerror="this.remove()" /><figcaption>images/four-elevation.jpg</figcaption></figure>
+            <figure class="ph model-main"><video class="reel" data-reel src="videos/four-person.mp4" poster="images/four-elevation.jpg" muted loop playsinline preload="metadata"></video><img src="images/four-elevation.jpg" alt="Four-person sauna, wide elevation" onerror="this.remove()" /><button class="sound-btn" type="button" data-sound hidden aria-label="Turn sound on"><span class="sound-off" aria-hidden="true"></span></button><figcaption>images/four-elevation.jpg</figcaption></figure>
             <div class="model-side">
               <figure class="ph"><img src="images/four-corner.jpg" alt="The same sauna, corner view" onerror="this.remove()" /><figcaption>images/four-corner.jpg</figcaption></figure>
               <figure class="ph"><img src="images/four-interior.jpg" alt="Interior, bucket and ladle" onerror="this.remove()" /><figcaption>images/four-interior.jpg</figcaption></figure>
@@ -220,7 +218,7 @@
         <div class="wrap">
           <div class="model-shots model-shots-ba rv">
             <figure class="ph"><img src="images/before.jpg" alt="The alcove before, empty and tiled" onerror="this.remove()" /><span class="ba-tag ba-before" data-i="ba_before">Before</span><figcaption>images/before.jpg</figcaption></figure>
-            <figure class="ph"><img src="images/after.jpg" alt="The same alcove with the sauna installed" onerror="this.remove()" /><span class="ba-tag ba-after" data-i="ba_after">After</span><figcaption>images/after.jpg</figcaption></figure>
+            <figure class="ph"><video class="reel" data-reel src="videos/custom.mp4" poster="images/after.jpg" muted loop playsinline preload="metadata"></video><img src="images/after.jpg" alt="The same alcove with the sauna installed" onerror="this.remove()" /><button class="sound-btn" type="button" data-sound hidden aria-label="Turn sound on"><span class="sound-off" aria-hidden="true"></span></button><span class="ba-tag ba-after" data-i="ba_after">After</span><figcaption>images/after.jpg</figcaption></figure>
           </div>
           <div class="model-head rv">
             <h2 class="h2" data-i="m3_title">Designed around your space</h2>
@@ -244,15 +242,6 @@
 
 
 
-      <!-- ================= COLD PLUNGE ================= -->
-      <section class="band sec" id="cold">
-        <div class="wrap rv">
-          <p class="eyebrow" data-i="cold_eyebrow">Cold plunge</p>
-          <h2 class="h2" data-i="cold_title">Cold, for a place that never is.</h2>
-          <p class="lead" data-i="cold_lead">Insulated plunge tubs with a chiller that holds 3–5°C through a Dubai August. Indoors or beside the sauna. Add one to any build, or start with the cold alone.</p>
-          <a class="btn btn-clay" href="#contact"><span data-i="cold_cta">Ask about cold plunges</span> <span class="arr">→</span></a>
-        </div>
-      </section>
 
       <!-- ================= OPTIONS ================= -->
       <section class="sec" id="options">
@@ -354,26 +343,31 @@
       <!-- ================= SCIENCE ================= -->
       <section class="science sec" id="science">
         <div class="wrap">
-          <div class="rv">
-            <p class="eyebrow" data-i="sci_eyebrow">The Science</p>
-            <h2 class="h2" data-i="sci_title">Heat, cold, and the body.</h2>
-            <p class="lead" data-i="sci_lead">A practice of contrast. What happens inside when you sit in 90°C dry heat, step into 5°C water, and do it again tomorrow evening.</p>
+          <div class="sec-head rv">
+            <div>
+              <p class="eyebrow" data-i="sci_eyebrow">The Science</p>
+              <h2 class="h2" data-i="sci_title">Heat and the body.</h2>
+            </div>
           </div>
-          <div class="grid-3">
+          <p class="lead sci-lead rv" data-i="sci_lead">What ninety minutes a week at 90°C does, and why the people who keep a sauna at home end up using it more than they expected.</p>
+          <div class="grid-3 sci-grid">
             <div class="sci rv">
+              <figure class="ph sci-ph"><img src="images/science-1.jpg" alt="" onerror="this.remove()" /><figcaption>images/science-1.jpg<br/>1200 × 1600</figcaption></figure>
               <span class="num"><span data-i="sci1_num">01 · Recovery</span></span>
               <h3 class="h4" data-i="sci1_title">Less soreness, faster return.</h3>
-              <p class="p" data-i="sci1_text">Sauna and cold-water immersion after training are associated with lower perceived soreness and better next-day performance. In a city where most people train at 6 a.m. or 9 p.m., recovery matters as much as the session.</p>
+              <p class="p" data-i="sci1_text">Sitting in dry heat after training is associated with lower perceived soreness and better output the next day. In a city where most people train at 6 a.m. or 9 p.m., recovery decides how the next session goes.</p>
             </div>
             <div class="sci rv">
-              <span class="num"><span data-i="sci2_num">02 · Resilience</span></span>
-              <h3 class="h4" data-i="sci2_title">Trained stress, trained calm.</h3>
-              <p class="p" data-i="sci2_text">Deliberate, controlled heat and cold train the nervous system to enter stress fast and leave it faster. A steadier baseline — built by practice, not willpower.</p>
+              <figure class="ph sci-ph"><img src="images/science-2.jpg" alt="" onerror="this.remove()" /><figcaption>images/science-2.jpg<br/>1200 × 1600</figcaption></figure>
+              <span class="num"><span data-i="sci2_num">02 · Sleep</span></span>
+              <h3 class="h4" data-i="sci2_title">Warm, then cooling.</h3>
+              <p class="p" data-i="sci2_text">Core temperature rises in the sauna and falls afterwards, and that fall is the signal the body reads as time to sleep. An evening session an hour or two before bed is the one most of our clients settle into.</p>
             </div>
             <div class="sci rv">
+              <figure class="ph sci-ph"><img src="images/science-3.jpg" alt="" onerror="this.remove()" /><figcaption>images/science-3.jpg<br/>1200 × 1600</figcaption></figure>
               <span class="num"><span data-i="sci3_num">03 · Ritual</span></span>
               <h3 class="h4" data-i="sci3_title">A practice you can keep.</h3>
-              <p class="p" data-i="sci3_text">Sleep, mood, focus. The real case for heat and cold isn’t one dramatic session — it’s the compounding effect of showing up four evenings a week, for a year, twenty steps from your own bedroom.</p>
+              <p class="p" data-i="sci3_text">The case for a sauna at home is not one dramatic session. It is the compounding of four evenings a week, for a year, twenty steps from your own bedroom, with nothing to book and nowhere to drive.</p>
             </div>
           </div>
         </div>
@@ -590,7 +584,6 @@
               <li><a href="#saunas" data-i="f_l2">Four-person</a></li>
               <li><a href="#custom" data-i="f_l3">Built around your space</a></li>
               <li><a href="#options" data-i="f_l4">Options</a></li>
-              <li><a href="#cold" data-i="nav_cold">Cold plunge</a></li>
             </ul>
           </div>
           <div class="f-col">
