@@ -243,6 +243,13 @@ button{font:inherit;color:inherit}
 .quotes{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(20px,2.6vw,40px)}
 .quote{margin:0;display:flex;flex-direction:column}
 .bubble{position:relative;margin:0;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:clamp(26px,2.8vw,38px)}
+/* Quotation marks, so it reads as something a person said rather than as our
+   own copy. Set here rather than typed into the text: a quote cannot then be
+   left off one of them. The opening mark hangs into the margin, which keeps
+   the first line of every bubble starting on the same vertical. */
+.bubble p{text-indent:-.44em}
+.bubble p::before{content:'\201C'}
+.bubble p::after{content:'\201D'}
 /* The tail is two triangles, the outer one the border colour, so the hairline
    carries on around the point instead of stopping at the corner. */
 .bubble::before,.bubble::after{content:'';position:absolute;top:100%;left:32px;width:0;height:0;border-style:solid;border-color:transparent}
