@@ -13,11 +13,64 @@ const CONFIG = {
   tiktok: 'anywhere_sauna',
   // Text that opens in WhatsApp when someone taps a "Chat" button.
   waGreeting: 'Hi! I’m interested in a sauna. Could you tell me more?',
+
+  /* Traffic counters. Paste an id in and that counter starts working on the
+     next page load. Leave one empty and nothing happens at all — no script is
+     fetched, no cookie is set, no request leaves the visitor's browser. That
+     is deliberate: a site should not be talking to four companies before
+     anyone has decided to measure anything. */
+  analytics: {
+    ga4: '',        // Google Analytics: Admin → Data streams → "G-XXXXXXXXXX"
+    metaPixel: '',  // Meta Events Manager: the numeric Pixel ID
+    tiktokPixel: '',// TikTok Events Manager: the Pixel ID
+  },
 };
 
 (function () {
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+
+  /* ---------- traffic counters ---------- */
+  /* Each one loads only when its id is filled in. The WhatsApp buttons and
+     the request form also report themselves as conversions, so the numbers
+     that matter — enquiries, not page views — land in the same place. */
+  const A = CONFIG.analytics || {};
+  const script = (src) => { const s = document.createElement('script'); s.async = true; s.src = src; document.head.appendChild(s); };
+
+  if (A.ga4) {
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function () { window.dataLayer.push(arguments); };
+    window.gtag('js', new Date());
+    window.gtag('config', A.ga4);
+    script('https://www.googletagmanager.com/gtag/js?id=' + A.ga4);
+  }
+
+  if (A.metaPixel) {
+    const q = [];
+    window.fbq = function () { (window.fbq.callMethod ? window.fbq.callMethod.apply(window.fbq, arguments) : q.push(arguments)); };
+    window.fbq.queue = q; window.fbq.loaded = true; window.fbq.version = '2.0';
+    window._fbq = window._fbq || window.fbq;
+    script('https://connect.facebook.net/en_US/fbevents.js');
+    window.fbq('init', A.metaPixel);
+    window.fbq('track', 'PageView');
+  }
+
+  if (A.tiktokPixel) {
+    const t = (window.ttq = window.ttq || []);
+    t.methods = ['page','track','identify','instances','debug','on','off','once','ready','alias','group','enableCookie','disableCookie'];
+    t.setAndDefer = function (obj, m) { obj[m] = function () { obj.push([m].concat(Array.prototype.slice.call(arguments, 0))); }; };
+    t.methods.forEach((m) => t.setAndDefer(t, m));
+    t._i = {}; t._i[A.tiktokPixel] = []; t._t = {}; t._t[A.tiktokPixel] = +new Date(); t._o = {}; t._o[A.tiktokPixel] = {};
+    script('https://analytics.tiktok.com/i18n/pixel/events.js?sdkid=' + A.tiktokPixel + '&lib=ttq');
+    t.page();
+  }
+
+  /* One call, so a conversion is recorded wherever counters are switched on. */
+  function trackLead(where) {
+    if (window.gtag) window.gtag('event', 'generate_lead', { method: where });
+    if (window.fbq) window.fbq('track', 'Lead', { content_name: where });
+    if (window.ttq && window.ttq.track) window.ttq.track('SubmitForm', { content_name: where });
+  }
   /* ---------- brand + contacts from CONFIG ---------- */
   $$('[data-brand]').forEach((el) => { el.textContent = CONFIG.brand; });
   $$('[data-phone-display]').forEach((el) => { el.textContent = CONFIG.whatsappDisplay; });
@@ -30,18 +83,21 @@ const CONFIG = {
     'https://wa.me/' + CONFIG.whatsapp + (text ? '?text=' + encodeURIComponent(text) : '');
 
   $$('[data-wa]').forEach((el) => {
+    el.addEventListener('click', () => trackLead('whatsapp'));
     el.href = waLink(CONFIG.waGreeting);
     el.target = '_blank';
     el.rel = 'noopener';
   });
 
   /* ---------- mobile menu ---------- */
+  /* The guide pages run the same script for the counters and the WhatsApp
+     links, and have no burger menu, so every lookup here tolerates a miss. */
   const sheet = $('[data-menu]');
-  const openMenu = () => { sheet.classList.add('on'); document.body.style.overflow = 'hidden'; };
-  const closeMenu = () => { sheet.classList.remove('on'); document.body.style.overflow = ''; };
+  const openMenu = () => { if (sheet) { sheet.classList.add('on'); document.body.style.overflow = 'hidden'; } };
+  const closeMenu = () => { if (sheet) { sheet.classList.remove('on'); document.body.style.overflow = ''; } };
   $$('[data-menu-open]').forEach((b) => b.addEventListener('click', openMenu));
   $$('[data-menu-close]').forEach((b) => b.addEventListener('click', closeMenu));
-  $$('a', sheet).forEach((a) => a.addEventListener('click', closeMenu));
+  if (sheet) $$('a', sheet).forEach((a) => a.addEventListener('click', closeMenu));
   /* ---------- the full-screen clip ---------- */
   /* "Watch video" plays the file we host, in one shared player. It used to
      embed an Instagram reel, which regularly failed to load; nothing here
@@ -93,6 +149,7 @@ const CONFIG = {
         'Interested in: ' + f.get('type'),
         f.get('message') ? 'About the space: ' + f.get('message') : '',
       ];
+      trackLead('form');
       window.open(waLink(lines.filter(Boolean).join('\n')), '_blank', 'noopener');
     });
   }

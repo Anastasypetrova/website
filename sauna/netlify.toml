@@ -1,0 +1,15 @@
+# Read by Netlify when the site's base directory is set to "sauna".
+# There is nothing to build: the folder is the site.
+
+[build]
+  base = "sauna"
+  publish = "."
+  command = ""
+
+# Everything serves from one domain, so there is one canonical host. Netlify
+# redirects www to the apex automatically once the domain is attached; this
+# only pins the 404.
+[[redirects]]
+  from = "/*"
+  to = "/404.html"
+  status = 404
