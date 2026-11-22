@@ -124,7 +124,7 @@ button{font:inherit;color:inherit}
   radial-gradient(80% 70% at 10% 90%,rgba(62,44,30,.9),transparent 70%),
   linear-gradient(180deg,#3A2C21 0%,#5A4231 55%,#2B2119 100%)}
 .hero-bg::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(180deg,rgba(255,255,255,.035) 0 3px,transparent 3px 46px);mix-blend-mode:overlay}
-.hero-bg img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover}
+.hero-bg img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;object-position:50% 30%}
 /* The sky is the best thing in the cover photograph, so the scrim stays thin
    over it and only thickens low down, where the words are. */
 .hero-scrim{position:absolute;inset:0;background:linear-gradient(180deg,rgba(13,11,9,.4) 0%,rgba(13,11,9,.22) 34%,rgba(13,11,9,.66) 72%,rgba(13,11,9,.9) 100%)}
@@ -520,7 +520,10 @@ section[id]{scroll-margin-top:calc(var(--nav-h) + 12px)}
 @media (max-width:760px){
   .hero{display:block;min-height:0;max-height:none;--hero-img:clamp(300px,52svh,440px)}
   .hero-bg{position:relative;inset:auto;height:var(--hero-img)}
-  .hero-bg img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 46%}
+  .hero-bg{overflow:hidden}
+  /* A square photograph in a short panel leaves the cabin small with a lot of
+     empty paving under it, so on a phone the frame closes in on the cabin. */
+  .hero-bg img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 50%;transform:scale(1.62);transform-origin:50% 34%}
   .hero-scrim{inset:0 0 auto 0;height:var(--hero-img);background:linear-gradient(180deg,rgba(13,11,9,.3) 0%,rgba(13,11,9,.05) 42%,rgba(13,11,9,.55) 100%)}
   .hero-in{padding:34px var(--gutter) 52px}
   .hero .eyebrow{margin-bottom:16px}
