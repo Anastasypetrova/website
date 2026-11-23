@@ -587,3 +587,10 @@ section[id]{scroll-margin-top:calc(var(--nav-h) + 12px)}
 .clip-play::before{content:'';width:68px;height:68px;border-radius:50%;background:rgba(13,11,9,.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border:1px solid rgba(243,235,223,.45);transition:background .2s,transform .2s}
 .clip-play::after{content:'';position:absolute;width:0;height:0;border-left:19px solid var(--ink);border-top:12px solid transparent;border-bottom:12px solid transparent;margin-left:5px}
 .clip-play:hover::before{background:rgba(13,11,9,.75);transform:scale(1.06)}
+
+/* The science cards open the article behind them. */
+.sci{color:inherit;text-decoration:none;display:block}
+.sci-go{display:inline-flex;align-items:center;gap:9px;margin-top:18px;font-family:var(--label);font-weight:600;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);transition:gap .2s}
+.sci:hover .sci-go{gap:14px;color:var(--gold-2)}
+.sci:hover .h4{color:var(--gold-2)}
+.sci .h4{transition:color .2s}
