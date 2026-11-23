@@ -101,6 +101,31 @@ function visitSource(): string {
 const seen = new Set<string>();
 
 /**
+ * Класс устройства — по ширине окна, и только три значения.
+ *
+ * Не отпечаток браузера: ни модели, ни версии, ни набора шрифтов. Нужно ровно
+ * одно — понимать, что до оплаты с телефона доходят реже, чем с компьютера,
+ * потому что чинится это вёрсткой, а не догадками.
+ */
+function deviceClass(): 'mobile' | 'tablet' | 'desktop' {
+  const w = window.innerWidth;
+  return w < 700 ? 'mobile' : w < 1024 ? 'tablet' : 'desktop';
+}
+
+/**
+ * Страница, на которой это случилось. Раньше у сайта был один адрес, и вопрос
+ * не стоял; теперь их семнадцать, и без этого нажатия с главной и со страницы
+ * формата сливаются в одно число.
+ */
+function pagePath(): string {
+  try {
+    return window.location.pathname.toLowerCase().slice(0, 60);
+  } catch {
+    return '';
+  }
+}
+
+/**
  * Считает событие на сайте: нажатие, прокрутку, открытый вопрос.
  *
  * sendBeacon, а не fetch: человек в этот момент часто уходит по ссылке, и
@@ -117,7 +142,7 @@ export function trackClick(event: string, once = false): void {
     seen.add(event);
   }
   try {
-    const body = JSON.stringify({ event, source: visitSource() });
+    const body = JSON.stringify({ event, source: visitSource(), device: deviceClass(), page: pagePath() });
     const url = `${API_BASE}/event`;
     if (navigator.sendBeacon) {
       navigator.sendBeacon(url, new Blob([body], { type: 'application/json' }));

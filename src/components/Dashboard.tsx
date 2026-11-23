@@ -27,6 +27,11 @@ const PERIODS: Periods[] = [
   { label: 'Всё время', days: 3650 },
 ];
 
+interface Step {
+  all: number;
+  mobile: number;
+}
+
 interface Clicks {
   total: number;
   byDay: Record<string, number>;
@@ -36,6 +41,12 @@ interface Clicks {
   firstDay: string;
   totalAllTime: number;
   tz: string;
+  /** Появилось с версией 10 обработчика — у старых данных этих полей нет. */
+  byDevice?: Record<string, number>;
+  byPage?: Record<string, number>;
+  sections?: Record<string, number>;
+  depth?: Record<string, number>;
+  funnel?: { formats: Step; price: Step; consent: Step; pay: Step };
 }
 
 interface Named {
@@ -93,6 +104,35 @@ function named(rows: Named[] | undefined): Named[] {
   return (rows ?? []).map((r) => (r.name === '—' ? { ...r, name: 'напрямую' } : r));
 }
 
+/** Коды разделов и страниц — в то, как они называются на сайте. */
+const SECTION_NAMES: Record<string, string> = {
+  club: 'Samadhi Club',
+  'personal-session': 'Личная консультация',
+  mentorship: 'Менторство',
+  mastermind: 'Мастермайнд',
+  'forever-young': 'Forever Young',
+  reviews: 'Отзывы',
+  videos: 'Видео',
+  about: 'Обо мне',
+  faq: 'Вопросы',
+  contacts: 'Контакты',
+};
+
+const DEPTH_NAMES: Record<string, string> = {
+  '25': 'Четверть страницы',
+  '50': 'Половина',
+  '75': 'Три четверти',
+  '100': 'До конца',
+};
+
+function renamed(map: Record<string, number> | undefined, names: Record<string, string>): Named[] {
+  return sorted(map).map((r) => ({ ...r, name: names[r.name] ?? r.name }));
+}
+
+function pages(map: Record<string, number> | undefined): Named[] {
+  return sorted(map).map((r) => ({ ...r, name: r.name === '/' ? 'главная' : r.name }));
+}
+
 function sorted(map: Record<string, number> | undefined): Named[] {
   return Object.entries(map ?? {})
     .map(([name, visits]) => ({ name, visits }))
@@ -100,6 +140,84 @@ function sorted(map: Record<string, number> | undefined): Named[] {
 }
 
 /* ---- части страницы ------------------------------------------------------ */
+
+/**
+ * Воронка: не «сколько нажали», а где именно теряются люди.
+ *
+ * Первая ступень приходит из Cloudflare, остальные — из таблицы: это разные
+ * системы, и сравнивать их в лоб можно только по порядку величины. Зато
+ * ступени между собой считаются одинаково, и переход от одной к другой —
+ * честное число.
+ */
+function Funnel({ visits, funnel }: { visits: number | null; funnel?: Clicks['funnel'] }) {
+  if (!funnel) {
+    return (
+      <div className="dash-card">
+        <div className="dash-card-head"><h2>Воронка</h2></div>
+        <p className="dash-empty">
+          Эти данные начинает собирать десятая версия обработчика. Если она уже стоит —
+          числа появятся, как только кто-нибудь зайдёт на сайт.
+        </p>
+      </div>
+    );
+  }
+
+  const steps: { name: string; all: number | null; mobile: number | null }[] = [
+    { name: 'Зашли на сайт', all: visits, mobile: null },
+    { name: 'Долистали до форматов', all: funnel.formats.all, mobile: funnel.formats.mobile },
+    { name: 'Увидели цену', all: funnel.price.all, mobile: funnel.price.mobile },
+    { name: 'Поставили галочку', all: funnel.consent.all, mobile: funnel.consent.mobile },
+    { name: 'Нажали оплату', all: funnel.pay.all, mobile: funnel.pay.mobile },
+  ];
+
+  const top = Math.max(1, ...steps.map((s) => s.all ?? 0));
+  const lost = funnel.consent.all - funnel.pay.all;
+
+  return (
+    <div className="dash-card">
+      <div className="dash-card-head">
+        <h2>Воронка</h2>
+        <span className="dash-card-sum">{nf.format(funnel.pay.all)} до оплаты</span>
+      </div>
+      <table className="dash-rows dash-funnel">
+        <thead>
+          <tr>
+            <th>Шаг</th>
+            <th className="dash-rows-n">Всего</th>
+            <th className="dash-rows-n">Телефон</th>
+            <th className="dash-rows-n">Дошли</th>
+          </tr>
+        </thead>
+        <tbody>
+          {steps.map((step, i) => {
+            const prev = i > 0 ? steps[i - 1].all : null;
+            const share = prev && step.all !== null && prev > 0 ? Math.round((step.all / prev) * 100) : null;
+            return (
+              <tr key={step.name}>
+                <td>
+                  <span className="dash-fn-name">{step.name}</span>
+                  <span className="dash-fn-bar" aria-hidden="true">
+                    <span style={{ width: `${((step.all ?? 0) / top) * 100}%` }} />
+                  </span>
+                </td>
+                <td className="dash-rows-n">{step.all === null ? '—' : nf.format(step.all)}</td>
+                <td className="dash-rows-n">{step.mobile === null ? '—' : nf.format(step.mobile)}</td>
+                <td className="dash-rows-n">{share === null ? '—' : `${share}%`}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+      <p className="dash-note" style={{ marginTop: 14 }}>
+        {lost > 0
+          ? `Поставили галочку и не нажали кнопку: ${nf.format(lost)}. Это люди, которые всё прочитали и согласились — и передумали на последнем шаге.`
+          : 'Все, кто поставил галочку, нажали кнопку.'}
+        {' '}Первая ступень — из Cloudflare, остальные — из таблицы: системы разные,
+        поэтому сравнивать их стоит по порядку величины, а не до единицы.
+      </p>
+    </div>
+  );
+}
 
 function Tile({ value, label, note }: { value: number | null; label: string; note?: string }) {
   return (
@@ -380,6 +498,42 @@ export default function Dashboard() {
             unit="нажатий"
             error={data?.clicksError}
           />
+
+          <Funnel visits={data?.visits?.visits ?? null} funnel={data?.clicks?.funnel} />
+
+          <div className="dash-two">
+            <Rows
+              title="Докуда дочитали"
+              rows={renamed(data?.clicks?.depth, DEPTH_NAMES)}
+              unit="визитов"
+              empty="Нет данных — нужна десятая версия обработчика."
+              error={data?.clicksError}
+            />
+            <Rows
+              title="Какие разделы увидели"
+              rows={renamed(data?.clicks?.sections, SECTION_NAMES)}
+              unit="визитов"
+              empty="Нет данных — нужна десятая версия обработчика."
+              error={data?.clicksError}
+            />
+          </div>
+
+          <div className="dash-two">
+            <Rows
+              title="На каких страницах"
+              rows={pages(data?.clicks?.byPage)}
+              unit="событий"
+              empty="Нет данных — нужна десятая версия обработчика."
+              error={data?.clicksError}
+            />
+            <Rows
+              title="С чего заходили"
+              rows={sorted(data?.clicks?.byDevice)}
+              unit="событий"
+              empty="Нет данных — нужна десятая версия обработчика."
+              error={data?.clicksError}
+            />
+          </div>
 
           <div className="dash-two">
             <Rows

@@ -44,7 +44,27 @@ const PREFIXED: Record<string, RegExp> = {
   video: /^[a-z]{3,8}\d{1,2}$/,
   doc: /^[a-z-]{3,20}$/,
   social: /^(instagram|telegram|youtube)$/,
+  // Шаги воронки: докуда дочитали, дошли ли до цены, поставили ли галочку.
+  seen: /^[a-z-]{3,20}$/,
+  price: /^[a-z-]{3,20}$/,
+  consent: /^[a-z-]{3,20}$/,
+  depth: /^(25|50|75|100)$/,
 };
+
+/** Класс устройства — три значения и ничего больше. */
+const DEVICES = new Set(['mobile', 'tablet', 'desktop']);
+
+function cleanDevice(raw: unknown): string {
+  return typeof raw === 'string' && DEVICES.has(raw) ? raw : '';
+}
+
+/**
+ * Адрес страницы, на которой случилось событие. Только путь: ни запроса, ни
+ * решётки — там могут оказаться метки и чужие данные.
+ */
+function cleanPage(raw: unknown): string {
+  return typeof raw === 'string' && /^\/[a-z0-9/-]{0,60}$/.test(raw) ? raw : '';
+}
 
 export function isTracked(event: string): boolean {
   if (SIMPLE.has(event)) return true;
@@ -86,6 +106,8 @@ export async function handleEvent(
       email: '',
       outcome: event,
       message: cleanSource(body.source),
+      device: cleanDevice(body.device),
+      page: cleanPage(body.page),
     });
   } catch {
     // проглочено намеренно

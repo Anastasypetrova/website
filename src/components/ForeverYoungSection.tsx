@@ -97,7 +97,7 @@ export function ForeverYoungSection({ lead = false }: { lead?: boolean } = {}) {
 
           {/* Цена здесь — аргумент, а не формальность: она низкая именно сейчас,
               и об этом сказано прямо, без «успейте» и прочего понукания. */}
-          <div className="mm-card fy-price">
+          <div className="mm-card fy-price" data-price="forever-young">
             <div className="fy-price-row">
               <span className="klabel"><T ru="Стоимость подписки" en="Subscription" /></span>
               <span className="fy-price-v">

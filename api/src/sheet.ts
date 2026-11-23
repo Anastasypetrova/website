@@ -16,6 +16,10 @@ export interface ContactRow {
   message?: string;
   /** What the auto-reply did: sent, skipped as off-topic, or failed. */
   outcome: string;
+  /** События: грубый класс устройства — mobile / tablet / desktop. */
+  device?: string;
+  /** События: путь страницы, на которой это случилось. */
+  page?: string;
 }
 
 export async function appendRow(endpoint: string, secret: string, row: ContactRow): Promise<void> {

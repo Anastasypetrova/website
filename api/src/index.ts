@@ -61,7 +61,7 @@ export interface Env {
   CF_SITE_TAG?: string;
 }
 
-export const VERSION = 9;
+export const VERSION = 10;
 
 const DEFAULTS = {
   ALLOWED_ORIGINS: 'https://anastasia-samadhi.club,https://www.anastasia-samadhi.club',

@@ -24,6 +24,7 @@ import { TelegramBand } from './components/TelegramBand';
 import { Faq } from './components/Faq';
 import { Contact } from './components/Contact';
 import { Footer } from './components/Footer';
+import { PageTracking } from './components/PageTracking';
 import { showMastermind } from './content';
 import { T } from './i18n';
 
@@ -80,6 +81,7 @@ export function Site({ here, onSetLang }: { here: Here; onSetLang?: (lang: Lang)
   return (
     <HereContext.Provider value={here}>
       <LangContext.Provider value={here.lang}>
+        <PageTracking />
         {doc ? (
           <LegalPage doc={doc} onSetLang={onSetLang ?? (() => {})} />
         ) : route.kind === 'service' ? (

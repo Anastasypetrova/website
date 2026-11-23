@@ -16,7 +16,14 @@ const HEADERS = ['Дата', 'Тип', 'ФИО', 'Email', 'Telegram', 'Сооб�
 // Клики по кнопкам пишутся на отдельную вкладку: это статистика, а не
 // обращения, и смешивать их в одной таблице неудобно обоим.
 const EVENT_SHEET = 'События';
-const EVENT_HEADERS = ['Дата', 'Что произошло', 'Подробность', 'Источник'];
+const EVENT_HEADERS = ['Дата', 'Что произошло', 'Подробность', 'Источник', 'Устройство', 'Страница'];
+
+// Класс устройства приходит кодом, в таблице читается словом.
+const DEVICE_NAMES = { mobile: 'Телефон', tablet: 'Планшет', desktop: 'Компьютер' };
+
+// Шаги воронки: от «долистал до форматов» до «нажал оплату». Считаются по
+// коду события, а не по названию, чтобы переименование ничего не сломало.
+const PAY_CODES = ['samadhi-club', 'personal-session', 'mentorship', 'mastermind', 'forever-young'];
 
 // Коды событий — в человеческие названия. Чего нет в списке, попадёт в
 // таблицу как есть: лучше непонятная строка, чем потерянное событие.
@@ -38,7 +45,19 @@ const EVENT_NAMES = {
   'video': 'Открыл видео',
   'doc': 'Открыл документ',
   'social': 'Ушёл в соцсеть',
+  'seen': 'Долистал до раздела',
+  'price': 'Увидел цену',
+  'consent': 'Поставил галочку согласия',
+  'depth': 'Прокрутил страницу, %',
 };
+
+// Название в таблице — обратно в код. Нужно отчёту: в таблице лежат
+// человеческие названия, а считать воронку надо по кодам.
+const CODE_BY_NAME = (function () {
+  var map = {};
+  for (var code in EVENT_NAMES) map[EVENT_NAMES[code]] = code;
+  return map;
+})();
 
 function doPost(e) {
   try {
@@ -99,6 +118,8 @@ function appendEvent(data) {
     EVENT_NAMES[raw] || EVENT_NAMES[key] || raw,
     detail,
     data.message || 'напрямую',
+    DEVICE_NAMES[data.device] || '',
+    data.page || '',
   ]);
 
   return json({ ok: true });
@@ -142,7 +163,22 @@ function buildStats(days) {
     contactsByDay: {},
     firstDay: '',
     totalAllTime: 0,
+    byDevice: {},
+    byPage: {},
+    sections: {},
+    depth: {},
+    funnel: {
+      formats: { all: 0, mobile: 0 },
+      price: { all: 0, mobile: 0 },
+      consent: { all: 0, mobile: 0 },
+      pay: { all: 0, mobile: 0 },
+    },
   };
+
+  function step(name, isMobile) {
+    out.funnel[name].all++;
+    if (isMobile) out.funnel[name].mobile++;
+  }
 
   var ev = book.getSheetByName(EVENT_SHEET);
   if (ev && ev.getLastRow() > 1) {
@@ -156,11 +192,28 @@ function buildStats(days) {
       if (day < sinceDay) continue;
 
       var name = String(rows[i][1] || '—');
+      var detail = String(rows[i][2] || '');
       var source = String(rows[i][3] || 'напрямую');
+      var device = String(rows[i][4] || '');
+      var page = String(rows[i][5] || '');
+
       out.byDay[day] = (out.byDay[day] || 0) + 1;
       out.byEvent[name] = (out.byEvent[name] || 0) + 1;
       out.bySource[source] = (out.bySource[source] || 0) + 1;
+      if (device) out.byDevice[device] = (out.byDevice[device] || 0) + 1;
+      if (page) out.byPage[page] = (out.byPage[page] || 0) + 1;
       out.total++;
+
+      // Воронка и глубина — по коду события, не по его названию.
+      var code = CODE_BY_NAME[name] || '';
+      var mobile = device === DEVICE_NAMES.mobile;
+
+      if (code === 'formats-seen') step('formats', mobile);
+      else if (code === 'price') step('price', mobile);
+      else if (code === 'consent') step('consent', mobile);
+      else if (PAY_CODES.indexOf(code) !== -1) step('pay', mobile);
+      else if (code === 'seen' && detail) out.sections[detail] = (out.sections[detail] || 0) + 1;
+      else if (code === 'depth' && detail) out.depth[detail] = (out.depth[detail] || 0) + 1;
     }
   }
 

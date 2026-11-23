@@ -49,7 +49,7 @@ export function PersonalSessionSection({ lead = false }: { lead?: boolean } = {}
               </div>
             </div>
             <div className="meta"><T ru="Длительность: 1 час" en="Duration: 1 hour" /></div>
-            <div className="pricerow">
+            <div className="pricerow" data-price="personal-session">
               <div className="pricebox">
                 <span className="klabel"><T ru="Стоимость" en="Price" /></span>
                 <div className="price" style={{ marginTop: 8, fontFamily: 'var(--font-grotesk)', fontWeight: 100 }}>

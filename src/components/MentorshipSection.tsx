@@ -99,7 +99,7 @@ export function MentorshipSection({ lead = false }: { lead?: boolean } = {}) {
             </div>
           </div>
           <div className="mm-col">
-            <div className="mm-card">
+            <div className="mm-card" data-price="mentorship">
               <span className="klabel"><T ru="Стоимость программ" en="Program pricing" /></span>
               <div className="pricetable" style={{ marginTop: 16 }}>
                 {pricing.mentorship.map((tier) => (

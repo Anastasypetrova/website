@@ -148,7 +148,7 @@ export function ClubSection({ lead = false }: { lead?: boolean } = {}) {
             </div>
           </div>
 
-          <div className="mm-card">
+          <div className="mm-card" data-price="samadhi-club">
               <span className="klabel"><T ru="Стоимость подписки" en="Subscription pricing" /></span>
               <div className="pricetable" style={{ marginTop: 16 }}>
                 {clubPlans.map((plan) => (

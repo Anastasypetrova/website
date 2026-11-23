@@ -327,3 +327,37 @@
   font-size: 15px;
   cursor: pointer;
 }
+
+/* ---- воронка ------------------------------------------------------------- */
+
+/* Полоска под названием шага, а не отдельным столбцом: так ступени видно
+   глазом, и таблица не расползается на телефоне. */
+.dash-funnel td:first-child {
+  padding-right: 16px;
+}
+.dash-fn-name {
+  display: block;
+}
+.dash-fn-bar {
+  display: block;
+  height: 6px;
+  margin-top: 5px;
+  border-radius: 3px;
+  background: var(--d-mark-soft);
+  max-width: 320px;
+}
+.dash-fn-bar span {
+  display: block;
+  height: 100%;
+  border-radius: 3px;
+  background: var(--d-mark);
+  min-width: 2px;
+}
+.dash-funnel thead th {
+  font-size: 12px;
+  color: var(--taupe-500);
+  border-bottom: 1px solid var(--d-line);
+}
+.dash-funnel thead th {
+  white-space: nowrap;
+}

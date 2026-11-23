@@ -82,6 +82,10 @@ export function ConsentGate({ href, slugs, product, children, secondary, style, 
           onChange={(e) => {
             setAgreed(e.target.checked);
             setNudge(false);
+            // Считаем только постановку галочки: человек дочитал, согласился —
+            // и дальше либо платит, либо нет. Разница между этими двумя
+            // числами и есть самый дорогой отказ на сайте.
+            if (e.target.checked) trackClick(`consent:${product}`, true);
           }}
         />
         <span className="consent-text">
