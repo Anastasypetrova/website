@@ -20,7 +20,7 @@ const CONFIG = {
      is deliberate: a site should not be talking to four companies before
      anyone has decided to measure anything. */
   analytics: {
-    ga4: '',        // Google Analytics: Admin → Data streams → "G-XXXXXXXXXX"
+    ga4: 'G-QZK9EB9CQX', // Google Analytics: Admin → Data streams → "G-XXXXXXXXXX"
     metaPixel: '',  // Meta Events Manager: the numeric Pixel ID
     tiktokPixel: '',// TikTok Events Manager: the Pixel ID
     // Cloudflare Web Analytics: free, sets no cookie, needs no consent
