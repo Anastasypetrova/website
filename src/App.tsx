@@ -2,6 +2,8 @@ import { Suspense, lazy, useEffect, useRef, useState } from 'react';
 import { LangContext, type Lang } from './i18n';
 import { LegalPage } from './components/LegalPage';
 import { ServicePage } from './components/ServicePage';
+import { BlogPage } from './components/BlogPage';
+import { ArticlePage } from './components/ArticlePage';
 import { findLegalDoc, legalDocs } from './legal';
 import { HereContext, previewMode } from './router';
 import { rootPrefix, routeFromPath, type Here } from './routes';
@@ -86,6 +88,10 @@ export function Site({ here, onSetLang }: { here: Here; onSetLang?: (lang: Lang)
           <LegalPage doc={doc} onSetLang={onSetLang ?? (() => {})} />
         ) : route.kind === 'service' ? (
           <ServicePage slug={route.slug} />
+        ) : route.kind === 'blog' ? (
+          <BlogPage />
+        ) : route.kind === 'article' ? (
+          <ArticlePage slug={route.slug} />
         ) : (
           <Landing />
         )}

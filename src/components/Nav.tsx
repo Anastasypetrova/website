@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { T, useLang } from '../i18n';
 import { useHere, useHomeAnchor, useHref } from '../router';
-import { HOME } from '../routes';
+import { HOME, type Route } from '../routes';
+import { showBlog } from '../articles';
 import { trackClick } from '../api';
 import { BurgerIcon, CloseIcon } from './Icons';
 
@@ -55,6 +56,10 @@ export function LangSwitch({ className = 'langsw' }: { className?: string }) {
 export function Nav({ solid = false }: { solid?: boolean } = {}) {
   const href = useHref();
   const anchor = useHomeAnchor();
+  const lang = useLang();
+  // Статьи написаны по-русски, английского двойника у них нет: на английской
+  // версии ссылка вела бы в тупик.
+  const blog: Route | null = showBlog && lang !== 'en' ? { kind: 'blog' } : null;
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -76,6 +81,7 @@ export function Nav({ solid = false }: { solid?: boolean } = {}) {
                 <T ru={l.ru} en={l.en} />
               </a>
             ))}
+            {blog && <a className="nlink" href={href(blog)}>Статьи</a>}
             <a className="npill" href={anchor('contacts')}><T ru="Контакты" en="Contacts" /></a>
             <LangSwitch />
           </div>
@@ -96,6 +102,9 @@ export function Nav({ solid = false }: { solid?: boolean } = {}) {
             <T ru={l.ru} en={l.en} />
           </a>
         ))}
+        {blog && (
+          <a className="mlink" href={href(blog)} onClick={() => setMenuOpen(false)}>Статьи</a>
+        )}
         <a className="mlink" href={anchor('contacts')} onClick={() => setMenuOpen(false)}><T ru="Контакты" en="Contacts" /></a>
         <LangSwitch className="mlang" />
       </div>

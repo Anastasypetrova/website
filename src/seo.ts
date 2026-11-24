@@ -18,6 +18,7 @@ import {
   type FaqItem,
 } from './content';
 import { legalDocs } from './legalDocs.generated';
+import { articlesByDate, findArticle } from './articles';
 import type { Lang } from './i18n';
 import {
   allPages,
@@ -50,6 +51,7 @@ const site = {
     inLanguage: 'ru-RU',
     home: 'Главная',
     docs: 'Документы',
+    blog: 'Статьи',
   },
   en: {
     name: 'Anastasia Petrova',
@@ -65,6 +67,7 @@ const site = {
     inLanguage: 'en-US',
     home: 'Home',
     docs: 'Documents',
+    blog: 'Articles',
   },
 } as const;
 
@@ -161,6 +164,21 @@ function metaFor({ route, lang }: Here): PageMeta {
     const title = def?.title[lang] ?? s.title;
     const description = def?.description[lang] ?? s.description;
     return { title, description, ogTitle: title, ogDescription: description };
+  }
+  if (route.kind === 'blog') {
+    const title = `Статьи — ${SITE_NAME}`;
+    const description =
+      'Разборы о внимании, состоянии и смене идентичности — то, о чём я говорю в эфирах и роликах, собранное текстом.';
+    return { title, description, ogTitle: title, ogDescription: description };
+  }
+  if (route.kind === 'article') {
+    const article = findArticle(route.slug);
+    // Заголовок статьи — это вопрос человека. Имя добавляется, только если
+    // оно влезет: обрезанный вопрос в выдаче хуже, чем вопрос без подписи.
+    const base = article?.title ?? 'Статья';
+    const title = base.length <= 45 ? `${base} — ${SITE_NAME}` : base;
+    const description = article?.description ?? s.description;
+    return { title, description, ogTitle: base, ogDescription: description };
   }
   const doc = docOf(route.slug);
   const title = `${doc?.title ?? 'Документ'} — ${SITE_NAME}`;
@@ -261,6 +279,9 @@ function breadcrumbs(here: Here, name: string) {
   const items = [
     { name: site[lang].home, item: urlOf({ kind: 'home' }, lang) },
     ...(here.route.kind === 'doc' ? [{ name: site[lang].docs, item: `${SITE_URL}/#documents` }] : []),
+    ...(here.route.kind === 'article'
+      ? [{ name: site[lang].blog, item: urlOf({ kind: 'blog' }, lang) }]
+      : []),
     { name, item: urlOf(here.route, lang) },
   ];
   return {
@@ -326,6 +347,50 @@ function buildJsonLd(here: Here): string {
       },
       serviceNode(route.slug, lang, url),
       breadcrumbs(here, findService(route.slug)?.name[lang] ?? route.slug),
+    );
+  } else if (route.kind === 'blog') {
+    nodes.push(
+      {
+        '@type': 'Blog',
+        '@id': `${url}#webpage`,
+        url,
+        name: meta.title,
+        description: meta.description,
+        inLanguage: 'ru-RU',
+        isPartOf: { '@id': `${SITE_URL}/#website` },
+        author: { '@id': `${SITE_URL}/#person` },
+        blogPost: articlesByDate().map((a) => ({
+          '@type': 'BlogPosting',
+          '@id': `${urlOf({ kind: 'article', slug: a.slug }, 'ru')}#article`,
+          headline: a.title,
+          description: a.description,
+          url: urlOf({ kind: 'article', slug: a.slug }, 'ru'),
+          datePublished: a.date,
+          author: { '@id': `${SITE_URL}/#person` },
+        })),
+      },
+      breadcrumbs(here, site[lang].blog),
+    );
+  } else if (route.kind === 'article') {
+    const article = findArticle(route.slug);
+    nodes.push(
+      {
+        '@type': 'BlogPosting',
+        '@id': `${url}#article`,
+        headline: article?.title ?? meta.title,
+        description: meta.description,
+        url,
+        mainEntityOfPage: url,
+        inLanguage: 'ru-RU',
+        isPartOf: { '@id': `${SITE_URL}/#website` },
+        author: { '@id': `${SITE_URL}/#person` },
+        publisher: { '@id': `${SITE_URL}/#person` },
+        image: `${SITE_URL}/og-image.jpg`,
+        ...(article?.date
+          ? { datePublished: article.date, dateModified: article.updated ?? article.date }
+          : {}),
+      },
+      breadcrumbs(here, article?.title ?? route.slug),
     );
   } else {
     const doc = docOf(route.slug);

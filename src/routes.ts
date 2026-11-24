@@ -14,6 +14,7 @@
 import type { Lang } from './i18n';
 import { foreverYoungPrice, showMastermind } from './content';
 import { legalDocs } from './legalDocs.generated';
+import { articles, showBlog } from './articles';
 
 export type ServiceSlug =
   | 'samadhi-club'
@@ -25,7 +26,10 @@ export type ServiceSlug =
 export type Route =
   | { kind: 'home' }
   | { kind: 'service'; slug: ServiceSlug }
-  | { kind: 'doc'; slug: string };
+  | { kind: 'doc'; slug: string }
+  /** Список статей. */
+  | { kind: 'blog' }
+  | { kind: 'article'; slug: string };
 
 /** Страница, на которой мы сейчас: адрес плюс язык. */
 export interface Here {
@@ -143,6 +147,11 @@ export function findService(slug: string): ServiceDef | undefined {
  */
 export function pathOf(route: Route, lang: Lang): string {
   if (route.kind === 'doc') return `docs/${route.slug}/`;
+  // Статьи выросли из русских роликов, английских двойников у них нет —
+  // как и у документов. Английский адрес с русским текстом был бы пустой
+  // страницей в индексе.
+  if (route.kind === 'blog') return 'blog/';
+  if (route.kind === 'article') return `blog/${route.slug}/`;
   const prefix = lang === 'en' ? 'en/' : '';
   return route.kind === 'home' ? prefix : `${prefix}${route.slug}/`;
 }
@@ -171,6 +180,12 @@ export function allPages(): Here[] {
     pages.push({ route: { kind: 'service', slug: s.slug }, lang: 'ru' });
     pages.push({ route: { kind: 'service', slug: s.slug }, lang: 'en' });
   }
+  if (showBlog) {
+    pages.push({ route: { kind: 'blog' }, lang: 'ru' });
+    for (const a of articles) {
+      pages.push({ route: { kind: 'article', slug: a.slug }, lang: 'ru' });
+    }
+  }
   for (const d of legalDocs) {
     pages.push({ route: { kind: 'doc', slug: d.slug }, lang: 'ru' });
   }
@@ -179,7 +194,7 @@ export function allPages(): Here[] {
 
 /** У документов английского адреса нет, поэтому и пары языков у них нет. */
 export function hasLangPair(route: Route): boolean {
-  return route.kind !== 'doc';
+  return route.kind === 'home' || route.kind === 'service';
 }
 
 /**
@@ -196,6 +211,10 @@ export function routeFromPath(pathname: string): Here {
   if (prev === 'docs' && legalDocs.some((d) => d.slug === last)) {
     return { route: { kind: 'doc', slug: last }, lang: 'ru' };
   }
+  if (prev === 'blog' && articles.some((a) => a.slug === last)) {
+    return { route: { kind: 'article', slug: last }, lang: 'ru' };
+  }
+  if (last === 'blog' && showBlog) return { route: { kind: 'blog' }, lang: 'ru' };
   if (findService(last)) {
     return { route: { kind: 'service', slug: last as ServiceSlug }, lang: prev === 'en' ? 'en' : 'ru' };
   }

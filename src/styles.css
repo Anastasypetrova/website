@@ -673,3 +673,49 @@ textarea.field{min-height:130px;resize:vertical;border-radius:20px}
 .lang-btn{display:inline-block;line-height:1.1;text-decoration:none}
 a.lang-btn:hover{color:inherit;opacity:1}
 span.lang-btn{cursor:default}
+
+/* Раздел статей. Текст тут главный, поэтому колонка узкая: строка длиннее
+   примерно 70 знаков читается заметно хуже — глаз теряет начало следующей. */
+.postlist{margin-top:44px;border-top:1px solid var(--border-subtle)}
+.postrow{display:flex;gap:28px;align-items:baseline;justify-content:space-between;
+  padding:26px 0;border-bottom:1px solid var(--border-subtle);transition:padding-left .25s var(--ease-soft)}
+.postrow:hover{padding-left:8px}
+.postrow-main{display:block;max-width:64ch}
+.postrow-t{display:block;font-family:var(--font-head);font-size:calc(22px*var(--hs));
+  line-height:1.3;letter-spacing:-.01em;color:var(--ink)}
+.postrow-l{display:block;margin-top:8px;font-size:15.5px;line-height:1.6;color:var(--taupe-600)}
+.postrow-m{flex:0 0 auto;font-size:12.5px;color:var(--taupe-500);white-space:nowrap}
+@media(max-width:640px){
+  .postrow{flex-direction:column;gap:10px}
+  .postrow-m{order:-1}
+}
+
+.post-in{max-width:760px;margin-inline:auto}
+.post-h{max-width:20ch}
+.post-meta{margin:18px 0 0;font-size:13px;color:var(--taupe-500)}
+.post-lead{margin:26px 0 0;font-size:calc(20px*var(--hs));line-height:1.6;color:var(--ink)}
+.post-body{margin-top:34px;font-size:17px;line-height:1.75;color:var(--taupe-700)}
+.post-body h2{margin:44px 0 14px;font-family:var(--font-head);font-weight:400;
+  font-size:calc(26px*var(--hs));line-height:1.25;letter-spacing:-.012em;color:var(--ink)}
+.post-body p{margin:0 0 18px}
+.post-body ul{margin:0 0 20px;padding-left:22px}
+.post-body li{margin-bottom:9px}
+.post-body blockquote{margin:28px 0;padding:20px 24px;border-radius:14px;
+  background:var(--mist-100,rgba(44,44,44,.04));font-family:var(--font-head);
+  font-size:calc(19px*var(--hs));line-height:1.5;color:var(--ink)}
+.post-video{margin-top:44px}
+.post-cta{margin-top:40px;padding:22px 24px;border:1px solid var(--border-subtle);
+  border-radius:18px;font-size:16px;line-height:1.6;color:var(--taupe-700)}
+.post-cta p{margin:0}
+.post-cta a{color:var(--sage);text-decoration:underline;text-underline-offset:3px}
+.post-back{display:inline-block;margin-top:34px;font-size:15px;color:var(--taupe-600)}
+
+/* Ролик: сначала обложка, плеер — только по нажатию. */
+.vembed{position:relative;display:block;width:100%;margin-top:14px;aspect-ratio:16/9;
+  border:0;padding:0;border-radius:16px;overflow:hidden;background:var(--ink);cursor:pointer}
+.vembed iframe{width:100%;height:100%;border:0;display:block}
+.vembed-cover img{width:100%;height:100%;object-fit:cover;opacity:.85;transition:opacity .3s,transform .5s var(--ease-soft)}
+.vembed-cover:hover img{opacity:1;transform:scale(1.02)}
+.vembed-play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-size:26px;color:#fff;text-shadow:0 2px 14px rgba(0,0,0,.5)}
+.vembed-note{position:absolute;left:16px;bottom:14px;font-size:13px;color:#fff;opacity:.9}
