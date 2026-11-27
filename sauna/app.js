@@ -76,7 +76,44 @@ const CONFIG = {
     t.page();
   }
 
-  /* One call, so a conversion is recorded wherever counters are switched on. */
+  /* ---------- what we measure ---------- */
+  /* One funnel, six steps, named the same everywhere so a dashboard can line
+     them up without a lookup table:
+
+       page_view     someone arrived            (sent by Google itself)
+       view_prices   reached the price block    — read the number
+       view_item     reached a specific sauna   — picked a model
+       play_video    started a clip             — wanted to see it move
+       open_faq      opened a question          — doing their homework
+       reach_contact reached the contact form   — looking for the button
+       generate_lead wrote to us                — the only step worth money
+
+     Each one fires at most once per visit, so a dashboard counts people, not
+     scrolling. Nothing is sent unless a counter id is set in CONFIG. */
+  const track = (name, params) => {
+    if (window.gtag) window.gtag('event', name, params || {});
+    if (window.ttq && window.ttq.track) window.ttq.track(name, params || {});
+  };
+
+  const fired = new Set();
+  const trackOnce = (name, params) => {
+    const key = name + ':' + ((params && (params.item_id || params.id)) || '');
+    if (fired.has(key)) return;
+    fired.add(key);
+    track(name, params);
+  };
+
+  /* Meta keeps its own vocabulary, so the funnel is mapped onto its standard
+     events rather than sent twice under two names. */
+  const META = { view_prices: 'ViewContent', view_item: 'ViewContent', reach_contact: 'InitiateCheckout' };
+
+  function step(name, params) {
+    trackOnce(name, params);
+    if (window.fbq && META[name]) window.fbq('track', META[name], params || {});
+  }
+
+  /* A conversion, recorded wherever counters are switched on. This one may
+     fire more than once: two enquiries from one visit are two enquiries. */
   function trackLead(where) {
     if (window.gtag) window.gtag('event', 'generate_lead', { method: where });
     if (window.fbq) window.fbq('track', 'Lead', { content_name: where });
@@ -246,6 +283,65 @@ const CONFIG = {
       });
     }, { threshold: 0.45 });
     reels.forEach((v) => vio.observe(v));
+  }
+
+  /* ---------- the funnel ---------- */
+  /* Reaching a block counts once; the autoplaying clips do not count as
+     "watched a video", because nobody chose to start them. Everything here
+     tolerates a missing element, so the same file runs on a guide page. */
+  const MODELS = { two: 'Two-person', four: 'Four-person', custom: 'Built to fit' };
+
+  if ('IntersectionObserver' in window) {
+    const seen = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        if (!en.isIntersecting) return;
+        const t = en.target;
+        seen.unobserve(t);
+        if (t.classList.contains('usp')) step('view_prices');
+        else if (t.id === 'contact') step('reach_contact');
+        else if (MODELS[t.id]) step('view_item', { item_id: t.id, item_name: MODELS[t.id] });
+      });
+    }, { threshold: 0.35 });
+
+    [$('.usp'), $('#contact'), $('#two'), $('#four'), $('#custom')]
+      .forEach((el) => { if (el) seen.observe(el); });
+  }
+
+  /* Picked a model from the three cards at the top. */
+  $$('#saunas .card').forEach((a) => a.addEventListener('click', () => {
+    const id = (a.getAttribute('href') || '').replace('#', '');
+    if (MODELS[id]) track('select_item', { item_id: id, item_name: MODELS[id] });
+  }));
+
+  /* Asked for a video on purpose, one way or another. */
+  $$('[data-video]').forEach((b) => b.addEventListener('click', () => step('play_video', { method: 'full screen' })));
+  document.addEventListener('click', (e) => {
+    const t = e.target;
+    if (!t || !t.closest) return;
+    if (t.closest('.clip-play')) step('play_video', { method: 'tapped play' });
+    else if (t.closest('[data-sound]')) step('play_video', { method: 'sound on' });
+  });
+
+  /* Opened a question. Which question is worth knowing: it is the thing they
+     were unsure about, and the answer belongs higher up the page. */
+  $$('#faq details').forEach((d) => d.addEventListener('toggle', () => {
+    if (!d.open) return;
+    const q = d.querySelector('summary');
+    trackOnce('open_faq', { item_id: q ? q.textContent.trim().slice(0, 90) : 'question' });
+  }));
+
+  /* On a guide page: arrived, and reached the end. The gap between the two is
+     the only honest measure of whether an article is read or bounced. */
+  if (location.pathname.indexOf('/guides/') > -1) {
+    const slug = (location.pathname.split('/').pop() || 'index').replace('.html', '') || 'index';
+    track('read_guide', { item_id: slug });
+    const toEnd = () => {
+      const h = document.documentElement;
+      if ((window.scrollY + window.innerHeight) / h.scrollHeight < 0.85) return;
+      trackOnce('finish_guide', { item_id: slug });
+      window.removeEventListener('scroll', toEnd);
+    };
+    window.addEventListener('scroll', toEnd, { passive: true });
   }
 
   /* ---------- reveal on scroll ---------- */
