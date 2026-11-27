@@ -119,6 +119,7 @@ export function ForeverYoungSection({ lead = false }: { lead?: boolean } = {}) {
               href={links.foreverYoungJoin}
               product="forever-young"
               slugs={['oferta', 'disclaimer']}
+              immediateAccess
             secondary={
               <a className="btn-outline" href={links.reviewsChannel} target="_blank" rel="noopener">
                 <T ru="Отзывы" en="Reviews" />

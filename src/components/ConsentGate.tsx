@@ -46,6 +46,17 @@ interface Props {
   children: ReactNode;
   /** Вторая кнопка рядом с главной — например «Отзывы». */
   secondary?: ReactNode;
+  /**
+   * Подписки: доступ открывается сразу после оплаты.
+   *
+   * Право на отказ в течение 14 дней не исчезает само по себе оттого, что
+   * товар цифровой. По закону оно теряется, только если человек заранее
+   * прямо попросил начать немедленно и подтвердил, что понимает утрату
+   * права. В договорах на консультацию и менторство это сделано отдельной
+   * галочкой в приложении; у подписки договора нет, и просьба должна
+   * прозвучать здесь.
+   */
+  immediateAccess?: boolean;
   /** Layout for the checkbox + button block as a whole. */
   style?: CSSProperties;
   /** Layout for the button alone. */
@@ -53,7 +64,7 @@ interface Props {
 }
 
 /** A call-to-action that stays locked until the documents are accepted. */
-export function ConsentGate({ href, slugs, product, children, secondary, style, buttonStyle }: Props) {
+export function ConsentGate({ href, slugs, product, children, secondary, immediateAccess = false, style, buttonStyle }: Props) {
   const docHref = useDocHref();
   const [agreed, setAgreed] = useState(false);
   const [nudge, setNudge] = useState(false);
@@ -90,6 +101,12 @@ export function ConsentGate({ href, slugs, product, children, secondary, style, 
         />
         <span className="consent-text">
           <T ru={<>Я ознакомлен(а) и принимаю {link}</>} en={<>I have read and accept the {link}</>} />
+          {immediateAccess && (
+            <T
+              ru={<>. Прошу открыть доступ сразу — понимаю, что право на отказ в течение 14 дней при этом утрачивается</>}
+              en={<>. I ask for access to open immediately and understand that I then lose the right to withdraw within 14 days</>}
+            />
+          )}
         </span>
       </label>
       {/* Кнопки в одной строке: главная и второстепенная стоят рядом, а не

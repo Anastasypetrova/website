@@ -187,6 +187,7 @@ export function ClubSection({ lead = false }: { lead?: boolean } = {}) {
               href={links.clubJoin}
               product="samadhi-club"
               slugs={['oferta', 'club-terms', 'disclaimer']}
+              immediateAccess
               secondary={
                 <a className="btn-outline" href={links.reviewsChannel} target="_blank" rel="noopener">
                   <T ru="Отзывы" en="Reviews" />
