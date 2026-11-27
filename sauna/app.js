@@ -77,38 +77,48 @@ const CONFIG = {
   }
 
   /* ---------- what we measure ---------- */
-  /* One funnel, six steps, named the same everywhere so a dashboard can line
-     them up without a lookup table:
+  /* One funnel, named the same everywhere so a dashboard can line it up
+     without a lookup table:
 
        page_view     someone arrived            (sent by Google itself)
        view_prices   reached the price block    — read the number
-       view_item     reached a specific sauna   — picked a model
-       play_video    started a clip             — wanted to see it move
-       open_faq      opened a question          — doing their homework
+       view_sauna    reached a specific sauna   · sauna
+       pick_sauna    chose one of the cards     · sauna
+       play_video    started a clip on purpose  · how
+       open_faq      opened a question          · question
        reach_contact reached the contact form   — looking for the button
        generate_lead wrote to us                — the only step worth money
+       read_guide    opened an article          · guide
+       finish_guide  read it to the end         · guide
 
-     Each one fires at most once per visit, so a dashboard counts people, not
-     scrolling. Nothing is sent unless a counter id is set in CONFIG. */
+     The names after a dot are the parameters, and they are ours rather than
+     Google's. Google reserves names like item_id and item_name for shop
+     carts and reads them out of an items array, so a flat one on an event
+     called view_item either goes missing or turns up empty in a report —
+     and the event itself gets filed as a half-finished purchase. Plain
+     custom names keep the reports honest.
+
+     Each step fires at most once per visit, so a dashboard counts people,
+     not scrolling. Nothing is sent unless a counter id is set in CONFIG. */
   const track = (name, params) => {
     if (window.gtag) window.gtag('event', name, params || {});
     if (window.ttq && window.ttq.track) window.ttq.track(name, params || {});
   };
 
   const fired = new Set();
-  const trackOnce = (name, params) => {
-    const key = name + ':' + ((params && (params.item_id || params.id)) || '');
-    if (fired.has(key)) return;
-    fired.add(key);
+  const trackOnce = (name, params, key) => {
+    const k = name + ':' + (key || '');
+    if (fired.has(k)) return;
+    fired.add(k);
     track(name, params);
   };
 
   /* Meta keeps its own vocabulary, so the funnel is mapped onto its standard
      events rather than sent twice under two names. */
-  const META = { view_prices: 'ViewContent', view_item: 'ViewContent', reach_contact: 'InitiateCheckout' };
+  const META = { view_prices: 'ViewContent', view_sauna: 'ViewContent', reach_contact: 'InitiateCheckout' };
 
-  function step(name, params) {
-    trackOnce(name, params);
+  function step(name, params, key) {
+    trackOnce(name, params, key);
     if (window.fbq && META[name]) window.fbq('track', META[name], params || {});
   }
 
@@ -299,7 +309,7 @@ const CONFIG = {
         seen.unobserve(t);
         if (t.classList.contains('usp')) step('view_prices');
         else if (t.id === 'contact') step('reach_contact');
-        else if (MODELS[t.id]) step('view_item', { item_id: t.id, item_name: MODELS[t.id] });
+        else if (MODELS[t.id]) step('view_sauna', { sauna: MODELS[t.id] }, t.id);
       });
     }, { threshold: 0.35 });
 
@@ -310,16 +320,16 @@ const CONFIG = {
   /* Picked a model from the three cards at the top. */
   $$('#saunas .card').forEach((a) => a.addEventListener('click', () => {
     const id = (a.getAttribute('href') || '').replace('#', '');
-    if (MODELS[id]) track('select_item', { item_id: id, item_name: MODELS[id] });
+    if (MODELS[id]) track('pick_sauna', { sauna: MODELS[id] });
   }));
 
   /* Asked for a video on purpose, one way or another. */
-  $$('[data-video]').forEach((b) => b.addEventListener('click', () => step('play_video', { method: 'full screen' })));
+  $$('[data-video]').forEach((b) => b.addEventListener('click', () => step('play_video', { how: 'full screen' })));
   document.addEventListener('click', (e) => {
     const t = e.target;
     if (!t || !t.closest) return;
-    if (t.closest('.clip-play')) step('play_video', { method: 'tapped play' });
-    else if (t.closest('[data-sound]')) step('play_video', { method: 'sound on' });
+    if (t.closest('.clip-play')) step('play_video', { how: 'tapped play' });
+    else if (t.closest('[data-sound]')) step('play_video', { how: 'sound on' });
   });
 
   /* Opened a question. Which question is worth knowing: it is the thing they
@@ -327,18 +337,19 @@ const CONFIG = {
   $$('#faq details').forEach((d) => d.addEventListener('toggle', () => {
     if (!d.open) return;
     const q = d.querySelector('summary');
-    trackOnce('open_faq', { item_id: q ? q.textContent.trim().slice(0, 90) : 'question' });
+    const text = q ? q.textContent.trim().slice(0, 90) : 'question';
+    trackOnce('open_faq', { question: text }, text);
   }));
 
   /* On a guide page: arrived, and reached the end. The gap between the two is
      the only honest measure of whether an article is read or bounced. */
   if (location.pathname.indexOf('/guides/') > -1) {
     const slug = (location.pathname.split('/').pop() || 'index').replace('.html', '') || 'index';
-    track('read_guide', { item_id: slug });
+    track('read_guide', { guide: slug });
     const toEnd = () => {
       const h = document.documentElement;
       if ((window.scrollY + window.innerHeight) / h.scrollHeight < 0.85) return;
-      trackOnce('finish_guide', { item_id: slug });
+      trackOnce('finish_guide', { guide: slug }, slug);
       window.removeEventListener('scroll', toEnd);
     };
     window.addEventListener('scroll', toEnd, { passive: true });
