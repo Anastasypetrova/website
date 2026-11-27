@@ -216,7 +216,7 @@ export const pricing = {
  * Цифра живёт здесь, а не в вёрстке: её же читает разметка для поисковиков,
  * и менять её придётся в одном месте, а не в трёх.
  */
-export const foreverYoungPrice = { eur: 7, ru: '7 € в месяц', en: '€7 a month' };
+export const foreverYoungPrice = { eur: 9, ru: '9 € в месяц', en: '€9 a month' };
 
 export const docs = [
   { slug: 'oferta', file: '1_Dogovor_publichnoy_oferty.pdf', label: { ru: 'Договор оферты', en: 'Public offer agreement' } },
